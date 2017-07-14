@@ -1,0 +1,4 @@
+#Fri Jul 14 09:07:41 CST 2017
+base.0=C\:\\Users\\chiaying.wu\\AndroidStudioProjects\\ListAllFiles\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\support-v4-18.0.0_1e06cab7c3da96f6e19bba8c82a427fabca1153a
+renamed.0=classes.dex
+file.0=C\:\\Users\\chiaying.wu\\AndroidStudioProjects\\ListAllFiles\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\support-v4-18.0.0_1e06cab7c3da96f6e19bba8c82a427fabca1153a\\classes.dex

@@ -1,0 +1,27 @@
+#Internal package file, do not edit.
+#Fri Jul 14 09:13:46 CST 2017
+2.base=C\:\\Users\\chiaying.wu\\AndroidStudioProjects\\ListAllFiles\\app\\build\\intermediates\\res\\resources-debug.ap_
+5.file=C\:\\Users\\chiaying.wu\\AndroidStudioProjects\\ListAllFiles\\app\\build\\intermediates\\res\\resources-debug.ap_\\res\\drawable-xhdpi-v4\\ic_launcher.png
+5.set=ANDROID_RESOURCE
+3.base=C\:\\Users\\chiaying.wu\\AndroidStudioProjects\\ListAllFiles\\app\\build\\intermediates\\res\\resources-debug.ap_
+6.file=C\:\\Users\\chiaying.wu\\AndroidStudioProjects\\ListAllFiles\\app\\build\\intermediates\\res\\resources-debug.ap_\\AndroidManifest.xml
+2.set=ANDROID_RESOURCE
+4.base=C\:\\Users\\chiaying.wu\\AndroidStudioProjects\\ListAllFiles\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run-bootstrap_31640f066428af53c86cb1b1ed33449e371f043c
+7.file=C\:\\Users\\chiaying.wu\\AndroidStudioProjects\\ListAllFiles\\app\\build\\intermediates\\res\\resources-debug.ap_\\res\\menu-v11\\main.xml
+7.set=ANDROID_RESOURCE
+count=8
+0.file=C\:\\Users\\chiaying.wu\\AndroidStudioProjects\\ListAllFiles\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run_aa879f006840045e7ef41be5f1867e9e2d889513\\classes.dex
+5.base=C\:\\Users\\chiaying.wu\\AndroidStudioProjects\\ListAllFiles\\app\\build\\intermediates\\res\\resources-debug.ap_
+4.set=DEX
+6.base=C\:\\Users\\chiaying.wu\\AndroidStudioProjects\\ListAllFiles\\app\\build\\intermediates\\res\\resources-debug.ap_
+1.file=C\:\\Users\\chiaying.wu\\AndroidStudioProjects\\ListAllFiles\\app\\build\\intermediates\\res\\resources-debug.ap_\\res\\menu\\main.xml
+1.set=ANDROID_RESOURCE
+7.base=C\:\\Users\\chiaying.wu\\AndroidStudioProjects\\ListAllFiles\\app\\build\\intermediates\\res\\resources-debug.ap_
+2.file=C\:\\Users\\chiaying.wu\\AndroidStudioProjects\\ListAllFiles\\app\\build\\intermediates\\res\\resources-debug.ap_\\resources.arsc
+6.set=ANDROID_RESOURCE
+0.base=C\:\\Users\\chiaying.wu\\AndroidStudioProjects\\ListAllFiles\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run_aa879f006840045e7ef41be5f1867e9e2d889513
+3.file=C\:\\Users\\chiaying.wu\\AndroidStudioProjects\\ListAllFiles\\app\\build\\intermediates\\res\\resources-debug.ap_\\res\\layout\\activity_main.xml
+3.set=ANDROID_RESOURCE
+1.base=C\:\\Users\\chiaying.wu\\AndroidStudioProjects\\ListAllFiles\\app\\build\\intermediates\\res\\resources-debug.ap_
+4.file=C\:\\Users\\chiaying.wu\\AndroidStudioProjects\\ListAllFiles\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run-bootstrap_31640f066428af53c86cb1b1ed33449e371f043c\\classes.dex
+0.set=DEX
