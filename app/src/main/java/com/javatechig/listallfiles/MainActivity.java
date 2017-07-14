@@ -37,10 +37,12 @@ public class MainActivity extends Activity {
 
 			System.out.println(fileList.get(i).getName());
 
-			if (fileList.get(i).isDirectory()) {
-				textView.setTextColor(Color.parseColor("#FF0000"));
-			}
-			view.addView(textView);
+//			if (fileList.get(i).isDirectory()) {
+//				textView.setTextColor(Color.parseColor("#FF0000"));
+//			}
+
+			if (fileList.get(i).isFile())
+				view.addView(textView);
 		}
 
 	}
