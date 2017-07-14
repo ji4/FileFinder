@@ -36,9 +36,9 @@ public class MainActivity extends Activity {
 		btn_search.setOnClickListener(new Button.OnClickListener(){
 			@Override
 			public void onClick(View view) {
-                String strFileName = et_fileName.getText().toString();
+//                String strFileName = et_fileName.getText().toString();
 //				Log.d("strFileName's length", String.valueOf(strFileName.length()));
-				searchFiles(strFileName);
+				searchFiles();
 			}
 		});
 
@@ -46,11 +46,11 @@ public class MainActivity extends Activity {
 
 	}
 
-    public void searchFiles(String strFileName){
+    public void searchFiles(){
         //getting SDcard root path
         root = new File(Environment.getExternalStorageDirectory()
                 .getAbsolutePath());
-        getfile(root, strFileName);
+        getfile(root);
 
         for (int i = 0; i < fileList.size(); i++) {
             TextView textView = new TextView(this);
@@ -68,22 +68,22 @@ public class MainActivity extends Activity {
         }
     }
 
-	public ArrayList<File> getfile(File dir, String strFileName) {
+	public ArrayList<File> getfile(File dir) {
 		File listFile[] = dir.listFiles();
 		if (listFile != null && listFile.length > 0) {
 			for (int i = 0; i < listFile.length; i++) {
 
 				if (listFile[i].isDirectory()) {
 //					fileList.add(listFile[i]);
-					getfile(listFile[i], strFileName);
+					getfile(listFile[i]);
 
 				} else {
-                    if(strFileName.length() > 0) //Search for input name
-                        if(listFile[i].getName().equals(strFileName))
-						    fileList.add(listFile[i]);
-                    else { //Search All files
+//                    if(strFileName.length() > 0) //Search for input name
+//                        if(listFile[i].getName().equals(strFileName))
+//						    fileList.add(listFile[i]);
+//                    else { //Search All files
                             fileList.add(listFile[i]);
-                    }
+//                    }
 				}
 
 			}
