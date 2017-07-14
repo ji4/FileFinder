@@ -57,14 +57,14 @@ public class MainActivity extends Activity {
 					getfile(listFile[i]);
 
 				} else {
-					if (listFile[i].getName().endsWith(".png")
-							|| listFile[i].getName().endsWith(".jpg")
-							|| listFile[i].getName().endsWith(".jpeg")
-							|| listFile[i].getName().endsWith(".gif"))
-
-					{
+//					if (listFile[i].getName().endsWith(".png")
+//							|| listFile[i].getName().endsWith(".jpg")
+//							|| listFile[i].getName().endsWith(".jpeg")
+//							|| listFile[i].getName().endsWith(".gif"))
+//
+//					{
 						fileList.add(listFile[i]);
-					}
+//					}
 				}
 
 			}
