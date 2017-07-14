@@ -36,9 +36,8 @@ public class MainActivity extends Activity {
 		btn_search.setOnClickListener(new Button.OnClickListener(){
 			@Override
 			public void onClick(View view) {
-//                String strFileName = et_fileName.getText().toString();
-//				Log.d("strFileName's length", String.valueOf(strFileName.length()));
-				searchFiles();
+                String strFileName = et_fileName.getText().toString();
+				searchFiles(strFileName);
 			}
 		});
 
@@ -46,11 +45,11 @@ public class MainActivity extends Activity {
 
 	}
 
-    public void searchFiles(){
+    public void searchFiles(String strFileName){
         //getting SDcard root path
         root = new File(Environment.getExternalStorageDirectory()
                 .getAbsolutePath());
-        getfile(root);
+        getfile(root, strFileName);
 
         for (int i = 0; i < fileList.size(); i++) {
             TextView textView = new TextView(this);
@@ -59,33 +58,28 @@ public class MainActivity extends Activity {
 
             System.out.println(fileList.get(i).getName());
 
-//			if (fileList.get(i).isDirectory()) {
-//				textView.setTextColor(Color.parseColor("#FF0000"));
-//			}
-
             if (fileList.get(i).isFile())
                 view.addView(textView);
         }
     }
 
-	public ArrayList<File> getfile(File dir) {
+	public ArrayList<File> getfile(File dir, String strFileName) {
 		File listFile[] = dir.listFiles();
+
 		if (listFile != null && listFile.length > 0) {
 			for (int i = 0; i < listFile.length; i++) {
-
-				if (listFile[i].isDirectory()) {
-//					fileList.add(listFile[i]);
-					getfile(listFile[i]);
-
-				} else {
-//                    if(strFileName.length() > 0) //Search for input name
-//                        if(listFile[i].getName().equals(strFileName))
-//						    fileList.add(listFile[i]);
-//                    else { //Search All files
-                            fileList.add(listFile[i]);
-//                    }
+				if (listFile[i].isDirectory())
+					getfile(listFile[i], strFileName);
+				else {  //file
+					if(strFileName.length() > 0) { //File Name Inputted
+						if(listFile[i].getName().equals(strFileName)) {
+							fileList.add(listFile[i]);
+						}
+					}
+					else { //All files
+						fileList.add(listFile[i]);
+					}
 				}
-
 			}
 		}
 		return fileList;
