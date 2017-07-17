@@ -4,26 +4,33 @@
     android:orientation="vertical"
     android:padding="8dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/activity_main_et_fileName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="2.0"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="All"/>
+            android:hint="All"
+            android:inputType="textPersonName" />
+
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/activity_main_btn_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1.0"
             android:text="Search" />
+        <!--<Button-->
+            <!--android:id="@+id/activity_main_btn_clear"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1.0"-->
+            <!--android:text="Clear" />-->
     </LinearLayout>
-
 
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"

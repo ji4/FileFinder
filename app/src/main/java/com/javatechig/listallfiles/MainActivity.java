@@ -6,60 +6,87 @@ import java.util.ArrayList;
 import com.example.listallfiles.R;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
 	private File root;
 	private ArrayList<File> fileList = new ArrayList<File>();
-	private LinearLayout view;
-	Button btn_search;
+	private LinearLayout resultView;
+	Button btn_search, btn_clear;
     EditText et_fileName;
+	ScrollView scrollView;
+	LinearLayout ll;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		view = (LinearLayout) findViewById(R.id.view);
+		resultView = (LinearLayout) findViewById(R.id.view);
+		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		btn_search = (Button) findViewById(R.id.activity_main_btn_search);
-        et_fileName = (EditText) findViewById(R.id.activity_main_et_fileName);
+//		btn_clear = (Button) findViewById(R.id.activity_main_btn_clear);
+		et_fileName = (EditText) findViewById(R.id.activity_main_et_fileName);
+		ll = (LinearLayout) findViewById(R.id.ll);
+
+
 
 		btn_search.setOnClickListener(new Button.OnClickListener(){
 			@Override
 			public void onClick(View view) {
-                String strFileName = et_fileName.getText().toString();
+				String strFileName = et_fileName.getText().toString();
 				searchFiles(strFileName);
 			}
 		});
 
-
+//		btn_clear.setOnClickListener(new Button.OnClickListener() {
+//			@Override
+//			public void onClick(View view) {
+//				resultView.post(new Runnable(){
+//					@Override
+//					public void run()
+//					{
+//						resultView.removeAllViews();
+//						resultView.invalidate();
+//						resultView.requestLayout();
+//					}
+//				});
+//
+//			}
+//		});
 
 	}
 
+
     public void searchFiles(String strFileName){
         //getting SDcard root path
-        root = new File(Environment.getExternalStorageDirectory()
-                .getAbsolutePath());
+//        root = new File(Environment.getExternalStorageDirectory()
+//                .getAbsolutePath());
+		root = new File("/storage/emulated/0/Download");
         getfile(root, strFileName);
 
         for (int i = 0; i < fileList.size(); i++) {
             TextView textView = new TextView(this);
             textView.setText(fileList.get(i).getName());
             textView.setPadding(5, 5, 5, 5);
+			textView.setTag("txt");
 
             System.out.println(fileList.get(i).getName());
 
             if (fileList.get(i).isFile())
-                view.addView(textView);
+                resultView.addView(textView);
         }
     }
 
@@ -84,7 +111,5 @@ public class MainActivity extends Activity {
 		}
 		return fileList;
 	}
-
-
 
 }
