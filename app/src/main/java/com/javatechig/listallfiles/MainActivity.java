@@ -2,17 +2,14 @@ package com.javatechig.listallfiles;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import com.example.listallfiles.R;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -25,9 +22,11 @@ public class MainActivity extends Activity {
 	private ArrayList<File> fileList = new ArrayList<File>();
 	private LinearLayout resultView;
 	Button btn_search, btn_clear;
+	Button btn_searchDate;
     EditText et_fileName;
 	ScrollView scrollView;
 	LinearLayout ll;
+	EditText et_startYear, et_startMonth, et_startDay;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +37,12 @@ public class MainActivity extends Activity {
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		btn_search = (Button) findViewById(R.id.activity_main_btn_search);
 //		btn_clear = (Button) findViewById(R.id.activity_main_btn_clear);
+		btn_searchDate = (Button) findViewById(R.id.activity_main_btn_searchDate);
 		et_fileName = (EditText) findViewById(R.id.activity_main_et_fileName);
 		ll = (LinearLayout) findViewById(R.id.ll);
+		et_startYear = (EditText) findViewById(R.id.activity_main_et_startYear);
+		et_startMonth = (EditText) findViewById(R.id.activity_main_et_startMonth);
+		et_startDay = (EditText) findViewById(R.id.activity_main_et_startDay);
 
 
 
@@ -48,6 +51,29 @@ public class MainActivity extends Activity {
 			public void onClick(View view) {
 				String strFileName = et_fileName.getText().toString();
 				searchFiles(strFileName);
+			}
+		});
+
+		btn_searchDate.setOnClickListener(new Button.OnClickListener(){
+			@Override
+			public void onClick(View view) {
+				int year = Integer.parseInt(et_startYear.getText().toString().trim());
+				int month = Integer.parseInt(et_startMonth.getText().toString().trim());
+				int day = Integer.parseInt(et_startDay.getText().toString().trim());
+
+
+				Date date = new Date();
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(date);
+				calendar.set(Calendar.YEAR, year);
+				calendar.set(Calendar.MONTH, month - 1);
+				calendar.set(Calendar.DAY_OF_MONTH, day);
+				calendar.set(Calendar.HOUR, 0);
+				calendar.set(Calendar.MINUTE, 0);// for 0 min
+				calendar.set(Calendar.SECOND, 0);// for 0 sec
+				System.out.println("calendar.getTime(): "+calendar.getTime());// print 'Mon Mar 28 06:00:00 ALMT 2016'
+
+
 			}
 		});
 
@@ -95,7 +121,7 @@ public class MainActivity extends Activity {
 
 		if (listFile != null && listFile.length > 0) {
 			for (int i = 0; i < listFile.length; i++) {
-				if (listFile[i].isDirectory())
+				if (listFile[i].isDirectory()) //directory
 					getfile(listFile[i], strFileName);
 				else {  //file
 					if(strFileName.length() > 0) { //File Name Inputted

@@ -33,6 +33,45 @@
     </LinearLayout>
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/activity_main_et_startYear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:ems="10"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/activity_main_et_startMonth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:ems="10"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/activity_main_et_startDay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:ems="10"
+            android:inputType="number" />
+
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/activity_main_btn_searchDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Search Date" />
+
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/scrollView"
@@ -45,6 +84,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:padding="8dp" >
+
 
 
         </LinearLayout>
