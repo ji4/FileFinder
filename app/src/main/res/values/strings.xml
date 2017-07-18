@@ -4,5 +4,7 @@
     <string name="app_name">ListAllFiles</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="greater_than_or_equal_to">&gt;=</string>
+    <string name="less_than_or_equal_to">&lt;=</string>
 
 </resources>

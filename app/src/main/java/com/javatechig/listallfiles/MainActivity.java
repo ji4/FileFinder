@@ -9,7 +9,6 @@ import com.example.listallfiles.R;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,12 +20,12 @@ public class MainActivity extends Activity {
 
     private ArrayList<File> matchedFileList = new ArrayList<File>();
 	private LinearLayout resultView;
-	Button btn_search, btn_clear;
-	Button btn_searchDate;
+	Button btn_search, btn_searchDate, btn_searchSize, btn_clear;
     EditText et_fileName;
 	ScrollView scrollView;
 	LinearLayout ll;
 	EditText et_startYear, et_startMonth, et_startDay, et_endYear, et_endMonth, et_endDay;
+	EditText et_minSize, et_maxSize;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +68,20 @@ public class MainActivity extends Activity {
 				displaySearchResult();
 			}
 		});
+
+		btn_searchSize.setOnClickListener(new Button.OnClickListener(){
+			@Override
+			public void onClick(View view) {
+				long min_size = Long.parseLong(et_minSize.getText().toString().trim()) * 1024 * 1024; //Convert megabytes to bytes
+				long max_size = Long.parseLong(et_maxSize.getText().toString().trim()) * 1024 * 1024; //Convert megabytes to bytes
+
+				//search
+				FileSearcher fileSearcher = new FileSearcher(min_size, max_size);
+				matchedFileList = fileSearcher.searchFiles();
+
+				displaySearchResult();
+			}
+		});
 	}
 
 	public Date setDate(int year, int month, int day, Boolean isEndDate){
@@ -104,16 +117,19 @@ public class MainActivity extends Activity {
 		btn_search = (Button) findViewById(R.id.activity_main_btn_search);
 //		btn_clear = (Button) findViewById(R.id.activity_main_btn_clear);
 		btn_searchDate = (Button) findViewById(R.id.activity_main_btn_searchDate);
+		btn_searchSize = (Button) findViewById(R.id.activity_main_btn_searchSize);
 		et_fileName = (EditText) findViewById(R.id.activity_main_et_fileName);
 		ll = (LinearLayout) findViewById(R.id.ll);
-		//start date
+		//start & end date
 		et_startYear = (EditText) findViewById(R.id.activity_main_et_startYear);
 		et_startMonth = (EditText) findViewById(R.id.activity_main_et_startMonth);
 		et_startDay = (EditText) findViewById(R.id.activity_main_et_startDay);
-		//end date
 		et_endYear = (EditText) findViewById(R.id.activity_main_et_endYear);
 		et_endMonth = (EditText) findViewById(R.id.activity_main_et_endMonth);
 		et_endDay = (EditText) findViewById(R.id.activity_main_et_endDay);
+		//size
+		et_minSize = (EditText) findViewById(R.id.activity_main_et_minSize);
+		et_maxSize = (EditText) findViewById(R.id.activity_main_et_maxSize);
 	}
 
 }
