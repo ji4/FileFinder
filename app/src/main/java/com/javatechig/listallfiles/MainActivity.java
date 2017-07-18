@@ -82,6 +82,29 @@ public class MainActivity extends Activity {
 				displaySearchResult();
 			}
 		});
+
+		btn_searchJpg.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				//search
+				FileSearcher fileSearcher = new FileSearcher("jpg");
+				matchedFileList = fileSearcher.searchFiles();
+
+				displaySearchResult();
+			}
+		});
+
+		btn_searchPng.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				//search
+				FileSearcher fileSearcher = new FileSearcher("png");
+				matchedFileList = fileSearcher.searchFiles();
+
+				displaySearchResult();
+			}
+		});
+
 	}
 
 	public Date setDate(int year, int month, int day, Boolean isEndDate){
@@ -118,6 +141,8 @@ public class MainActivity extends Activity {
 //		btn_clear = (Button) findViewById(R.id.activity_main_btn_clear);
 		btn_searchDate = (Button) findViewById(R.id.activity_main_btn_searchDate);
 		btn_searchSize = (Button) findViewById(R.id.activity_main_btn_searchSize);
+		btn_searchJpg = (Button) findViewById(R.id.activity_main_btn_searchJpg);
+		btn_searchPng = (Button) findViewById(R.id.activity_main_btn_searchPng);
 		et_fileName = (EditText) findViewById(R.id.activity_main_et_fileName);
 		ll = (LinearLayout) findViewById(R.id.ll);
 		//start & end date

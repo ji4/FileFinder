@@ -9,14 +9,14 @@ import java.util.Date;
  */
 
 public class FileSearcher {
-    private File root = new File("/storage/emulated/0/Download");;
+    private File dir = new File("/storage/emulated/0/Download");
+
     private ArrayList<File> directoryList = new ArrayList<File>();
     private ArrayList<File> matchedFileList = new ArrayList<File>();
 
     //getting SDcard root path
 //        root = new File(Environment.getExternalStorageDirectory()
 //                .getAbsolutePath());
-    private File dir = new File("/storage/emulated/0/Download");
 
     private String strFileName;
     private Date startDate, endDate;
@@ -34,7 +34,11 @@ public class FileSearcher {
     }
     public FileSearcher(String strFileName) {
         this.strFileName = strFileName;
-        searchType = SEARCH_FILE_NAME;
+
+        if(strFileName.equals("jpg") || strFileName.equals("png"))
+            searchType = SEARCH_FILE_TYPE;
+        else
+            searchType = SEARCH_FILE_NAME;
     }
     public FileSearcher(Date startDate, Date endDate){
         this.startDate = startDate;
@@ -59,9 +63,12 @@ public class FileSearcher {
     public long getMaxSize() {
         return maxSize;
     }
+    public String getFileName() {
+        return strFileName;
+    }
 
     public ArrayList<File> searchFiles(){
-        directoryList.add(root);
+        directoryList.add(dir);
 
         int count = 0;
         while(count < directoryList.size()) {
@@ -71,7 +78,7 @@ public class FileSearcher {
         return matchedFileList;
     }
 
-    private ArrayList<File> getFile(File dir) {
+    private void getFile(File dir) {
         File listFile[] = dir.listFiles();
 
         if (listFile != null && listFile.length > 0) {
@@ -96,6 +103,10 @@ public class FileSearcher {
                         if(fileSizeInBytes >= getMinSize() && fileSizeInBytes <= getMaxSize()) {
                             matchedFileList.add(listFile[i]);
                         }
+                        break;
+                    case SEARCH_FILE_TYPE:
+                        if(listFile[i].getName().endsWith("."+getFileName()))
+                            matchedFileList.add(listFile[i]);
                         break;
                 }
             }
