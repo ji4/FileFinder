@@ -9,6 +9,7 @@ import com.example.listallfiles.R;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -71,7 +72,6 @@ public class MainActivity extends Activity {
 	}
 
 	public Date setDate(int year, int month, int day, Boolean isEndDate){
-		Date date = new Date();
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.YEAR, year);
 		calendar.set(Calendar.MONTH, month - 1);
@@ -80,7 +80,7 @@ public class MainActivity extends Activity {
 		calendar.set(Calendar.HOUR, 0);
 		calendar.set(Calendar.MINUTE, 0);// for 0 min
 		calendar.set(Calendar.SECOND, 0);// for 0 sec
-		System.out.println("calendar.getTime(): "+calendar.getTime());// print 'Mon Mar 28 06:00:00 ALMT 2016'
+		Date date = new Date(calendar.getTimeInMillis());
 
 		return date;
 	}

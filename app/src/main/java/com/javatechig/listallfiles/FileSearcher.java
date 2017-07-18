@@ -53,6 +53,14 @@ public class FileSearcher {
         return matchedFileList;
     }
 
+    public Date getStartDate(){
+        return startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
     private ArrayList<File> getFile(File dir) {
         File listFile[] = dir.listFiles();
 
@@ -69,7 +77,9 @@ public class FileSearcher {
                             matchedFileList.add(listFile[i]);
                         break;
                     case SEARCH_CREATION_DATE:
-                        this.startDate
+                        Date lastModDate = new Date(listFile[i].lastModified());
+                        if(lastModDate.after(getStartDate()) && lastModDate.before(getEndDate()))
+                            matchedFileList.add(listFile[i]);
                         break;
                 }
             }
