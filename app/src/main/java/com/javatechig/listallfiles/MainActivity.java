@@ -38,7 +38,12 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View view) {
 				String strFileName = et_fileName.getText().toString();
-				searchFiles();
+
+				//search
+				FileSearcher fileSearcher = new FileSearcher();
+				matchedFileList = fileSearcher.searchFiles();
+
+				displaySearchResult();
 			}
 		});
 
@@ -55,26 +60,15 @@ public class MainActivity extends Activity {
 
 				Date startDate = setDate(startYear, startMonth, startDay, false);
 				Date endDate = setDate(endYear, endMonth, endDay, true);
+
+				//search
+				FileSearcher fileSearcher = new FileSearcher(startDate, endDate);
+				matchedFileList = fileSearcher.searchFiles();
+
+				displaySearchResult();
 			}
 		});
 	}
-
-	public void searchFiles(){
-		FileSearcher fileSearcher = new FileSearcher();
-		matchedFileList = fileSearcher.searchFiles();
-
-
-        for (int i = 0; i < matchedFileList.size(); i++) {
-            TextView textView = new TextView(this);
-            textView.setText(matchedFileList.get(i).getName());
-            textView.setPadding(5, 5, 5, 5);
-
-            System.out.println(matchedFileList.get(i).getName());
-
-            if (matchedFileList.get(i).isFile())
-                resultView.addView(textView);
-        }
-    }
 
 	public Date setDate(int year, int month, int day, Boolean isEndDate){
 		Date date = new Date();
@@ -89,6 +83,19 @@ public class MainActivity extends Activity {
 		System.out.println("calendar.getTime(): "+calendar.getTime());// print 'Mon Mar 28 06:00:00 ALMT 2016'
 
 		return date;
+	}
+
+	public void displaySearchResult(){
+		for (int i = 0; i < matchedFileList.size(); i++) {
+			TextView textView = new TextView(this);
+			textView.setText(matchedFileList.get(i).getName());
+			textView.setPadding(5, 5, 5, 5);
+
+			System.out.println(matchedFileList.get(i).getName());
+
+			if (matchedFileList.get(i).isFile())
+				resultView.addView(textView);
+		}
 	}
 
 	public void findAllViews(){

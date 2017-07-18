@@ -60,16 +60,17 @@ public class FileSearcher {
             for (int i = 0; i < listFile.length; i++) {
                 if (listFile[i].isDirectory()) //directory
                     directoryList.add(listFile[i]);
-                else {  //file
-                    switch (searchType){
-                        case SEARCH_ALL_FILES:
+                else switch (searchType) { //file
+                    case SEARCH_ALL_FILES:
+                        matchedFileList.add(listFile[i]);
+                        break;
+                    case SEARCH_FILE_NAME:
+                        if (listFile[i].getName().equals(strFileName)) //File Name Inputted
                             matchedFileList.add(listFile[i]);
-                            break;
-                        case SEARCH_FILE_NAME:
-                            if(listFile[i].getName().equals(strFileName)) //File Name Inputted
-                                matchedFileList.add(listFile[i]);
-                            break;
-                    }
+                        break;
+                    case SEARCH_CREATION_DATE:
+                        this.startDate
+                        break;
                 }
             }
         }
