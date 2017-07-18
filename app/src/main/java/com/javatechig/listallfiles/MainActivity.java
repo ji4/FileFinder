@@ -18,9 +18,7 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
-    private File root;
-    private ArrayList<File> foundFileList = new ArrayList<File>();
-    private ArrayList<File> directoryList = new ArrayList<File>();
+    private ArrayList<File> matchedFileList = new ArrayList<File>();
 	private LinearLayout resultView;
 	Button btn_search, btn_clear;
 	Button btn_searchDate;
@@ -40,7 +38,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View view) {
 				String strFileName = et_fileName.getText().toString();
-				searchFiles(strFileName);
+				searchFiles();
 			}
 		});
 
@@ -61,50 +59,22 @@ public class MainActivity extends Activity {
 		});
 	}
 
-	public void searchFiles(String strFileName){
+	public void searchFiles(){
+		FileSearcher fileSearcher = new FileSearcher();
+		matchedFileList = fileSearcher.searchFiles();
 
-        root = new File("/storage/emulated/0/Download");
-		directoryList.add(root);
 
-		int count = 0;
-		while(count < directoryList.size()) {
-			getFile(directoryList.get(count), strFileName);
-			count++;
-		}
-
-        for (int i = 0; i < foundFileList.size(); i++) {
+        for (int i = 0; i < matchedFileList.size(); i++) {
             TextView textView = new TextView(this);
-            textView.setText(foundFileList.get(i).getName());
+            textView.setText(matchedFileList.get(i).getName());
             textView.setPadding(5, 5, 5, 5);
 
-            System.out.println(foundFileList.get(i).getName());
+            System.out.println(matchedFileList.get(i).getName());
 
-            if (foundFileList.get(i).isFile())
+            if (matchedFileList.get(i).isFile())
                 resultView.addView(textView);
         }
     }
-
-	public ArrayList<File> getFile(File dir, String strFileName) {
-		File listFile[] = dir.listFiles();
-
-		if (listFile != null && listFile.length > 0) {
-			for (int i = 0; i < listFile.length; i++) {
-				if (listFile[i].isDirectory()) //directory
-					directoryList.add(listFile[i]);
-				else {  //file
-					if(strFileName.length() > 0) { //File Name Inputted
-						if(listFile[i].getName().equals(strFileName)) {
-							foundFileList.add(listFile[i]);
-						}
-					}
-					else { //All files
-						foundFileList.add(listFile[i]);
-					}
-				}
-			}
-		}
-		return foundFileList;
-	}
 
 	public Date setDate(int year, int month, int day, Boolean isEndDate){
 		Date date = new Date();
