@@ -37,8 +37,10 @@ public class FileSearcher {
 
         if(strFileName.equals("jpg") || strFileName.equals("png"))
             searchType = SEARCH_FILE_TYPE;
-        else
+        else if(!strFileName.equals(""))  //input isn't empty
             searchType = SEARCH_FILE_NAME;
+        else searchType = SEARCH_ALL_FILES;
+
     }
     public FileSearcher(Date startDate, Date endDate){
         this.startDate = startDate;
@@ -90,7 +92,7 @@ public class FileSearcher {
                         matchedFileList.add(listFile[i]);
                         break;
                     case SEARCH_FILE_NAME:
-                        if (listFile[i].getName().equals(strFileName)) //File Name Inputted
+                        if (listFile[i].getName().equals(getFileName()))
                             matchedFileList.add(listFile[i]);
                         break;
                     case SEARCH_CREATION_DATE:
