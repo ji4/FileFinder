@@ -1,25 +1,31 @@
 package com.javatechig.listallfiles;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewStub;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.listallfiles.R;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
-import com.example.listallfiles.R;
-
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
-
 public class MainActivity extends Activity {
-
     private ArrayList<File> matchedFileList = new ArrayList<File>();
 	private LinearLayout resultView;
 	Button btn_search, btn_searchDate, btn_searchSize, btn_searchJpg, btn_searchPng, btn_searchDupFile ,btn_clear;
@@ -29,12 +35,27 @@ public class MainActivity extends Activity {
 	EditText et_startYear, et_startMonth, et_startDay, et_endYear, et_endMonth, et_endDay;
 	EditText et_minSize, et_maxSize;
 
+	//View
+	private ViewStub stubGrid;
+	private ViewStub stubList;
+	private ListView listView;
+	private GridView gridView;
+	private ListViewAdapter listViewAdapter;
+	private GridViewAdapter gridViewAdapter;
+	private List<Product> productList;
+	private int currentViewMode = 0;
+
+	static final int VIEW_MODE_LISTVIEW = 0;
+	static final int VIEW_MODE_GRIDVIEW = 1;
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
 		findAllViews();
+		setFileViews();
 
 		btn_search.setOnClickListener(new Button.OnClickListener(){
 			@Override
@@ -145,9 +166,36 @@ public class MainActivity extends Activity {
 		}
 	}
 
+	public void setFileViews(){
+		stubList = (ViewStub) findViewById(R.id.stub_list);
+		stubGrid = (ViewStub) findViewById(R.id.stub_grid);
+
+		//Inflate ViewStub before get view
+
+		stubList.inflate();
+		stubGrid.inflate();
+
+		listView = (ListView) findViewById(R.id.mylistview);
+		gridView = (GridView) findViewById(R.id.mygridview);
+
+		//get list of product
+		getProductList();
+
+		//Get current view mode in share reference
+		SharedPreferences sharedPreferences = getSharedPreferences("ViewMode", MODE_PRIVATE);
+		currentViewMode = sharedPreferences.getInt("currentViewMode", VIEW_MODE_LISTVIEW);//Default is view listview
+		//Register item lick
+		listView.setOnItemClickListener(onItemClick);
+		gridView.setOnItemClickListener(onItemClick);
+
+		switchView();
+
+
+	}
+
 	public void findAllViews(){
-		resultView = (LinearLayout) findViewById(R.id.view);
-		scrollView = (ScrollView) findViewById(R.id.scrollView);
+//		resultView = (LinearLayout) findViewById(R.id.view);
+//		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		btn_search = (Button) findViewById(R.id.activity_main_btn_search);
 //		btn_clear = (Button) findViewById(R.id.activity_main_btn_clear);
 		btn_searchDate = (Button) findViewById(R.id.activity_main_btn_searchDate);
@@ -168,5 +216,87 @@ public class MainActivity extends Activity {
 		et_minSize = (EditText) findViewById(R.id.activity_main_et_minSize);
 		et_maxSize = (EditText) findViewById(R.id.activity_main_et_maxSize);
 	}
+
+	//---------Following are file view functions-------------------
+
+	private void switchView() {
+
+		if(VIEW_MODE_LISTVIEW == currentViewMode) {
+			//Display listview
+			stubList.setVisibility(View.VISIBLE);
+			//Hide gridview
+			stubGrid.setVisibility(View.GONE);
+		} else {
+			//Hide listview
+			stubList.setVisibility(View.GONE);
+			//Display gridview
+			stubGrid.setVisibility(View.VISIBLE);
+		}
+		setAdapters();
+	}
+
+	private void setAdapters() {
+		if(VIEW_MODE_LISTVIEW == currentViewMode) {
+			listViewAdapter = new ListViewAdapter(this, R.layout.list_item, productList);
+			listView.setAdapter(listViewAdapter);
+		} else {
+			gridViewAdapter = new GridViewAdapter(this, R.layout.grid_item, productList);
+			gridView.setAdapter(gridViewAdapter);
+		}
+	}
+
+	public List<Product> getProductList() {
+		//pseudo code to get product, replace your code to get real product here
+		productList = new ArrayList<>();
+		productList.add(new Product(R.drawable.icon_android, "Title 1", "This is description 1"));
+		productList.add(new Product(R.drawable.icon_android, "Title 2", "This is description 2"));
+		productList.add(new Product(R.drawable.icon_android, "Title 3", "This is description 3"));
+		productList.add(new Product(R.drawable.icon_android, "Title 4", "This is description 4"));
+		productList.add(new Product(R.drawable.icon_android, "Title 5", "This is description 5"));
+		productList.add(new Product(R.drawable.icon_android, "Title 6", "This is description 6"));
+		productList.add(new Product(R.drawable.icon_android, "Title 7", "This is description 7"));
+		productList.add(new Product(R.drawable.icon_android, "Title 8", "This is description 8"));
+		productList.add(new Product(R.drawable.icon_android, "Title 9", "This is description 9"));
+		productList.add(new Product(R.drawable.icon_android, "Title 10", "This is description 10"));
+
+		return productList;
+	}
+
+	AdapterView.OnItemClickListener onItemClick = new AdapterView.OnItemClickListener() {
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			//Do any thing when user click to item
+			Toast.makeText(getApplicationContext(), productList.get(position).getTitle() + " - " + productList.get(position).getDescription(), Toast.LENGTH_SHORT).show();
+		}
+	};
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.item_menu_1:
+				if(VIEW_MODE_LISTVIEW == currentViewMode) {
+					currentViewMode = VIEW_MODE_GRIDVIEW;
+				} else {
+					currentViewMode = VIEW_MODE_LISTVIEW;
+				}
+				//Switch view
+				switchView();
+				//Save view mode in share reference
+				SharedPreferences sharedPreferences = getSharedPreferences("ViewMode", MODE_PRIVATE);
+				SharedPreferences.Editor editor = sharedPreferences.edit();
+				editor.putInt("currentViewMode", currentViewMode);
+				editor.commit();
+
+				break;
+		}
+		return true;
+	}
+
 
 }

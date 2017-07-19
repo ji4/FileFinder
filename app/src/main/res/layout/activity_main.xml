@@ -169,19 +169,28 @@
 
     </LinearLayout>
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/scrollView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:id="@+id/activity_main2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/view"
+        <ViewStub
+            android:id="@+id/stub_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="8dp" >
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:inflatedId="@+id/showlayout"
+            android:layout="@layout/my_listview"/>
 
-    </ScrollView>
+        <ViewStub
+            android:id="@+id/stub_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:inflatedId="@+id/showlayout"
+            android:layout="@layout/my_gridview"/>
+    </LinearLayout>
+
 </LinearLayout>

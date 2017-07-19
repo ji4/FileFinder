@@ -1,8 +1,8 @@
-package com.example.listallfiles;
+package com.javatechig.listallfiles;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,14 +12,12 @@ import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.javatechig.listallfiles.GridViewAdapter;
-import com.javatechig.listallfiles.ListViewAdapter;
-import com.javatechig.listallfiles.Product;
+import com.example.listallfiles.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Main2Activity extends ActionBarActivity {
+public class Main2Activity extends Activity {
     private ViewStub stubGrid;
     private ViewStub stubList;
     private ListView listView;
@@ -37,29 +35,6 @@ public class Main2Activity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-
-        stubList = (ViewStub) findViewById(R.id.stub_list);
-        stubGrid = (ViewStub) findViewById(R.id.stub_grid);
-
-        //Inflate ViewStub before get view
-
-        stubList.inflate();
-        stubGrid.inflate();
-
-        listView = (ListView) findViewById(R.id.mylistview);
-        gridView = (GridView) findViewById(R.id.mygridview);
-
-        //get list of product
-        getProductList();
-
-        //Get current view mode in share reference
-        SharedPreferences sharedPreferences = getSharedPreferences("ViewMode", MODE_PRIVATE);
-        currentViewMode = sharedPreferences.getInt("currentViewMode", VIEW_MODE_LISTVIEW);//Default is view listview
-        //Register item lick
-        listView.setOnItemClickListener(onItemClick);
-        gridView.setOnItemClickListener(onItemClick);
-
-        switchView();
 
 
     }
