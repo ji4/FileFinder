@@ -3,6 +3,7 @@ package com.javatechig.listallfiles;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Created by chiaying.wu on 2017/7/17.
@@ -13,6 +14,7 @@ public class FileSearcher {
 
     private ArrayList<File> directoryList = new ArrayList<File>();
     private ArrayList<File> matchedFileList = new ArrayList<File>();
+    private ArrayList<File> dupFileList = new ArrayList<File>();
 
     //getting SDcard root path
 //        root = new File(Environment.getExternalStorageDirectory()
@@ -27,10 +29,11 @@ public class FileSearcher {
     private static final int SEARCH_FILE_TYPE = 2;
     private static final int SEARCH_CREATION_DATE = 3;
     private static final int SEARCH_SIZE = 4;
+    private static final int SEARCH_DUPLICATED_FILE = 5;
     private int searchType = SEARCH_ALL_FILES;
 
     public FileSearcher(){
-        searchType = SEARCH_ALL_FILES;
+        searchType = SEARCH_DUPLICATED_FILE;
     }
     public FileSearcher(String strFileName) {
         this.strFileName = strFileName;
@@ -77,6 +80,8 @@ public class FileSearcher {
             getFile(directoryList.get(count));
             count++;
         }
+        if(searchType == SEARCH_DUPLICATED_FILE)
+            return dupFileList;
         return matchedFileList;
     }
 
@@ -102,17 +107,58 @@ public class FileSearcher {
                         break;
                     case SEARCH_SIZE:
                         long fileSizeInBytes = listFile[i].length();
-                        if(fileSizeInBytes >= getMinSize() && fileSizeInBytes <= getMaxSize()) {
+                        if(fileSizeInBytes >= getMinSize() && fileSizeInBytes <= getMaxSize())
                             matchedFileList.add(listFile[i]);
-                        }
                         break;
                     case SEARCH_FILE_TYPE:
                         if(listFile[i].getName().endsWith("."+getFileName()))
                             matchedFileList.add(listFile[i]);
                         break;
+                    case SEARCH_DUPLICATED_FILE:
+                        matchedFileList.add(listFile[i]);
+                        break;
+
+                }
+            }
+            if(searchType == SEARCH_DUPLICATED_FILE) {
+                try {
+                    findDuplicatedFiles(matchedFileList);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
-        return matchedFileList;
+    }
+
+    private void findDuplicatedFiles(ArrayList<File> filepaths) {
+        HashMap<String, String> hashmap = new HashMap<String, String>();
+        for(File filepath : filepaths)
+        {
+            String strFilePath = String.valueOf(filepath);
+            String md5 = null;
+            try {
+                md5 = MD5CheckSum.getMD5Checksum(strFilePath);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if(hashmap.containsKey(md5))
+            {
+                String original = hashmap.get(md5);
+                String duplicate = strFilePath;
+
+                // found a match between original and duplicate
+                    File fileOriPath = new File(original);
+                    if(!dupFileList.contains(fileOriPath))
+                        dupFileList.add(fileOriPath);
+                    else { //filepath already exists
+                        File fileDupPath = new File(duplicate);
+                        dupFileList.add(fileDupPath);
+                    }
+            }
+            else
+            {
+                hashmap.put(md5, strFilePath);
+            }
+        }
     }
 }

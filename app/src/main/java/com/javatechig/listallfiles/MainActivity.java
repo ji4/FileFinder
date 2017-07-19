@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 import com.example.listallfiles.R;
 
@@ -20,7 +22,7 @@ public class MainActivity extends Activity {
 
     private ArrayList<File> matchedFileList = new ArrayList<File>();
 	private LinearLayout resultView;
-	Button btn_search, btn_searchDate, btn_searchSize, btn_clear;
+	Button btn_search, btn_searchDate, btn_searchSize, btn_searchJpg, btn_searchPng, btn_searchDupFile ,btn_clear;
     EditText et_fileName;
 	ScrollView scrollView;
 	LinearLayout ll;
@@ -40,7 +42,7 @@ public class MainActivity extends Activity {
 				String strFileName = et_fileName.getText().toString();
 
 				//search
-				FileSearcher fileSearcher = new FileSearcher();
+				FileSearcher fileSearcher = new FileSearcher(strFileName);
 				matchedFileList = fileSearcher.searchFiles();
 
 				displaySearchResult();
@@ -105,6 +107,15 @@ public class MainActivity extends Activity {
 			}
 		});
 
+		btn_searchDupFile.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				FileSearcher fileSearcher = new FileSearcher();
+				matchedFileList = fileSearcher.searchFiles();
+
+				displaySearchResult();
+			}
+		});
 	}
 
 	public Date setDate(int year, int month, int day, Boolean isEndDate){
@@ -143,6 +154,7 @@ public class MainActivity extends Activity {
 		btn_searchSize = (Button) findViewById(R.id.activity_main_btn_searchSize);
 		btn_searchJpg = (Button) findViewById(R.id.activity_main_btn_searchJpg);
 		btn_searchPng = (Button) findViewById(R.id.activity_main_btn_searchPng);
+		btn_searchDupFile = (Button) findViewById(R.id.activity_main_btn_searchDupFile);
 		et_fileName = (EditText) findViewById(R.id.activity_main_et_fileName);
 		ll = (LinearLayout) findViewById(R.id.ll);
 		//start & end date
