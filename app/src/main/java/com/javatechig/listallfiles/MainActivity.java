@@ -13,8 +13,6 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.listallfiles.R;
@@ -27,15 +25,13 @@ import java.util.List;
 
 public class MainActivity extends Activity {
     private ArrayList<File> matchedFileList = new ArrayList<File>();
-	private LinearLayout resultView;
 	Button btn_search, btn_searchDate, btn_searchSize, btn_searchJpg, btn_searchPng, btn_searchDupFile ,btn_clear;
     EditText et_fileName;
-	ScrollView scrollView;
 	LinearLayout ll;
 	EditText et_startYear, et_startMonth, et_startDay, et_endYear, et_endMonth, et_endDay;
 	EditText et_minSize, et_maxSize;
 
-	//View
+	//file view
 	private ViewStub stubGrid;
 	private ViewStub stubList;
 	private ListView listView;
@@ -66,7 +62,7 @@ public class MainActivity extends Activity {
 				FileSearcher fileSearcher = new FileSearcher(strFileName);
 				matchedFileList = fileSearcher.searchFiles();
 
-				displaySearchResult();
+				getProductList();
 			}
 		});
 
@@ -88,7 +84,8 @@ public class MainActivity extends Activity {
 				FileSearcher fileSearcher = new FileSearcher(startDate, endDate);
 				matchedFileList = fileSearcher.searchFiles();
 
-				displaySearchResult();
+				getProductList();
+
 			}
 		});
 
@@ -102,7 +99,8 @@ public class MainActivity extends Activity {
 				FileSearcher fileSearcher = new FileSearcher(min_size, max_size);
 				matchedFileList = fileSearcher.searchFiles();
 
-				displaySearchResult();
+				getProductList();
+
 			}
 		});
 
@@ -113,7 +111,8 @@ public class MainActivity extends Activity {
 				FileSearcher fileSearcher = new FileSearcher("jpg");
 				matchedFileList = fileSearcher.searchFiles();
 
-				displaySearchResult();
+				getProductList();
+
 			}
 		});
 
@@ -124,7 +123,8 @@ public class MainActivity extends Activity {
 				FileSearcher fileSearcher = new FileSearcher("png");
 				matchedFileList = fileSearcher.searchFiles();
 
-				displaySearchResult();
+				getProductList();
+
 			}
 		});
 
@@ -134,7 +134,8 @@ public class MainActivity extends Activity {
 				FileSearcher fileSearcher = new FileSearcher();
 				matchedFileList = fileSearcher.searchFiles();
 
-				displaySearchResult();
+				getProductList();
+
 			}
 		});
 	}
@@ -153,19 +154,6 @@ public class MainActivity extends Activity {
 		return date;
 	}
 
-	public void displaySearchResult(){
-		for (int i = 0; i < matchedFileList.size(); i++) {
-			TextView textView = new TextView(this);
-			textView.setText(matchedFileList.get(i).getName());
-			textView.setPadding(5, 5, 5, 5);
-
-			System.out.println(matchedFileList.get(i).getName());
-
-			if (matchedFileList.get(i).isFile())
-				resultView.addView(textView);
-		}
-	}
-
 	public void setFileViews(){
 		stubList = (ViewStub) findViewById(R.id.stub_list);
 		stubGrid = (ViewStub) findViewById(R.id.stub_grid);
@@ -177,6 +165,14 @@ public class MainActivity extends Activity {
 
 		listView = (ListView) findViewById(R.id.mylistview);
 		gridView = (GridView) findViewById(R.id.mygridview);
+
+		/////////////////////my own//////////////////////
+		String strFileName = et_fileName.getText().toString();
+
+		//search
+		FileSearcher fileSearcher = new FileSearcher(strFileName);
+		matchedFileList = fileSearcher.searchFiles();
+		/////////////////////my own//////////////////////
 
 		//get list of product
 		getProductList();
@@ -194,8 +190,6 @@ public class MainActivity extends Activity {
 	}
 
 	public void findAllViews(){
-//		resultView = (LinearLayout) findViewById(R.id.view);
-//		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		btn_search = (Button) findViewById(R.id.activity_main_btn_search);
 //		btn_clear = (Button) findViewById(R.id.activity_main_btn_clear);
 		btn_searchDate = (Button) findViewById(R.id.activity_main_btn_searchDate);
@@ -248,17 +242,11 @@ public class MainActivity extends Activity {
 	public List<Product> getProductList() {
 		//pseudo code to get product, replace your code to get real product here
 		productList = new ArrayList<>();
-		productList.add(new Product(R.drawable.icon_android, "Title 1", "This is description 1"));
-		productList.add(new Product(R.drawable.icon_android, "Title 2", "This is description 2"));
-		productList.add(new Product(R.drawable.icon_android, "Title 3", "This is description 3"));
-		productList.add(new Product(R.drawable.icon_android, "Title 4", "This is description 4"));
-		productList.add(new Product(R.drawable.icon_android, "Title 5", "This is description 5"));
-		productList.add(new Product(R.drawable.icon_android, "Title 6", "This is description 6"));
-		productList.add(new Product(R.drawable.icon_android, "Title 7", "This is description 7"));
-		productList.add(new Product(R.drawable.icon_android, "Title 8", "This is description 8"));
-		productList.add(new Product(R.drawable.icon_android, "Title 9", "This is description 9"));
-		productList.add(new Product(R.drawable.icon_android, "Title 10", "This is description 10"));
+        for (int i = 0; i < matchedFileList.size(); i++) {
+			productList.add(new Product(R.drawable.icon_android, matchedFileList.get(i).getName(), String.valueOf(matchedFileList.get(i).lastModified())));
+		}
 
+//		productList.add(new Product(R.drawable.icon_android, "Title 1", "This is description 1"));
 		return productList;
 	}
 
