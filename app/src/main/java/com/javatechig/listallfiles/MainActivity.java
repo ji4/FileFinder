@@ -27,6 +27,7 @@ public class MainActivity extends Activity {
 	private Button btn_search, btn_searchDate, btn_searchSize, btn_searchJpg, btn_searchPng, btn_searchDupFile;
     private EditText et_fileName;
 	private LinearLayout ll;
+	private EditText et_startDate, et_endDate;
 	private EditText et_startYear, et_startMonth, et_startDay, et_endYear, et_endMonth, et_endDay;
 	private EditText et_minSize, et_maxSize;
 
@@ -67,16 +68,14 @@ public class MainActivity extends Activity {
 		btn_searchDate.setOnClickListener(new Button.OnClickListener(){
 			@Override
 			public void onClick(View view) {
-				int startYear = Integer.parseInt(et_startYear.getText().toString().trim());
-				int startMonth = Integer.parseInt(et_startMonth.getText().toString().trim());
-				int startDay = Integer.parseInt(et_startDay.getText().toString().trim());
+				String strStartDate = et_startDate.getText().toString().trim();
+				String strEndDate = et_endDate.getText().toString().trim();
 
-				int endYear = Integer.parseInt(et_endYear.getText().toString().trim());
-				int endMonth = Integer.parseInt(et_endMonth.getText().toString().trim());
-				int endDay = Integer.parseInt(et_endDay.getText().toString().trim());
+				int iArrStartDate[] = parseDate(strStartDate);
+				int iArrEndDate[] = parseDate(strEndDate);
 
-				Date startDate = setDate(startYear, startMonth, startDay, false);
-				Date endDate = setDate(endYear, endMonth, endDay, true);
+				Date startDate = setDate(iArrStartDate[0], iArrStartDate[1], iArrStartDate[2], false); //param: year, month, day
+				Date endDate = setDate(iArrEndDate[0], iArrEndDate[1], iArrEndDate[2], true);
 
 				//search
 				FileSearcher fileSearcher = new FileSearcher(startDate, endDate);
@@ -86,19 +85,19 @@ public class MainActivity extends Activity {
 			}
 		});
 
-		btn_searchSize.setOnClickListener(new Button.OnClickListener(){
-			@Override
-			public void onClick(View view) {
-				long min_size = Long.parseLong(et_minSize.getText().toString().trim()) * 1024 * 1024; //Convert megabytes to bytes
-				long max_size = Long.parseLong(et_maxSize.getText().toString().trim()) * 1024 * 1024; //Convert megabytes to bytes
-
-				//search
-				FileSearcher fileSearcher = new FileSearcher(min_size, max_size);
-				matchedFileList = fileSearcher.searchFiles();
-
-				setAdapters();
-			}
-		});
+//		btn_searchSize.setOnClickListener(new Button.OnClickListener(){
+//			@Override
+//			public void onClick(View view) {
+//				long min_size = Long.parseLong(et_minSize.getText().toString().trim()) * 1024 * 1024; //Convert megabytes to bytes
+//				long max_size = Long.parseLong(et_maxSize.getText().toString().trim()) * 1024 * 1024; //Convert megabytes to bytes
+//
+//				//search
+//				FileSearcher fileSearcher = new FileSearcher(min_size, max_size);
+//				matchedFileList = fileSearcher.searchFiles();
+//
+//				setAdapters();
+//			}
+//		});
 
 		btn_searchJpg.setOnClickListener(new Button.OnClickListener() {
 			@Override
@@ -131,6 +130,15 @@ public class MainActivity extends Activity {
 				setAdapters();
 			}
 		});
+	}
+
+	public int[] parseDate(String strDate){
+		int[] iArrDate = new int[3];
+		String[] strArrDate = strDate.split("/");
+		for(int i=0; i<3; i++){
+			iArrDate[i] = Integer.parseInt(strArrDate[i]);
+		}
+		return iArrDate;
 	}
 
 	public Date setDate(int year, int month, int day, Boolean isEndDate){
@@ -185,19 +193,15 @@ public class MainActivity extends Activity {
 	public void findViews(){
 		btn_search = (Button) findViewById(R.id.activity_main_btn_search);
 		btn_searchDate = (Button) findViewById(R.id.activity_main_btn_searchDate);
-		btn_searchSize = (Button) findViewById(R.id.activity_main_btn_searchSize);
+//		btn_searchSize = (Button) findViewById(R.id.activity_main_btn_searchSize);
 		btn_searchJpg = (Button) findViewById(R.id.activity_main_btn_searchJpg);
 		btn_searchPng = (Button) findViewById(R.id.activity_main_btn_searchPng);
 		btn_searchDupFile = (Button) findViewById(R.id.activity_main_btn_searchDupFile);
 		et_fileName = (EditText) findViewById(R.id.activity_main_et_fileName);
 		ll = (LinearLayout) findViewById(R.id.ll);
 		//start & end date
-		et_startYear = (EditText) findViewById(R.id.activity_main_et_startYear);
-		et_startMonth = (EditText) findViewById(R.id.activity_main_et_startMonth);
-		et_startDay = (EditText) findViewById(R.id.activity_main_et_startDay);
-		et_endYear = (EditText) findViewById(R.id.activity_main_et_endYear);
-		et_endMonth = (EditText) findViewById(R.id.activity_main_et_endMonth);
-		et_endDay = (EditText) findViewById(R.id.activity_main_et_endDay);
+		et_startDate = (EditText) findViewById(R.id.activity_main_et_startDate);
+		et_endDate = (EditText) findViewById(R.id.activity_main_et_endDate);
 		//size
 		et_minSize = (EditText) findViewById(R.id.activity_main_et_minSize);
 		et_maxSize = (EditText) findViewById(R.id.activity_main_et_maxSize);

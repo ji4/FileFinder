@@ -757,6 +757,8 @@ containing a value of this type.
         public static final int abc_textfield_searchview_right_holo_dark=0x7f020055;
         public static final int abc_textfield_searchview_right_holo_light=0x7f020056;
         public static final int ic_launcher=0x7f020057;
+        public static final int icon_android=0x7f020058;
+        public static final int icon_file=0x7f020059;
     }
     public static final class id {
         public static final int action_bar=0x7f0a001a;
@@ -772,23 +774,18 @@ containing a value of this type.
         public static final int action_mode_bar=0x7f0a002f;
         public static final int action_mode_bar_stub=0x7f0a002e;
         public static final int action_mode_close_button=0x7f0a0022;
-        public static final int action_settings=0x7f0a005d;
         public static final int activity_chooser_view_content=0x7f0a0023;
+        public static final int activity_main2=0x7f0a0051;
         public static final int activity_main_btn_search=0x7f0a0044;
-        public static final int activity_main_btn_searchDate=0x7f0a004b;
-        public static final int activity_main_btn_searchDupFile=0x7f0a0055;
-        public static final int activity_main_btn_searchJpg=0x7f0a0053;
-        public static final int activity_main_btn_searchPng=0x7f0a0054;
-        public static final int activity_main_btn_searchSize=0x7f0a0052;
-        public static final int activity_main_et_endDay=0x7f0a004a;
-        public static final int activity_main_et_endMonth=0x7f0a0049;
-        public static final int activity_main_et_endYear=0x7f0a0048;
+        public static final int activity_main_btn_searchDate=0x7f0a0047;
+        public static final int activity_main_btn_searchDupFile=0x7f0a0050;
+        public static final int activity_main_btn_searchJpg=0x7f0a004e;
+        public static final int activity_main_btn_searchPng=0x7f0a004f;
+        public static final int activity_main_et_endDate=0x7f0a0046;
         public static final int activity_main_et_fileName=0x7f0a0043;
-        public static final int activity_main_et_maxSize=0x7f0a0050;
-        public static final int activity_main_et_minSize=0x7f0a004d;
-        public static final int activity_main_et_startDay=0x7f0a0047;
-        public static final int activity_main_et_startMonth=0x7f0a0046;
-        public static final int activity_main_et_startYear=0x7f0a0045;
+        public static final int activity_main_et_maxSize=0x7f0a004c;
+        public static final int activity_main_et_minSize=0x7f0a0049;
+        public static final int activity_main_et_startDate=0x7f0a0045;
         public static final int always=0x7f0a0011;
         public static final int beginning=0x7f0a000d;
         public static final int checkbox=0x7f0a002b;
@@ -806,13 +803,15 @@ containing a value of this type.
         public static final int icon=0x7f0a0028;
         public static final int ifRoom=0x7f0a0013;
         public static final int image=0x7f0a0025;
-        public static final int item_info=0x7f0a005a;
+        public static final int imageView=0x7f0a0055;
+        public static final int item_menu_1=0x7f0a005b;
         public static final int left_icon=0x7f0a0031;
         public static final int listMode=0x7f0a0004;
         public static final int list_item=0x7f0a0027;
         public static final int ll=0x7f0a0042;
         public static final int middle=0x7f0a000f;
-        public static final int name=0x7f0a0058;
+        public static final int mygridview=0x7f0a0059;
+        public static final int mylistview=0x7f0a005a;
         public static final int never=0x7f0a0014;
         public static final int none=0x7f0a0010;
         public static final int normal=0x7f0a0005;
@@ -821,7 +820,6 @@ containing a value of this type.
         public static final int radio=0x7f0a002d;
         public static final int right_container=0x7f0a0032;
         public static final int right_icon=0x7f0a0033;
-        public static final int scrollView=0x7f0a0056;
         public static final int search_badge=0x7f0a0038;
         public static final int search_bar=0x7f0a0037;
         public static final int search_button=0x7f0a0039;
@@ -836,22 +834,24 @@ containing a value of this type.
         public static final int showCustom=0x7f0a0009;
         public static final int showHome=0x7f0a000a;
         public static final int showTitle=0x7f0a000b;
+        public static final int showlayout=0x7f0a0053;
         public static final int split_action_bar=0x7f0a001c;
+        public static final int stub_grid=0x7f0a0054;
+        public static final int stub_list=0x7f0a0052;
         public static final int submit_area=0x7f0a003f;
         public static final int tabMode=0x7f0a0006;
-        public static final int textView=0x7f0a004c;
-        public static final int textView2=0x7f0a004e;
-        public static final int textView3=0x7f0a004f;
-        public static final int textView4=0x7f0a0051;
+        public static final int textView=0x7f0a0048;
+        public static final int textView2=0x7f0a004a;
+        public static final int textView3=0x7f0a004b;
+        public static final int textView4=0x7f0a004d;
         public static final int title=0x7f0a0029;
         public static final int title_container=0x7f0a0030;
         public static final int top_action_bar=0x7f0a001e;
-        public static final int type=0x7f0a0059;
+        public static final int txtCreationDate=0x7f0a0058;
+        public static final int txtName=0x7f0a0056;
+        public static final int txtSize=0x7f0a0057;
         public static final int up=0x7f0a001f;
         public static final int useLogo=0x7f0a000c;
-        public static final int version_heading=0x7f0a005b;
-        public static final int version_number=0x7f0a005c;
-        public static final int view=0x7f0a0057;
         public static final int withText=0x7f0a0015;
     }
     public static final class integer {
@@ -883,8 +883,12 @@ containing a value of this type.
         public static final int abc_search_dropdown_item_icons_2line=0x7f030016;
         public static final int abc_search_view=0x7f030017;
         public static final int activity_main=0x7f030018;
-        public static final int row_item=0x7f030019;
-        public static final int support_simple_spinner_dropdown_item=0x7f03001a;
+        public static final int activity_main2=0x7f030019;
+        public static final int grid_item=0x7f03001a;
+        public static final int list_item=0x7f03001b;
+        public static final int my_gridview=0x7f03001c;
+        public static final int my_listview=0x7f03001d;
+        public static final int support_simple_spinner_dropdown_item=0x7f03001e;
     }
     public static final class menu {
         public static final int main=0x7f0c0000;

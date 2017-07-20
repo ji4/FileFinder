@@ -24,12 +24,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1.0"
             android:text="Search" />
-        <!--<Button-->
-            <!--android:id="@+id/activity_main_btn_clear"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_weight="1.0"-->
-            <!--android:text="Clear" />-->
     </LinearLayout>
 
 
@@ -39,63 +33,28 @@
         android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/activity_main_et_startYear"
+            android:id="@+id/activity_main_et_startDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1.0"
             android:ems="10"
-            android:inputType="number" />
+            android:inputType="date" />
 
         <EditText
-            android:id="@+id/activity_main_et_startMonth"
+            android:id="@+id/activity_main_et_endDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1.0"
             android:ems="10"
-            android:inputType="number" />
-
-        <EditText
-            android:id="@+id/activity_main_et_startDay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-            android:ems="10"
-            android:inputType="number" />
-
-        <EditText
-            android:id="@+id/activity_main_et_endYear"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-            android:ems="10"
-            android:inputType="number" />
-
-        <EditText
-            android:id="@+id/activity_main_et_endMonth"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-            android:ems="10"
-            android:inputType="number" />
-
-        <EditText
-            android:id="@+id/activity_main_et_endDay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0"
-            android:ems="10"
-            android:inputType="number" />
-
+            android:inputType="date" />
 
     </LinearLayout>
-
 
     <Button
         android:id="@+id/activity_main_btn_searchDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Search Date" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -112,7 +71,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="number"
-            android:layout_weight="0.12" />
+            android:layout_weight="0.09" />
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
@@ -128,18 +87,13 @@
             android:layout_width="77dp"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="number" />
+            android:inputType="number"
+            android:layout_weight="0.05" />
         <TextView
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="MB" />
-        <Button
-            android:id="@+id/activity_main_btn_searchSize"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.3"
-            android:text="Search" />
 
     </LinearLayout>
 
