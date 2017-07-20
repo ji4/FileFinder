@@ -24,11 +24,11 @@ import java.util.Date;
 
 public class MainActivity extends Activity {
     private ArrayList<File> matchedFileList = new ArrayList<>();
-	Button btn_search, btn_searchDate, btn_searchSize, btn_searchJpg, btn_searchPng, btn_searchDupFile;
-    EditText et_fileName;
-	LinearLayout ll;
-	EditText et_startYear, et_startMonth, et_startDay, et_endYear, et_endMonth, et_endDay;
-	EditText et_minSize, et_maxSize;
+	private Button btn_search, btn_searchDate, btn_searchSize, btn_searchJpg, btn_searchPng, btn_searchDupFile;
+    private EditText et_fileName;
+	private LinearLayout ll;
+	private EditText et_startYear, et_startMonth, et_startDay, et_endYear, et_endMonth, et_endDay;
+	private EditText et_minSize, et_maxSize;
 
 	//file view
 	private ViewStub stubGrid;
