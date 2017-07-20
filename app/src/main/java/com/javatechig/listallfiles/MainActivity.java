@@ -229,7 +229,7 @@ public class MainActivity extends Activity {
 			listViewAdapter = new ListViewAdapter(this, R.layout.list_item, matchedFileList);
 			listView.setAdapter(listViewAdapter);
 		} else {
-			gridViewAdapter = new GridViewAdapter(this, R.layout.grid_item, productList);
+			gridViewAdapter = new GridViewAdapter(this, R.layout.grid_item, matchedFileList);
 			gridView.setAdapter(gridViewAdapter);
 		}
 	}
@@ -238,7 +238,7 @@ public class MainActivity extends Activity {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			//Do any thing when user click to item
-			Toast.makeText(getApplicationContext(), productList.get(position).getTitle() + " - " + productList.get(position).getDescription(), Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), matchedFileList.get(position).getName() + " - " + ListViewAdapter.convertTime(matchedFileList.get(position).lastModified()), Toast.LENGTH_SHORT).show();
 		}
 	};
 

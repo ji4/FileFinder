@@ -39,7 +39,7 @@ public class ListViewAdapter extends ArrayAdapter<File> {
         TextView txtSize = (TextView) v.findViewById(R.id.txtSize);
         TextView txtCreationDate = (TextView) v.findViewById(R.id.txtCreationDate);
 
-        img.setImageResource(R.drawable.icon_android);
+        img.setImageResource(R.drawable.icon_file);
         txtName.setText(matchedFile.getName());
         txtSize.setText(humanReadableByteCount(matchedFile.length(), true));
         txtCreationDate.setText(String.valueOf(convertTime(matchedFile.lastModified())));
@@ -55,7 +55,7 @@ public class ListViewAdapter extends ArrayAdapter<File> {
         return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 
-    public String convertTime(long time){
+    public static String convertTime(long time){
         Date date = new Date(time);
         Format format = new SimpleDateFormat("yyyy/MM/dd");
         return format.format(date);

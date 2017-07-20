@@ -10,14 +10,15 @@ import android.widget.TextView;
 
 import com.example.listallfiles.R;
 
-import java.util.List;
+import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by chiaying.wu on 2017/7/19.
  */
 
-public class GridViewAdapter extends ArrayAdapter<Product> {
-    public GridViewAdapter(Context context, int resource, List<Product> objects) {
+public class GridViewAdapter extends ArrayAdapter<File> {
+    public GridViewAdapter(Context context, int resource, ArrayList<File> objects) {
         super(context, resource, objects);
     }
 
@@ -30,14 +31,12 @@ public class GridViewAdapter extends ArrayAdapter<Product> {
             v = inflater.inflate(R.layout.list_item, null);
         }
 
-        Product product = getItem(position);
+        File matchedFile = getItem(position);
         ImageView img = (ImageView) v.findViewById(R.id.imageView);
-        TextView txtTitle = (TextView) v.findViewById(R.id.txtName);
-        TextView txtSize = (TextView) v.findViewById(R.id.txtSize);
+        TextView txtName = (TextView) v.findViewById(R.id.txtName);
 
-        img.setImageResource(product.getImageId());
-        txtTitle.setText(product.getTitle());
-        txtSize.setText(product.getDescription());
+        img.setImageResource(R.drawable.icon_file);
+        txtName.setText(matchedFile.getName());
 
         return v;
     }
