@@ -21,11 +21,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 public class MainActivity extends Activity {
-    private ArrayList<File> matchedFileList = new ArrayList<File>();
-	Button btn_search, btn_searchDate, btn_searchSize, btn_searchJpg, btn_searchPng, btn_searchDupFile ,btn_clear;
+    private ArrayList<File> matchedFileList = new ArrayList<>();
+	Button btn_search, btn_searchDate, btn_searchSize, btn_searchJpg, btn_searchPng, btn_searchDupFile;
     EditText et_fileName;
 	LinearLayout ll;
 	EditText et_startYear, et_startMonth, et_startDay, et_endYear, et_endMonth, et_endDay;
@@ -38,7 +37,6 @@ public class MainActivity extends Activity {
 	private GridView gridView;
 	private ListViewAdapter listViewAdapter;
 	private GridViewAdapter gridViewAdapter;
-	private List<Product> productList;
 	private int currentViewMode = 0;
 
 	static final int VIEW_MODE_LISTVIEW = 0;
@@ -50,8 +48,8 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		findAllViews();
-		setFileViews();
+		findViews();
+		initFileViews();
 
 		btn_search.setOnClickListener(new Button.OnClickListener(){
 			@Override
@@ -84,7 +82,7 @@ public class MainActivity extends Activity {
 				FileSearcher fileSearcher = new FileSearcher(startDate, endDate);
 				matchedFileList = fileSearcher.searchFiles();
 
-
+				setAdapters();
 			}
 		});
 
@@ -98,7 +96,7 @@ public class MainActivity extends Activity {
 				FileSearcher fileSearcher = new FileSearcher(min_size, max_size);
 				matchedFileList = fileSearcher.searchFiles();
 
-
+				setAdapters();
 			}
 		});
 
@@ -109,7 +107,7 @@ public class MainActivity extends Activity {
 				FileSearcher fileSearcher = new FileSearcher("jpg");
 				matchedFileList = fileSearcher.searchFiles();
 
-
+				setAdapters();
 			}
 		});
 
@@ -120,7 +118,7 @@ public class MainActivity extends Activity {
 				FileSearcher fileSearcher = new FileSearcher("png");
 				matchedFileList = fileSearcher.searchFiles();
 
-
+				setAdapters();
 			}
 		});
 
@@ -130,7 +128,7 @@ public class MainActivity extends Activity {
 				FileSearcher fileSearcher = new FileSearcher();
 				matchedFileList = fileSearcher.searchFiles();
 
-
+				setAdapters();
 			}
 		});
 	}
@@ -149,7 +147,7 @@ public class MainActivity extends Activity {
 		return date;
 	}
 
-	public void setFileViews(){
+	public void initFileViews(){
 		stubList = (ViewStub) findViewById(R.id.stub_list);
 		stubGrid = (ViewStub) findViewById(R.id.stub_grid);
 
@@ -161,13 +159,7 @@ public class MainActivity extends Activity {
 		listView = (ListView) findViewById(R.id.mylistview);
 		gridView = (GridView) findViewById(R.id.mygridview);
 
-		/////////////////////my own//////////////////////
-		String strFileName = et_fileName.getText().toString();
-
-		//search
-		FileSearcher fileSearcher = new FileSearcher(strFileName);
-		matchedFileList = fileSearcher.searchFiles();
-		/////////////////////my own//////////////////////
+		searchAllFiles();
 
 		//get list of product
 		setAdapters();
@@ -180,13 +172,18 @@ public class MainActivity extends Activity {
 		gridView.setOnItemClickListener(onItemClick);
 
 		switchView();
-
-
 	}
 
-	public void findAllViews(){
+	public void searchAllFiles(){
+		String strFileName = et_fileName.getText().toString();
+
+		//search
+		FileSearcher fileSearcher = new FileSearcher(strFileName);
+		matchedFileList = fileSearcher.searchFiles();
+	}
+
+	public void findViews(){
 		btn_search = (Button) findViewById(R.id.activity_main_btn_search);
-//		btn_clear = (Button) findViewById(R.id.activity_main_btn_clear);
 		btn_searchDate = (Button) findViewById(R.id.activity_main_btn_searchDate);
 		btn_searchSize = (Button) findViewById(R.id.activity_main_btn_searchSize);
 		btn_searchJpg = (Button) findViewById(R.id.activity_main_btn_searchJpg);
