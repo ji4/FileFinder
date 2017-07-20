@@ -32,7 +32,7 @@ public class GridViewAdapter extends ArrayAdapter<Product> {
 
         Product product = getItem(position);
         ImageView img = (ImageView) v.findViewById(R.id.imageView);
-        TextView txtTitle = (TextView) v.findViewById(R.id.txtTitle);
+        TextView txtTitle = (TextView) v.findViewById(R.id.txtName);
         TextView txtSize = (TextView) v.findViewById(R.id.txtSize);
 
         img.setImageResource(product.getImageId());

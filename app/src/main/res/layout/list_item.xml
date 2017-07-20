@@ -17,7 +17,7 @@
         app:srcCompat="@drawable/icon_android" />
 
     <TextView
-        android:id="@+id/txtTitle"
+        android:id="@+id/txtName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
@@ -31,8 +31,8 @@
         android:id="@+id/txtSize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/txtTitle"
-        android:layout_below="@id/txtTitle"
+        android:layout_alignLeft="@id/txtName"
+        android:layout_below="@id/txtName"
         android:layout_marginTop="10dp"
         android:text="Size"
         android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -41,10 +41,11 @@
         android:id="@+id/txtCreationDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="18dp"
+        android:layout_marginRight="18dp"
+        android:text="Creation Date"
+        android:layout_alignBaseline="@+id/txtSize"
+        android:layout_alignBottom="@+id/txtSize"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/txtSize"
-        android:layout_marginEnd="44dp"
-        android:layout_marginRight="44dp"
-        android:text="Creation Date" />
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>
