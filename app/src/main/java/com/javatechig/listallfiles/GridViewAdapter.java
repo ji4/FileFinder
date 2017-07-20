@@ -28,7 +28,7 @@ public class GridViewAdapter extends ArrayAdapter<File> {
 
         if(null == v) {
             LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = inflater.inflate(R.layout.list_item, null);
+            v = inflater.inflate(R.layout.grid_item, null);
         }
 
         File matchedFile = getItem(position);
