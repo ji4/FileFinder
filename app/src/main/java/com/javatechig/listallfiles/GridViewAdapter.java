@@ -29,14 +29,15 @@ public class GridViewAdapter extends ArrayAdapter<Product> {
             LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(R.layout.list_item, null);
         }
+
         Product product = getItem(position);
         ImageView img = (ImageView) v.findViewById(R.id.imageView);
         TextView txtTitle = (TextView) v.findViewById(R.id.txtTitle);
-        TextView txtDescription = (TextView) v.findViewById(R.id.txtSize);
+        TextView txtSize = (TextView) v.findViewById(R.id.txtSize);
 
         img.setImageResource(product.getImageId());
         txtTitle.setText(product.getTitle());
-        txtDescription.setText(product.getDescription());
+        txtSize.setText(product.getDescription());
 
         return v;
     }

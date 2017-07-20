@@ -62,7 +62,7 @@ public class MainActivity extends Activity {
 				FileSearcher fileSearcher = new FileSearcher(strFileName);
 				matchedFileList = fileSearcher.searchFiles();
 
-				getProductList();
+				setAdapters();
 			}
 		});
 
@@ -84,7 +84,6 @@ public class MainActivity extends Activity {
 				FileSearcher fileSearcher = new FileSearcher(startDate, endDate);
 				matchedFileList = fileSearcher.searchFiles();
 
-				getProductList();
 
 			}
 		});
@@ -99,7 +98,6 @@ public class MainActivity extends Activity {
 				FileSearcher fileSearcher = new FileSearcher(min_size, max_size);
 				matchedFileList = fileSearcher.searchFiles();
 
-				getProductList();
 
 			}
 		});
@@ -111,7 +109,6 @@ public class MainActivity extends Activity {
 				FileSearcher fileSearcher = new FileSearcher("jpg");
 				matchedFileList = fileSearcher.searchFiles();
 
-				getProductList();
 
 			}
 		});
@@ -123,7 +120,6 @@ public class MainActivity extends Activity {
 				FileSearcher fileSearcher = new FileSearcher("png");
 				matchedFileList = fileSearcher.searchFiles();
 
-				getProductList();
 
 			}
 		});
@@ -134,7 +130,6 @@ public class MainActivity extends Activity {
 				FileSearcher fileSearcher = new FileSearcher();
 				matchedFileList = fileSearcher.searchFiles();
 
-				getProductList();
 
 			}
 		});
@@ -175,7 +170,7 @@ public class MainActivity extends Activity {
 		/////////////////////my own//////////////////////
 
 		//get list of product
-		getProductList();
+		setAdapters();
 
 		//Get current view mode in share reference
 		SharedPreferences sharedPreferences = getSharedPreferences("ViewMode", MODE_PRIVATE);
@@ -231,23 +226,12 @@ public class MainActivity extends Activity {
 
 	private void setAdapters() {
 		if(VIEW_MODE_LISTVIEW == currentViewMode) {
-			listViewAdapter = new ListViewAdapter(this, R.layout.list_item, productList);
+			listViewAdapter = new ListViewAdapter(this, R.layout.list_item, matchedFileList);
 			listView.setAdapter(listViewAdapter);
 		} else {
 			gridViewAdapter = new GridViewAdapter(this, R.layout.grid_item, productList);
 			gridView.setAdapter(gridViewAdapter);
 		}
-	}
-
-	public List<Product> getProductList() {
-		//pseudo code to get product, replace your code to get real product here
-		productList = new ArrayList<>();
-        for (int i = 0; i < matchedFileList.size(); i++) {
-			productList.add(new Product(R.drawable.icon_android, matchedFileList.get(i).getName(), String.valueOf(matchedFileList.get(i).lastModified())));
-		}
-
-//		productList.add(new Product(R.drawable.icon_android, "Title 1", "This is description 1"));
-		return productList;
 	}
 
 	AdapterView.OnItemClickListener onItemClick = new AdapterView.OnItemClickListener() {
