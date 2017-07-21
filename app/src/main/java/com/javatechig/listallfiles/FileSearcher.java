@@ -28,37 +28,38 @@ public class FileSearcher {
     private long maxSize;
     private List<String> inputTextList;
 
-    private static final int SEARCH_ALL_FILES = 0;
-    private static final int SEARCH_FILE_NAME = 1;
-    private static final int SEARCH_FILE_TYPE = 2;
-    private static final int SEARCH_CREATION_DATE = 3;
-    private static final int SEARCH_SIZE = 4;
-    private static final int SEARCH_DUPLICATED_FILE = 5;
-    private int searchType = SEARCH_ALL_FILES;
+//    private static final int SEARCH_ALL_FILES = 0;
+    private static final int FILTER_FILE_NAME = 0;
+    private static final int FILTER_START_DATE = 1;
+    private static final int FILTER_END_DATE = 2;
+    private static final int FILTER_MIN_SIZE = 3;
+    private static final int FILTER_MAX_SIZE = 4;
+//    private static final int SEARCH_DUPLICATED_FILE = 5;
+//    private int searchType = SEARCH_ALL_FILES;
 
-    public FileSearcher(){
-        searchType = SEARCH_DUPLICATED_FILE;
-    }
-    public FileSearcher(String strFileName) {
-        this.strFileName = strFileName;
-
-        if(strFileName.equals("jpg") || strFileName.equals("png"))
-            searchType = SEARCH_FILE_TYPE;
-        else if(!strFileName.equals(""))  //input isn't empty
-            searchType = SEARCH_FILE_NAME;
-        else searchType = SEARCH_ALL_FILES;
-
-    }
-    public FileSearcher(Date startDate, Date endDate){
-        this.startDate = startDate;
-        this.endDate = endDate;
-        searchType = SEARCH_CREATION_DATE;
-    }
-    public FileSearcher(long minSize, long maxSize){
-        this.minSize = minSize;
-        this.maxSize = maxSize;
-        searchType = SEARCH_SIZE;
-    }
+//    public FileSearcher(){
+//        searchType = SEARCH_DUPLICATED_FILE;
+//    }
+//    public FileSearcher(String strFileName) {
+//        this.strFileName = strFileName;
+//
+//        if(strFileName.equals("jpg") || strFileName.equals("png"))
+//            searchType = SEARCH_FILE_TYPE;
+//        else if(!strFileName.equals(""))  //input isn't empty
+//            searchType = SEARCH_FILE_NAME;
+//        else searchType = SEARCH_ALL_FILES;
+//
+//    }
+//    public FileSearcher(Date startDate, Date endDate){
+//        this.startDate = startDate;
+//        this.endDate = endDate;
+//        searchType = SEARCH_CREATION_DATE;
+//    }
+//    public FileSearcher(long minSize, long maxSize){
+//        this.minSize = minSize;
+//        this.maxSize = maxSize;
+//        searchType = SEARCH_SIZE;
+//    }
     public FileSearcher(List<String> inputTextList){
         this.inputTextList = inputTextList;
 
@@ -165,23 +166,23 @@ public class FileSearcher {
             if(inputTextList.get(i) != null){//has input text
                 for (Iterator<File> iterator = to_be_filtered_fileList.iterator(); iterator.hasNext();) {
                     switch (i) {
-                        case 0: //filename
+                        case FILTER_FILE_NAME: //filename
                             if (!iterator.next().getName().contains(getFileName()))
                                 iterator.remove();
                             break;
-                        case 1: //start date
+                        case FILTER_START_DATE: //start date
                             if(new Date(iterator.next().lastModified()).before(getInputStartDate()))
                                 iterator.remove();
                             break;
-                        case 2: //end date
+                        case FILTER_END_DATE: //end date
                             if(new Date(iterator.next().lastModified()).after(getInputEndDate()))
                                 iterator.remove();
                             break;
-                        case 3: //min size
+                        case FILTER_MIN_SIZE: //min size
                             if (iterator.next().length() < getInputMinSize())
                                 iterator.remove();
                             break;
-                        case 4: //min size
+                        case FILTER_MAX_SIZE: //max size
                             if (iterator.next().length() > getInputMaxSize())
                                 iterator.remove();
                             break;
@@ -200,41 +201,17 @@ public class FileSearcher {
             for (int i = 0; i < listFile.length; i++) {
                 if (listFile[i].isDirectory()) //directory
                     directoryList.add(listFile[i]);
-                else /*switch (searchType)*/ { //file
-//                    case SEARCH_ALL_FILES:
+                else{ //file
                         matchedFileList.add(listFile[i]);
-//                        break;
-//                    case SEARCH_FILE_NAME:
-//                        if (listFile[i].getName().equals(getFileName()))
-//                            matchedFileList.add(listFile[i]);
-//                        break;
-//                    case SEARCH_CREATION_DATE:
-//                        Date lastModDate = new Date(listFile[i].lastModified());
-//                        if(lastModDate.after(getInputStartDate()) && lastModDate.before(getInputEndDate()))
-//                            matchedFileList.add(listFile[i]);
-//                        break;
-//                    case SEARCH_SIZE:
-//                        long fileSizeInBytes = listFile[i].length();
-//                        if(fileSizeInBytes >= getInputMinSize() && fileSizeInBytes <= getInputMaxSize())
-//                            matchedFileList.add(listFile[i]);
-//                        break;
-//                    case SEARCH_FILE_TYPE:
-//                        if(listFile[i].getName().endsWith("."+getFileName()))
-//                            matchedFileList.add(listFile[i]);
-//                        break;
-//                    case SEARCH_DUPLICATED_FILE:
-//                        matchedFileList.add(listFile[i]);
-//                        break;
-
                 }
             }
-            if(searchType == SEARCH_DUPLICATED_FILE) {
-                try {
-                    findDuplicatedFiles(matchedFileList);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+//            if(searchType == SEARCH_DUPLICATED_FILE) {
+//                try {
+//                    findDuplicatedFiles(matchedFileList);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
         }
     }
 
