@@ -102,13 +102,13 @@ public class FileSearcher {
         }
     }
 
-    public Date getStartDate(){
+    public Date getInputStartDate(){
         return startDate;
     }
-    public Date getEndDate() {
+    public Date getInputEndDate() {
         return endDate;
     }
-    public long getMinSize() {
+    public long getInputMinSize() {
         return minSize;
     }
     public long getMaxSize() {
@@ -161,23 +161,19 @@ public class FileSearcher {
         int i = 0;
         while (i < inputTextList.size()){
             if(inputTextList.get(i) != null){//has input text
-                int j = 0;
                 for (Iterator<File> iterator = to_be_filtered_fileList.iterator(); iterator.hasNext();) {
                     switch (i) {
                         case 0: //filename
-                            if (!iterator.next().getName().equals(getFileName())) {
+                            if (!iterator.next().getName().contains(getFileName()))
                                 iterator.remove();
-                            }
-//                            if (listFile[i].getName().equals(getFileName()) && !matchedFileList.contains(listFile[i]))
-//                                matchedFileList.add(listFile[i]);
-//                            else matchedFileList.remove(listFile[i]);
+                            break;
+                        case 1: //start date
+                            if(new Date(iterator.next().lastModified()).before(getInputStartDate()))
+                                iterator.remove();
                             break;
                     }
-
-                    j++;
                 }
             }
-
             i++;
         }
         return to_be_filtered_fileList;
@@ -201,13 +197,13 @@ public class FileSearcher {
                         break;
                     case SEARCH_CREATION_DATE:
                         Date lastModDate = new Date(listFile[i].lastModified());
-                        if(lastModDate.after(getStartDate()) && lastModDate.before(getEndDate()) && !matchedFileList.contains(listFile[i]))
+                        if(lastModDate.after(getInputStartDate()) && lastModDate.before(getInputEndDate()) && !matchedFileList.contains(listFile[i]))
                             matchedFileList.add(listFile[i]);
                         else matchedFileList.remove(listFile[i]);
                         break;
                     case SEARCH_SIZE:
                         long fileSizeInBytes = listFile[i].length();
-                        if(fileSizeInBytes >= getMinSize() && fileSizeInBytes <= getMaxSize() && !matchedFileList.contains(listFile[i]))
+                        if(fileSizeInBytes >= getInputMinSize() && fileSizeInBytes <= getMaxSize() && !matchedFileList.contains(listFile[i]))
                             matchedFileList.add(listFile[i]);
                         else matchedFileList.remove(listFile[i]);
                         break;
