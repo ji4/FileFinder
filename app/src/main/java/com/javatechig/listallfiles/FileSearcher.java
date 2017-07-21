@@ -203,21 +203,18 @@ public class FileSearcher {
                         matchedFileList.add(listFile[i]);
                         break;
                     case SEARCH_FILE_NAME:
-                        if (listFile[i].getName().equals(getFileName()) && !matchedFileList.contains(listFile[i]))
+                        if (listFile[i].getName().equals(getFileName()))
                             matchedFileList.add(listFile[i]);
-                        else matchedFileList.remove(listFile[i]);
                         break;
                     case SEARCH_CREATION_DATE:
                         Date lastModDate = new Date(listFile[i].lastModified());
-                        if(lastModDate.after(getInputStartDate()) && lastModDate.before(getInputEndDate()) && !matchedFileList.contains(listFile[i]))
+                        if(lastModDate.after(getInputStartDate()) && lastModDate.before(getInputEndDate()))
                             matchedFileList.add(listFile[i]);
-                        else matchedFileList.remove(listFile[i]);
                         break;
                     case SEARCH_SIZE:
                         long fileSizeInBytes = listFile[i].length();
-                        if(fileSizeInBytes >= getInputMinSize() && fileSizeInBytes <= getInputMaxSize() && !matchedFileList.contains(listFile[i]))
+                        if(fileSizeInBytes >= getInputMinSize() && fileSizeInBytes <= getInputMaxSize())
                             matchedFileList.add(listFile[i]);
-                        else matchedFileList.remove(listFile[i]);
                         break;
                     case SEARCH_FILE_TYPE:
                         if(listFile[i].getName().endsWith("."+getFileName()))

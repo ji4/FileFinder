@@ -26,7 +26,7 @@ import java.util.List;
 
 public class MainActivity extends Activity {
     private ArrayList<File> matchedFileList = new ArrayList<>();
-	private Button btn_search, btn_searchDate, btn_searchSize, btn_searchJpg, btn_searchPng, btn_searchDupFile;
+	private Button btn_search, btn_searchJpg, btn_searchPng, btn_searchDupFile;
     private EditText et_fileName;
 	private LinearLayout ll;
 	private EditText et_startDate, et_endDate;
@@ -74,51 +74,10 @@ public class MainActivity extends Activity {
 				FileSearcher fileSearcher = new FileSearcher(textValueList);
 				fileSearcher.filterSearchResult(matchedFileList);
 
-
-
-//				String strFileName = et_fileName.getText().toString();
-//
-//				//search
-//				FileSearcher fileSearcher = new FileSearcher(strFileName);
-//				matchedFileList = fileSearcher.searchFiles();
-//
 				setAdapters();
 			}
 		});
 
-//		btn_searchDate.setOnClickListener(new Button.OnClickListener(){
-//			@Override
-//			public void onClick(View view) {
-//				String strStartDate = et_startDate.getText().toString().trim();
-//				String strEndDate = et_endDate.getText().toString().trim();
-//
-//				int iArrStartDate[] = parseDate(strStartDate);
-//				int iArrEndDate[] = parseDate(strEndDate);
-//
-//				Date startDate = setDate(iArrStartDate[0], iArrStartDate[1], iArrStartDate[2], false); //param: year, month, day
-//				Date endDate = setDate(iArrEndDate[0], iArrEndDate[1], iArrEndDate[2], true);
-//
-//				//search
-//				FileSearcher fileSearcher = new FileSearcher(startDate, endDate);
-//				matchedFileList = fileSearcher.searchFiles();
-//
-//				setAdapters();
-//			}
-//		});
-
-//		btn_searchSize.setOnClickListener(new Button.OnClickListener(){
-//			@Override
-//			public void onClick(View view) {
-//				long min_size = Long.parseLong(et_minSize.getText().toString().trim()) * 1024 * 1024; //Convert megabytes to bytes
-//				long max_size = Long.parseLong(et_maxSize.getText().toString().trim()) * 1024 * 1024; //Convert megabytes to bytes
-//
-//				//search
-//				FileSearcher fileSearcher = new FileSearcher(min_size, max_size);
-//				matchedFileList = fileSearcher.searchFiles();
-//
-//				setAdapters();
-//			}
-//		});
 
 		btn_searchJpg.setOnClickListener(new Button.OnClickListener() {
 			@Override
@@ -190,8 +149,6 @@ public class MainActivity extends Activity {
 
 	public void findViews(){
 		btn_search = (Button) findViewById(R.id.activity_main_btn_search);
-//		btn_searchDate = (Button) findViewById(R.id.activity_main_btn_searchDate);
-//		btn_searchSize = (Button) findViewById(R.id.activity_main_btn_searchSize);
 		btn_searchJpg = (Button) findViewById(R.id.activity_main_btn_searchJpg);
 		btn_searchPng = (Button) findViewById(R.id.activity_main_btn_searchPng);
 		btn_searchDupFile = (Button) findViewById(R.id.activity_main_btn_searchDupFile);
