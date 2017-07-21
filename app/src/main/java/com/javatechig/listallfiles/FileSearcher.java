@@ -111,7 +111,7 @@ public class FileSearcher {
     public long getInputMinSize() {
         return minSize;
     }
-    public long getMaxSize() {
+    public long getInputMaxSize() {
         return maxSize;
     }
     public String getFileName() {
@@ -171,6 +171,18 @@ public class FileSearcher {
                             if(new Date(iterator.next().lastModified()).before(getInputStartDate()))
                                 iterator.remove();
                             break;
+                        case 2: //end date
+                            if(new Date(iterator.next().lastModified()).after(getInputEndDate()))
+                                iterator.remove();
+                            break;
+                        case 3: //min size
+                            if (iterator.next().length() < getInputMinSize())
+                                iterator.remove();
+                            break;
+                        case 4: //min size
+                            if (iterator.next().length() > getInputMaxSize())
+                                iterator.remove();
+                            break;
                     }
                 }
             }
@@ -203,7 +215,7 @@ public class FileSearcher {
                         break;
                     case SEARCH_SIZE:
                         long fileSizeInBytes = listFile[i].length();
-                        if(fileSizeInBytes >= getInputMinSize() && fileSizeInBytes <= getMaxSize() && !matchedFileList.contains(listFile[i]))
+                        if(fileSizeInBytes >= getInputMinSize() && fileSizeInBytes <= getInputMaxSize() && !matchedFileList.contains(listFile[i]))
                             matchedFileList.add(listFile[i]);
                         else matchedFileList.remove(listFile[i]);
                         break;
