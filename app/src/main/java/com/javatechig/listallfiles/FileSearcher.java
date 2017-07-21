@@ -29,11 +29,11 @@ public class FileSearcher {
     private List<String> inputTextList;
 
 //    private static final int SEARCH_ALL_FILES = 0;
-    private static final int FILTER_FILE_NAME = 0;
-    private static final int FILTER_START_DATE = 1;
-    private static final int FILTER_END_DATE = 2;
-    private static final int FILTER_MIN_SIZE = 3;
-    private static final int FILTER_MAX_SIZE = 4;
+    private static final int FILE_NAME = 0;
+    private static final int START_DATE = 1;
+    private static final int END_DATE = 2;
+    private static final int MIN_SIZE = 3;
+    private static final int MAX_SIZE = 4;
 //    private static final int SEARCH_DUPLICATED_FILE = 5;
 //    private int searchType = SEARCH_ALL_FILES;
 
@@ -63,14 +63,15 @@ public class FileSearcher {
     public FileSearcher(List<String> inputTextList){
         this.inputTextList = inputTextList;
 
+        //parse text values
         int i = 0;
         while(i < inputTextList.size()) {
             if(inputTextList.get(i) != null){ //has text value
                 switch (i){
-                    case 0:
+                    case FILE_NAME:
                         this.strFileName = inputTextList.get(i);
                         break;
-                    case 1:
+                    case START_DATE:
                         //get text
                         String strStartDate = inputTextList.get(i);
                         //parse text
@@ -79,20 +80,20 @@ public class FileSearcher {
                         Date startDate = setDate(iArrStartDate[0], iArrStartDate[1], iArrStartDate[2], false); //param: year, month, day
                         this.startDate = startDate;
                         break;
-                    case 2:
+                    case END_DATE:
                         //get text
                         String strEndDate = inputTextList.get(i);
                         //parse text
                         int iArrEndDate[] = parseDate(strEndDate);
                         //format date
-                        Date endDate = setDate(iArrEndDate[0], iArrEndDate[1], iArrEndDate[2], false); //param: year, month, day
+                        Date endDate = setDate(iArrEndDate[0], iArrEndDate[1], iArrEndDate[2], true); //param: year, month, day
                         this.endDate = endDate;
                         break;
-                    case 3:
+                    case MIN_SIZE:
                         long min_size = Long.parseLong(inputTextList.get(i)) * 1024 * 1024; //Convert megabytes to bytes
                         this.minSize = min_size;
                         break;
-                    case 4:
+                    case MAX_SIZE:
                         long max_size = Long.parseLong(inputTextList.get(i)) * 1024 * 1024; //Convert megabytes to bytes
                         this.maxSize = max_size;
                         break;
@@ -159,39 +160,39 @@ public class FileSearcher {
 //        return matchedFileList;
     }
 
-    public ArrayList<File> filterSearchResult(ArrayList<File> to_be_filtered_fileList){
+    public ArrayList<File> filterSearchResult(ArrayList<File> toBeFilteredFileList){
         //Filter result of matchedFileList
         int i = 0;
         while (i < inputTextList.size()){
             if(inputTextList.get(i) != null){//has input text
-                for (Iterator<File> iterator = to_be_filtered_fileList.iterator(); iterator.hasNext();) {
+                for (Iterator<File> iterator = toBeFilteredFileList.iterator(); iterator.hasNext();) {
                     switch (i) {
-                        case FILTER_FILE_NAME: //filename
-                            if (!iterator.next().getName().contains(getFileName()))
-                                iterator.remove();
+                        case FILE_NAME:
+                            if (!iterator.next().getName().contains(getFileName())){
+                                iterator.remove();}
                             break;
-                        case FILTER_START_DATE: //start date
-                            if(new Date(iterator.next().lastModified()).before(getInputStartDate()))
-                                iterator.remove();
+                        case START_DATE:
+                            if(new Date(iterator.next().lastModified()).before(getInputStartDate())){
+                                iterator.remove();}
                             break;
-                        case FILTER_END_DATE: //end date
-                            if(new Date(iterator.next().lastModified()).after(getInputEndDate()))
-                                iterator.remove();
+                        case END_DATE:
+                            if(new Date(iterator.next().lastModified()).after(getInputEndDate())){
+                                iterator.remove();}
                             break;
-                        case FILTER_MIN_SIZE: //min size
-                            if (iterator.next().length() < getInputMinSize())
-                                iterator.remove();
+                        case MIN_SIZE:
+                            if (iterator.next().length() < getInputMinSize()){
+                                iterator.remove();}
                             break;
-                        case FILTER_MAX_SIZE: //max size
-                            if (iterator.next().length() > getInputMaxSize())
-                                iterator.remove();
+                        case MAX_SIZE:
+                            if (iterator.next().length() > getInputMaxSize()){
+                                iterator.remove();}
                             break;
                     }
                 }
             }
             i++;
         }
-        return to_be_filtered_fileList;
+        return toBeFilteredFileList;
     }
 
     private void getFile(File dir) {
@@ -199,8 +200,9 @@ public class FileSearcher {
 
         if (listFile != null && listFile.length > 0) {
             for (int i = 0; i < listFile.length; i++) {
-                if (listFile[i].isDirectory()) //directory
+                if (listFile[i].isDirectory()) { //directory
                     directoryList.add(listFile[i]);
+                }
                 else{ //file
                         matchedFileList.add(listFile[i]);
                 }
@@ -233,8 +235,9 @@ public class FileSearcher {
 
                 // found a match between original and duplicate
                     File fileOriPath = new File(original);
-                    if(!dupFileList.contains(fileOriPath))
+                    if(!dupFileList.contains(fileOriPath)) {
                         dupFileList.add(fileOriPath);
+                    }
                     else { //filepath already exists
                         File fileDupPath = new File(duplicate);
                         dupFileList.add(fileDupPath);

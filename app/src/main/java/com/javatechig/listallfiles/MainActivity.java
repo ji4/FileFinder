@@ -26,7 +26,7 @@ import java.util.List;
 
 public class MainActivity extends Activity {
     private ArrayList<File> matchedFileList = new ArrayList<>();
-	private Button btn_search, btn_searchJpg, btn_searchPng, btn_searchDupFile;
+	private Button btn_search, btn_searchDupFile;
     private EditText et_fileName;
 	private LinearLayout ll;
 	private EditText et_startDate, et_endDate;
@@ -56,22 +56,22 @@ public class MainActivity extends Activity {
 		btn_search.setOnClickListener(new Button.OnClickListener(){
 			@Override
 			public void onClick(View view) {
-                //EditTexts ArrayList
 				ArrayList<EditText> editTextList = new ArrayList<>(
+                //Set All EditTexts ArrayList
 						Arrays.asList(et_fileName, et_startDate, et_endDate, et_minSize, et_maxSize));
 
                 List<String> textValueList = new ArrayList<>(Arrays.asList(new String[editTextList.size()]));
-                Collections.fill(textValueList, null);
+                Collections.fill(inputTextList, null);
 
 				for(int i = 0; i < editTextList.size(); i++){
 					String strInputValue = editTextList.get(i).getText().toString().trim();
 					if(!strInputValue.matches("")){//has input text
-						textValueList.set(i, strInputValue);
+						inputTextList.set(i, strInputValue);
 					}
-                    Log.d("textValueList", String.valueOf(textValueList.get(i)));
+                    Log.d("inputTextList", String.valueOf(inputTextList.get(i)));
 				}
 
-				FileSearcher fileSearcher = new FileSearcher(textValueList);
+				FileSearcher fileSearcher = new FileSearcher(inputTextList);
 				matchedFileList.clear();
 				matchedFileList = fileSearcher.searchFiles();
 
@@ -104,7 +104,7 @@ public class MainActivity extends Activity {
 
 		searchAllFiles();
 
-		//get list of product
+		//get list of files
 		setAdapters();
 
 		//Get current view mode in share reference
@@ -118,8 +118,8 @@ public class MainActivity extends Activity {
 	}
 
 	public void searchAllFiles(){
-        //EditTexts ArrayList
         ArrayList<EditText> editTextList = new ArrayList<>(
+        //Set All EditTexts ArrayList
                 Arrays.asList(et_fileName, et_startDate, et_endDate, et_minSize, et_maxSize));
 
         List<String> textValueList = new ArrayList<>(Arrays.asList(new String[editTextList.size()]));
@@ -133,8 +133,6 @@ public class MainActivity extends Activity {
 
 	public void findViews(){
 		btn_search = (Button) findViewById(R.id.activity_main_btn_search);
-		btn_searchJpg = (Button) findViewById(R.id.activity_main_btn_searchJpg);
-		btn_searchPng = (Button) findViewById(R.id.activity_main_btn_searchPng);
 		btn_searchDupFile = (Button) findViewById(R.id.activity_main_btn_searchDupFile);
 		et_fileName = (EditText) findViewById(R.id.activity_main_et_fileName);
 		ll = (LinearLayout) findViewById(R.id.ll);
