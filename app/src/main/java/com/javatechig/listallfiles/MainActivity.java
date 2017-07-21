@@ -78,39 +78,16 @@ public class MainActivity extends Activity {
 				setAdapters();
 			}
 		});
-
-
-		btn_searchJpg.setOnClickListener(new Button.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				//search
-				FileSearcher fileSearcher = new FileSearcher("jpg");
-				matchedFileList = fileSearcher.searchFiles();
-
-				setAdapters();
-			}
-		});
-
-		btn_searchPng.setOnClickListener(new Button.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				//search
-				FileSearcher fileSearcher = new FileSearcher("png");
-				matchedFileList = fileSearcher.searchFiles();
-
-				setAdapters();
-			}
-		});
-
-		btn_searchDupFile.setOnClickListener(new Button.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				FileSearcher fileSearcher = new FileSearcher();
-				matchedFileList = fileSearcher.searchFiles();
-
-				setAdapters();
-			}
-		});
+		
+//		btn_searchDupFile.setOnClickListener(new Button.OnClickListener() {
+//			@Override
+//			public void onClick(View view) {
+//				FileSearcher fileSearcher = new FileSearcher();
+//				matchedFileList = fileSearcher.searchFiles();
+//
+//				setAdapters();
+//			}
+//		});
 	}
 
 	public void initFileViews(){
