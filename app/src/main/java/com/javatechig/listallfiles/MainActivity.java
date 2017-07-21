@@ -3,6 +3,7 @@ package com.javatechig.listallfiles;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,9 +21,7 @@ import com.example.listallfiles.R;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends Activity {
@@ -57,17 +56,23 @@ public class MainActivity extends Activity {
 		btn_search.setOnClickListener(new Button.OnClickListener(){
 			@Override
 			public void onClick(View view) {
+                //EditTexts ArrayList
 				ArrayList<EditText> editTextList = new ArrayList<>(
 						Arrays.asList(et_fileName, et_startDate, et_endDate, et_minSize, et_maxSize));
-				List<Boolean> isInputted = new ArrayList<>(Arrays.asList(new Boolean[editTextList.size()]));
-				Collections.fill(isInputted, Boolean.FALSE);
+
+                List<String> textValueList = new ArrayList<>(Arrays.asList(new String[editTextList.size()]));
+                Collections.fill(textValueList, null);
 
 				for(int i = 0; i < editTextList.size(); i++){
 					String strInputValue = editTextList.get(i).getText().toString().trim();
 					if(!strInputValue.matches("")){//has input text
-						isInputted.set(i, Boolean.TRUE);
+						textValueList.set(i, strInputValue);
 					}
+                    Log.d("textValueList", String.valueOf(textValueList.get(i)));
 				}
+
+				FileSearcher fileSearcher = new FileSearcher(textValueList);
+				fileSearcher.filterSearchResult(matchedFileList);
 
 
 
@@ -77,7 +82,7 @@ public class MainActivity extends Activity {
 //				FileSearcher fileSearcher = new FileSearcher(strFileName);
 //				matchedFileList = fileSearcher.searchFiles();
 //
-//				setAdapters();
+				setAdapters();
 			}
 		});
 
@@ -146,29 +151,6 @@ public class MainActivity extends Activity {
 				setAdapters();
 			}
 		});
-	}
-
-	public int[] parseDate(String strDate){
-		int[] iArrDate = new int[3];
-		String[] strArrDate = strDate.split("/");
-		for(int i=0; i<3; i++){
-			iArrDate[i] = Integer.parseInt(strArrDate[i]);
-		}
-		return iArrDate;
-	}
-
-	public Date setDate(int year, int month, int day, Boolean isEndDate){
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.YEAR, year);
-		calendar.set(Calendar.MONTH, month - 1);
-		if(isEndDate) day++;
-		calendar.set(Calendar.DAY_OF_MONTH, day);
-		calendar.set(Calendar.HOUR, 0);
-		calendar.set(Calendar.MINUTE, 0);// for 0 min
-		calendar.set(Calendar.SECOND, 0);// for 0 sec
-		Date date = new Date(calendar.getTimeInMillis());
-
-		return date;
 	}
 
 	public void initFileViews(){
