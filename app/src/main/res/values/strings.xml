@@ -6,5 +6,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="greater_than_or_equal_to">&gt;=</string>
     <string name="less_than_or_equal_to">&lt;=</string>
+    <string name="date_hint">YYYY/M/D</string>
 
 </resources>

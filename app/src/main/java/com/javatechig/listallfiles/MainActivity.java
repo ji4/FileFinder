@@ -19,8 +19,11 @@ import com.example.listallfiles.R;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends Activity {
     private ArrayList<File> matchedFileList = new ArrayList<>();
@@ -28,7 +31,6 @@ public class MainActivity extends Activity {
     private EditText et_fileName;
 	private LinearLayout ll;
 	private EditText et_startDate, et_endDate;
-	private EditText et_startYear, et_startMonth, et_startDay, et_endYear, et_endMonth, et_endDay;
 	private EditText et_minSize, et_maxSize;
 
 	//file view
@@ -55,35 +57,49 @@ public class MainActivity extends Activity {
 		btn_search.setOnClickListener(new Button.OnClickListener(){
 			@Override
 			public void onClick(View view) {
-				String strFileName = et_fileName.getText().toString();
+				ArrayList<EditText> editTextList = new ArrayList<>(
+						Arrays.asList(et_fileName, et_startDate, et_endDate, et_minSize, et_maxSize));
+				List<Boolean> isInputted = new ArrayList<>(Arrays.asList(new Boolean[editTextList.size()]));
+				Collections.fill(isInputted, Boolean.FALSE);
 
-				//search
-				FileSearcher fileSearcher = new FileSearcher(strFileName);
-				matchedFileList = fileSearcher.searchFiles();
+				for(int i = 0; i < editTextList.size(); i++){
+					String strInputValue = editTextList.get(i).getText().toString().trim();
+					if(!strInputValue.matches("")){//has input text
+						isInputted.set(i, Boolean.TRUE);
+					}
+				}
 
-				setAdapters();
+
+
+//				String strFileName = et_fileName.getText().toString();
+//
+//				//search
+//				FileSearcher fileSearcher = new FileSearcher(strFileName);
+//				matchedFileList = fileSearcher.searchFiles();
+//
+//				setAdapters();
 			}
 		});
 
-		btn_searchDate.setOnClickListener(new Button.OnClickListener(){
-			@Override
-			public void onClick(View view) {
-				String strStartDate = et_startDate.getText().toString().trim();
-				String strEndDate = et_endDate.getText().toString().trim();
-
-				int iArrStartDate[] = parseDate(strStartDate);
-				int iArrEndDate[] = parseDate(strEndDate);
-
-				Date startDate = setDate(iArrStartDate[0], iArrStartDate[1], iArrStartDate[2], false); //param: year, month, day
-				Date endDate = setDate(iArrEndDate[0], iArrEndDate[1], iArrEndDate[2], true);
-
-				//search
-				FileSearcher fileSearcher = new FileSearcher(startDate, endDate);
-				matchedFileList = fileSearcher.searchFiles();
-
-				setAdapters();
-			}
-		});
+//		btn_searchDate.setOnClickListener(new Button.OnClickListener(){
+//			@Override
+//			public void onClick(View view) {
+//				String strStartDate = et_startDate.getText().toString().trim();
+//				String strEndDate = et_endDate.getText().toString().trim();
+//
+//				int iArrStartDate[] = parseDate(strStartDate);
+//				int iArrEndDate[] = parseDate(strEndDate);
+//
+//				Date startDate = setDate(iArrStartDate[0], iArrStartDate[1], iArrStartDate[2], false); //param: year, month, day
+//				Date endDate = setDate(iArrEndDate[0], iArrEndDate[1], iArrEndDate[2], true);
+//
+//				//search
+//				FileSearcher fileSearcher = new FileSearcher(startDate, endDate);
+//				matchedFileList = fileSearcher.searchFiles();
+//
+//				setAdapters();
+//			}
+//		});
 
 //		btn_searchSize.setOnClickListener(new Button.OnClickListener(){
 //			@Override
@@ -192,7 +208,7 @@ public class MainActivity extends Activity {
 
 	public void findViews(){
 		btn_search = (Button) findViewById(R.id.activity_main_btn_search);
-		btn_searchDate = (Button) findViewById(R.id.activity_main_btn_searchDate);
+//		btn_searchDate = (Button) findViewById(R.id.activity_main_btn_searchDate);
 //		btn_searchSize = (Button) findViewById(R.id.activity_main_btn_searchSize);
 		btn_searchJpg = (Button) findViewById(R.id.activity_main_btn_searchJpg);
 		btn_searchPng = (Button) findViewById(R.id.activity_main_btn_searchPng);
