@@ -151,9 +151,11 @@ public class FileSearcher {
             count++;
         }
 
+        return filterSearchResult(matchedFileList);
+
 //        if(searchType == SEARCH_DUPLICATED_FILE)
 //            return dupFileList;
-        return matchedFileList;
+//        return matchedFileList;
     }
 
     public ArrayList<File> filterSearchResult(ArrayList<File> to_be_filtered_fileList){
@@ -198,31 +200,31 @@ public class FileSearcher {
             for (int i = 0; i < listFile.length; i++) {
                 if (listFile[i].isDirectory()) //directory
                     directoryList.add(listFile[i]);
-                else switch (searchType) { //file
-                    case SEARCH_ALL_FILES:
+                else /*switch (searchType)*/ { //file
+//                    case SEARCH_ALL_FILES:
                         matchedFileList.add(listFile[i]);
-                        break;
-                    case SEARCH_FILE_NAME:
-                        if (listFile[i].getName().equals(getFileName()))
-                            matchedFileList.add(listFile[i]);
-                        break;
-                    case SEARCH_CREATION_DATE:
-                        Date lastModDate = new Date(listFile[i].lastModified());
-                        if(lastModDate.after(getInputStartDate()) && lastModDate.before(getInputEndDate()))
-                            matchedFileList.add(listFile[i]);
-                        break;
-                    case SEARCH_SIZE:
-                        long fileSizeInBytes = listFile[i].length();
-                        if(fileSizeInBytes >= getInputMinSize() && fileSizeInBytes <= getInputMaxSize())
-                            matchedFileList.add(listFile[i]);
-                        break;
-                    case SEARCH_FILE_TYPE:
-                        if(listFile[i].getName().endsWith("."+getFileName()))
-                            matchedFileList.add(listFile[i]);
-                        break;
-                    case SEARCH_DUPLICATED_FILE:
-                        matchedFileList.add(listFile[i]);
-                        break;
+//                        break;
+//                    case SEARCH_FILE_NAME:
+//                        if (listFile[i].getName().equals(getFileName()))
+//                            matchedFileList.add(listFile[i]);
+//                        break;
+//                    case SEARCH_CREATION_DATE:
+//                        Date lastModDate = new Date(listFile[i].lastModified());
+//                        if(lastModDate.after(getInputStartDate()) && lastModDate.before(getInputEndDate()))
+//                            matchedFileList.add(listFile[i]);
+//                        break;
+//                    case SEARCH_SIZE:
+//                        long fileSizeInBytes = listFile[i].length();
+//                        if(fileSizeInBytes >= getInputMinSize() && fileSizeInBytes <= getInputMaxSize())
+//                            matchedFileList.add(listFile[i]);
+//                        break;
+//                    case SEARCH_FILE_TYPE:
+//                        if(listFile[i].getName().endsWith("."+getFileName()))
+//                            matchedFileList.add(listFile[i]);
+//                        break;
+//                    case SEARCH_DUPLICATED_FILE:
+//                        matchedFileList.add(listFile[i]);
+//                        break;
 
                 }
             }

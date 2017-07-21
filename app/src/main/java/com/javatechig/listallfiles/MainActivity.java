@@ -72,7 +72,8 @@ public class MainActivity extends Activity {
 				}
 
 				FileSearcher fileSearcher = new FileSearcher(textValueList);
-				fileSearcher.filterSearchResult(matchedFileList);
+				matchedFileList.clear();
+				matchedFileList = fileSearcher.searchFiles();
 
 				setAdapters();
 			}
@@ -140,10 +141,16 @@ public class MainActivity extends Activity {
 	}
 
 	public void searchAllFiles(){
-		String strFileName = et_fileName.getText().toString();
+        //EditTexts ArrayList
+        ArrayList<EditText> editTextList = new ArrayList<>(
+                Arrays.asList(et_fileName, et_startDate, et_endDate, et_minSize, et_maxSize));
+
+        List<String> textValueList = new ArrayList<>(Arrays.asList(new String[editTextList.size()]));
+        Collections.fill(textValueList, null);
+
 
 		//search
-		FileSearcher fileSearcher = new FileSearcher(strFileName);
+		FileSearcher fileSearcher = new FileSearcher(textValueList);
 		matchedFileList = fileSearcher.searchFiles();
 	}
 
