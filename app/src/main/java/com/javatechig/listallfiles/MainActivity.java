@@ -78,7 +78,7 @@ public class MainActivity extends Activity {
 				setAdapters();
 			}
 		});
-		
+
 //		btn_searchDupFile.setOnClickListener(new Button.OnClickListener() {
 //			@Override
 //			public void onClick(View view) {

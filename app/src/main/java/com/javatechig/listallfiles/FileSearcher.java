@@ -94,7 +94,7 @@ public class FileSearcher {
                         break;
                     case 4:
                         long max_size = Long.parseLong(inputTextList.get(i)) * 1024 * 1024; //Convert megabytes to bytes
-                        this.minSize = max_size;
+                        this.maxSize = max_size;
                         break;
                 }
 

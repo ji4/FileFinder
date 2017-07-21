@@ -100,18 +100,6 @@
         android:orientation="horizontal">
 
     <Button
-        android:id="@+id/activity_main_btn_searchJpg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.0"
-        android:text="jpg" />
-    <Button
-        android:id="@+id/activity_main_btn_searchPng"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.0"
-        android:text="png" />
-    <Button
         android:id="@+id/activity_main_btn_searchDupFile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
