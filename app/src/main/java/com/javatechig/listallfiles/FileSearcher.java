@@ -64,8 +64,8 @@ public class FileSearcher {
         this.inputTextList = inputTextList;
 
         //parse text values
-        int i = 0;
-        while(i < inputTextList.size()) {
+        int i = 0, iInputTextListSize = inputTextList.size();
+        while(i < iInputTextListSize) {
             if(inputTextList.get(i) != null){ //has text value
                 switch (i){
                     case FILE_NAME:
@@ -147,8 +147,8 @@ public class FileSearcher {
         directoryList.add(dir);
 
         //Search all directory paths
-        int count = 0;
-        while(count < directoryList.size()) {
+        int count = 0, iDirectoryListSize = directoryList.size();
+        while(count < iDirectoryListSize) {
             getFile(directoryList.get(count));
             count++;
         }
@@ -162,8 +162,8 @@ public class FileSearcher {
 
     public ArrayList<File> filterSearchResult(ArrayList<File> toBeFilteredFileList){
         //Filter result of matchedFileList
-        int i = 0;
-        while (i < inputTextList.size()){
+        int i = 0, iInputTextListSize = inputTextList.size();
+        while (i < iInputTextListSize){
             if(inputTextList.get(i) != null){//has input text
                 for (Iterator<File> iterator = toBeFilteredFileList.iterator(); iterator.hasNext();) {
                     switch (i) {
@@ -238,7 +238,7 @@ public class FileSearcher {
                     if(!dupFileList.contains(fileOriPath)) {
                         dupFileList.add(fileOriPath);
                     }
-                    else { //filepath already exists
+                    else { //the same file already exists
                         File fileDupPath = new File(duplicate);
                         dupFileList.add(fileDupPath);
                     }

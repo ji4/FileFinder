@@ -59,11 +59,12 @@ public class MainActivity extends Activity {
 				ArrayList<EditText> editTextList = new ArrayList<>(
                 //Set All EditTexts ArrayList
 						Arrays.asList(et_fileName, et_startDate, et_endDate, et_minSize, et_maxSize));
+				int iEditTextListSize = editTextList.size();
 
-                List<String> textValueList = new ArrayList<>(Arrays.asList(new String[editTextList.size()]));
+				List<String> inputTextList = new ArrayList<String>(Arrays.asList(new String[iEditTextListSize]));
                 Collections.fill(inputTextList, null);
 
-				for(int i = 0; i < editTextList.size(); i++){
+				for(int i = 0; i < iEditTextListSize; i++){
 					String strInputValue = editTextList.get(i).getText().toString().trim();
 					if(!strInputValue.matches("")){//has input text
 						inputTextList.set(i, strInputValue);
@@ -121,8 +122,9 @@ public class MainActivity extends Activity {
         ArrayList<EditText> editTextList = new ArrayList<>(
         //Set All EditTexts ArrayList
                 Arrays.asList(et_fileName, et_startDate, et_endDate, et_minSize, et_maxSize));
+		int iEditTextListSize = editTextList.size();
 
-        List<String> textValueList = new ArrayList<>(Arrays.asList(new String[editTextList.size()]));
+        List<String> textValueList = new ArrayList<String>(Arrays.asList(new String[iEditTextListSize]));
         Collections.fill(textValueList, null);
 
 
