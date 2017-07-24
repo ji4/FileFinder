@@ -65,15 +65,15 @@ public class MainActivity extends Activity {
 			}
 		});
 
-//		btn_searchDupFile.setOnClickListener(new Button.OnClickListener() {
-//			@Override
-//			public void onClick(View view) {
-//				FileSearcher fileSearcher = new FileSearcher();
-//				matchedFileList = fileSearcher.searchFiles();
-//
-//				setAdapters();
-//			}
-//		});
+		btn_searchDupFile.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				FileSearcher fileSearcher = new FileSearcher();
+				matchedFileList = fileSearcher.searchDupFiles();
+
+				setAdapters();
+			}
+		});
 	}
 
 	public List<String> detectEditTextInputStatus(){
@@ -98,8 +98,6 @@ public class MainActivity extends Activity {
 	}
 
 	public void searchAllFiles(){
-		List<String> inputTextList = detectEditTextInputStatus();
-
 		//search
 		FileSearcher fileSearcher = new FileSearcher();
 		matchedFileList = fileSearcher.searchFiles(null);

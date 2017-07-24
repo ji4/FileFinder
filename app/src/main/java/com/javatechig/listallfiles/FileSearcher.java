@@ -14,9 +14,8 @@ import java.util.List;
 
 public class FileSearcher {
     //getting SDcard root path
-//        root = new File(Environment.getExternalStorageDirectory()
-//                .getAbsolutePath());
-    private File dir = new File("/storage/emulated/0/Download");
+//        root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+    public File dir = new File("/storage/emulated/0/Download");
 
     private ArrayList<File> directoryList = new ArrayList<File>();
     private ArrayList<File> matchedFileList = new ArrayList<File>();
@@ -33,18 +32,12 @@ public class FileSearcher {
     private static final int END_DATE = 2;
     private static final int MIN_SIZE = 3;
     private static final int MAX_SIZE = 4;
-//
-//    //search type
-//    private static final int SEARCH_ALL_FILES = 0;
-//    private static final int SEARCH_SPECIFIC_FILES = 1;
-//    private static final int SEARCH_DUPLICATED_FILE = 2;
-//    private int searchType = SEARCH_ALL_FILES;
-//
-//    public FileSearcher(){
-//        searchType = SEARCH_ALL_FILES;
-//    }
 
     public FileSearcher(){
+    }
+
+    public void setDirectoryPath(File dir){
+        this.dir = dir;
     }
 
     public Date getInputStartDate(){
@@ -147,9 +140,26 @@ public class FileSearcher {
         if(inputTextList != null)
             return filterSearchResult(matchedFileList);
 
-//        if(searchType == SEARCH_DUPLICATED_FILE)
-//            return dupFileList;
         return matchedFileList;
+    }
+
+    public ArrayList<File> searchDupFiles(){
+        directoryList.add(dir);
+
+        //Search all directory paths
+        int count = 0, iDirectoryListSize = directoryList.size();
+        while(count < iDirectoryListSize) {
+            getFile(directoryList.get(count));
+            count++;
+        }
+
+        try {
+            findDuplicatedFiles(matchedFileList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return dupFileList;
     }
 
     public ArrayList<File> filterSearchResult(ArrayList<File> toBeFilteredFileList){
@@ -196,16 +206,9 @@ public class FileSearcher {
                     directoryList.add(listFile[i]);
                 }
                 else{ //file
-                        matchedFileList.add(listFile[i]);
+                    matchedFileList.add(listFile[i]);
                 }
             }
-//            if(searchType == SEARCH_DUPLICATED_FILE) {
-//                try {
-//                    findDuplicatedFiles(matchedFileList);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
         }
     }
 
@@ -226,14 +229,11 @@ public class FileSearcher {
                 String duplicate = strFilePath;
 
                 // found a match between original and duplicate
-                    File fileOriPath = new File(original);
-                    if(!dupFileList.contains(fileOriPath)) {
-                        dupFileList.add(fileOriPath);
-                    }
-                    else { //the same file already exists
-                        File fileDupPath = new File(duplicate);
-                        dupFileList.add(fileDupPath);
-                    }
+                    File fileOri = new File(original);
+                    dupFileList.add(fileOri);
+
+                    File fileDup = new File(duplicate);
+                    dupFileList.add(fileDup);
             }
             else
             {
