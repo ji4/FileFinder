@@ -17,9 +17,9 @@ public class FileSearcher {
 //        root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
     public File root = new File("/storage/emulated/0/Download");
 
-    private ArrayList<File> directoryList = new ArrayList<File>();
-    private ArrayList<File> matchedFileList = new ArrayList<File>();
-    private ArrayList<File> dupFileList = new ArrayList<File>();
+    private ArrayList<File> arrltDirectories = new ArrayList<File>();
+    private ArrayList<File> arrltMatchedFiles = new ArrayList<File>();
+    private ArrayList<File> arrltDupFiles = new ArrayList<File>();
 
     private String strFileName;
     private Date startDate, endDate;
@@ -56,7 +56,7 @@ public class FileSearcher {
         return strFileName;
     }
 
-    private int[] parseDate(String strDate){
+    private int[] parseDateText(String strDate){
         int[] iArrDate = new int[3];
         String[] strArrDate = strDate.split("/");
         for(int i=0; i<3; i++){
@@ -80,18 +80,18 @@ public class FileSearcher {
                         //get text
                         String strStartDate = inputTextList.get(i);
                         //parse text
-                        int iArrStartDate[] = parseDate(strStartDate);
+                        int iArrStartDate[] = parseDateText(strStartDate);
                         //format date
-                        Date startDate = setDate(iArrStartDate[0], iArrStartDate[1], iArrStartDate[2], false); //param: year, month, day
+                        Date startDate = convertToDate(iArrStartDate[0], iArrStartDate[1], iArrStartDate[2], false); //param: year, month, day
                         this.startDate = startDate;
                         break;
                     case END_DATE:
                         //get text
                         String strEndDate = inputTextList.get(i);
                         //parse text
-                        int iArrEndDate[] = parseDate(strEndDate);
+                        int iArrEndDate[] = parseDateText(strEndDate);
                         //format date
-                        Date endDate = setDate(iArrEndDate[0], iArrEndDate[1], iArrEndDate[2], true); //param: year, month, day
+                        Date endDate = convertToDate(iArrEndDate[0], iArrEndDate[1], iArrEndDate[2], true); //param: year, month, day
                         this.endDate = endDate;
                         break;
                     case MIN_SIZE:
@@ -110,7 +110,7 @@ public class FileSearcher {
 
     }
 
-    public Date setDate(int year, int month, int day, Boolean isEndDate){
+    public Date convertToDate(int year, int month, int day, Boolean isEndDate){
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month - 1);
@@ -131,30 +131,30 @@ public class FileSearcher {
         searchBasedOnRootPath();
 
         if(inputTextList != null) //has input
-            return filterSearchResult(matchedFileList);
+            return filterSearchResult(arrltMatchedFiles);
 
-        return matchedFileList;
+        return arrltMatchedFiles;
     }
 
     public ArrayList<File> searchDupFiles(){
         searchBasedOnRootPath();
 
         try {
-            findDuplicatedFiles(matchedFileList);
+            findDuplicatedFiles(arrltMatchedFiles);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return dupFileList;
+        return arrltDupFiles;
     }
 
     private void searchBasedOnRootPath(){
-        directoryList.add(root); //based on root path
+        arrltDirectories.add(root); //based on root path
 
         //store inner directory paths
         int i = 0;
-        while(i < directoryList.size()) {
-            getFile(directoryList.get(i));
+        while(i < arrltDirectories.size()) {
+            getFile(arrltDirectories.get(i));
             i++;
         }
     }
@@ -200,10 +200,10 @@ public class FileSearcher {
         if (listFile != null && listFile.length > 0) {
             for (int i = 0; i < listFile.length; i++) {
                 if (listFile[i].isDirectory()) { //directory
-                    directoryList.add(listFile[i]);
+                    arrltDirectories.add(listFile[i]);
                 }
                 else{ //file
-                    matchedFileList.add(listFile[i]);
+                    arrltMatchedFiles.add(listFile[i]);
                 }
             }
         }
@@ -227,10 +227,10 @@ public class FileSearcher {
 
                 // found a match between original and duplicate
                     File fileOri = new File(original);
-                    dupFileList.add(fileOri);
+                    arrltDupFiles.add(fileOri);
 
                     File fileDup = new File(duplicate);
-                    dupFileList.add(fileDup);
+                    arrltDupFiles.add(fileDup);
             }
             else
             {

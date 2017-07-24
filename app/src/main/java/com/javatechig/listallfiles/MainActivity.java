@@ -41,8 +41,8 @@ public class MainActivity extends Activity {
 	private GridViewAdapter gridViewAdapter;
 	private int currentViewMode = 0;
 
-	static final int VIEW_MODE_LISTVIEW = 0;
-	static final int VIEW_MODE_GRIDVIEW = 1;
+	private static final int VIEW_MODE_LISTVIEW = 0;
+	private static final int VIEW_MODE_GRIDVIEW = 1;
 	//-------------file view-------------//
 
 	@Override
