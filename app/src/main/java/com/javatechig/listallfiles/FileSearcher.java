@@ -44,7 +44,35 @@ public class FileSearcher {
 //        searchType = SEARCH_ALL_FILES;
 //    }
 
-    public FileSearcher(List<String> inputTextList){
+    public FileSearcher(){
+    }
+
+    public Date getInputStartDate(){
+        return startDate;
+    }
+    public Date getInputEndDate() {
+        return endDate;
+    }
+    public long getInputMinSize() {
+        return minSize;
+    }
+    public long getInputMaxSize() {
+        return maxSize;
+    }
+    public String getFileName() {
+        return strFileName;
+    }
+
+    private int[] parseDate(String strDate){
+        int[] iArrDate = new int[3];
+        String[] strArrDate = strDate.split("/");
+        for(int i=0; i<3; i++){
+            iArrDate[i] = Integer.parseInt(strArrDate[i]);
+        }
+        return iArrDate;
+    }
+
+    private void setSearchVariables(List<String> inputTextList){
         this.inputTextList = inputTextList;
 
         //parse text values
@@ -86,31 +114,7 @@ public class FileSearcher {
             }
             i++;
         }
-    }
 
-    public Date getInputStartDate(){
-        return startDate;
-    }
-    public Date getInputEndDate() {
-        return endDate;
-    }
-    public long getInputMinSize() {
-        return minSize;
-    }
-    public long getInputMaxSize() {
-        return maxSize;
-    }
-    public String getFileName() {
-        return strFileName;
-    }
-
-    private int[] parseDate(String strDate){
-        int[] iArrDate = new int[3];
-        String[] strArrDate = strDate.split("/");
-        for(int i=0; i<3; i++){
-            iArrDate[i] = Integer.parseInt(strArrDate[i]);
-        }
-        return iArrDate;
     }
 
     public Date setDate(int year, int month, int day, Boolean isEndDate){
@@ -127,7 +131,10 @@ public class FileSearcher {
         return date;
     }
 
-    public ArrayList<File> searchFiles(){
+    public ArrayList<File> searchFiles(List<String> inputTextList){
+        if(inputTextList != null)
+            setSearchVariables(inputTextList);
+
         directoryList.add(dir);
 
         //Search all directory paths
@@ -137,11 +144,12 @@ public class FileSearcher {
             count++;
         }
 
-        return filterSearchResult(matchedFileList);
+        if(inputTextList != null)
+            return filterSearchResult(matchedFileList);
 
 //        if(searchType == SEARCH_DUPLICATED_FILE)
 //            return dupFileList;
-//        return matchedFileList;
+        return matchedFileList;
     }
 
     public ArrayList<File> filterSearchResult(ArrayList<File> toBeFilteredFileList){

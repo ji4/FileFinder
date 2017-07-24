@@ -58,8 +58,8 @@ public class MainActivity extends Activity {
 			public void onClick(View view) {
 				List<String> inputTextList = detectEditTextInputStatus();
 
-				FileSearcher fileSearcher = new FileSearcher(inputTextList);
-				matchedFileList = fileSearcher.searchFiles();
+				FileSearcher fileSearcher = new FileSearcher();
+				matchedFileList = fileSearcher.searchFiles(inputTextList);
 
 				setAdapters();
 			}
@@ -101,8 +101,8 @@ public class MainActivity extends Activity {
 		List<String> inputTextList = detectEditTextInputStatus();
 
 		//search
-		FileSearcher fileSearcher = new FileSearcher(inputTextList);
-		matchedFileList = fileSearcher.searchFiles();
+		FileSearcher fileSearcher = new FileSearcher();
+		matchedFileList = fileSearcher.searchFiles(null);
 	}
 
 	public void findViews(){
