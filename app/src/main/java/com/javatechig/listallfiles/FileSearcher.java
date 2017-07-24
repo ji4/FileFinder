@@ -28,38 +28,22 @@ public class FileSearcher {
     private long maxSize;
     private List<String> inputTextList;
 
-//    private static final int SEARCH_ALL_FILES = 0;
     private static final int FILE_NAME = 0;
     private static final int START_DATE = 1;
     private static final int END_DATE = 2;
     private static final int MIN_SIZE = 3;
     private static final int MAX_SIZE = 4;
-//    private static final int SEARCH_DUPLICATED_FILE = 5;
+//
+//    //search type
+//    private static final int SEARCH_ALL_FILES = 0;
+//    private static final int SEARCH_SPECIFIC_FILES = 1;
+//    private static final int SEARCH_DUPLICATED_FILE = 2;
 //    private int searchType = SEARCH_ALL_FILES;
-
+//
 //    public FileSearcher(){
-//        searchType = SEARCH_DUPLICATED_FILE;
+//        searchType = SEARCH_ALL_FILES;
 //    }
-//    public FileSearcher(String strFileName) {
-//        this.strFileName = strFileName;
-//
-//        if(strFileName.equals("jpg") || strFileName.equals("png"))
-//            searchType = SEARCH_FILE_TYPE;
-//        else if(!strFileName.equals(""))  //input isn't empty
-//            searchType = SEARCH_FILE_NAME;
-//        else searchType = SEARCH_ALL_FILES;
-//
-//    }
-//    public FileSearcher(Date startDate, Date endDate){
-//        this.startDate = startDate;
-//        this.endDate = endDate;
-//        searchType = SEARCH_CREATION_DATE;
-//    }
-//    public FileSearcher(long minSize, long maxSize){
-//        this.minSize = minSize;
-//        this.maxSize = maxSize;
-//        searchType = SEARCH_SIZE;
-//    }
+
     public FileSearcher(List<String> inputTextList){
         this.inputTextList = inputTextList;
 

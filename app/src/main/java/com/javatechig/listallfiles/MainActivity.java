@@ -32,7 +32,7 @@ public class MainActivity extends Activity {
 	private EditText et_startDate, et_endDate;
 	private EditText et_minSize, et_maxSize;
 
-	//file view
+	//-------------file view-------------//
 	private ViewStub stubGrid;
 	private ViewStub stubList;
 	private ListView listView;
@@ -43,7 +43,7 @@ public class MainActivity extends Activity {
 
 	static final int VIEW_MODE_LISTVIEW = 0;
 	static final int VIEW_MODE_GRIDVIEW = 1;
-
+	//-------------file view-------------//
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,24 +56,9 @@ public class MainActivity extends Activity {
 		btn_search.setOnClickListener(new Button.OnClickListener(){
 			@Override
 			public void onClick(View view) {
-				ArrayList<EditText> editTextList = new ArrayList<>(
-                //Set All EditTexts ArrayList
-						Arrays.asList(et_fileName, et_startDate, et_endDate, et_minSize, et_maxSize));
-				int iEditTextListSize = editTextList.size();
-
-				List<String> inputTextList = new ArrayList<String>(Arrays.asList(new String[iEditTextListSize]));
-                Collections.fill(inputTextList, null);
-
-				for(int i = 0; i < iEditTextListSize; i++){
-					String strInputValue = editTextList.get(i).getText().toString().trim();
-					if(!strInputValue.matches("")){//has input text
-						inputTextList.set(i, strInputValue);
-					}
-                    Log.d("inputTextList", String.valueOf(inputTextList.get(i)));
-				}
+				List<String> inputTextList = detectEditTextInputStatus();
 
 				FileSearcher fileSearcher = new FileSearcher(inputTextList);
-				matchedFileList.clear();
 				matchedFileList = fileSearcher.searchFiles();
 
 				setAdapters();
@@ -90,6 +75,50 @@ public class MainActivity extends Activity {
 //			}
 //		});
 	}
+
+	public List<String> detectEditTextInputStatus(){
+		//Add All EditTexts into ArrayList
+		ArrayList<EditText> editTextList = new ArrayList<>(
+				Arrays.asList(et_fileName, et_startDate, et_endDate, et_minSize, et_maxSize));
+
+		//Initialize input text list with null
+		int iEditTextListSize = editTextList.size();
+		List<String> inputTextList = new ArrayList<String>(Arrays.asList(new String[iEditTextListSize]));
+		Collections.fill(inputTextList, null);
+
+		//Fill in inputTextList if EditText has text
+		for(int i = 0; i < iEditTextListSize; i++){
+			String strInputValue = editTextList.get(i).getText().toString().trim();
+			if(!strInputValue.matches("")){//has input text
+				inputTextList.set(i, strInputValue);
+			}
+			Log.d("inputTextList", String.valueOf(inputTextList.get(i)));
+		}
+		return inputTextList;
+	}
+
+	public void searchAllFiles(){
+		List<String> inputTextList = detectEditTextInputStatus();
+
+		//search
+		FileSearcher fileSearcher = new FileSearcher(inputTextList);
+		matchedFileList = fileSearcher.searchFiles();
+	}
+
+	public void findViews(){
+		btn_search = (Button) findViewById(R.id.activity_main_btn_search);
+		btn_searchDupFile = (Button) findViewById(R.id.activity_main_btn_searchDupFile);
+		et_fileName = (EditText) findViewById(R.id.activity_main_et_fileName);
+		ll = (LinearLayout) findViewById(R.id.ll);
+		//start & end date
+		et_startDate = (EditText) findViewById(R.id.activity_main_et_startDate);
+		et_endDate = (EditText) findViewById(R.id.activity_main_et_endDate);
+		//size
+		et_minSize = (EditText) findViewById(R.id.activity_main_et_minSize);
+		et_maxSize = (EditText) findViewById(R.id.activity_main_et_maxSize);
+	}
+
+	//----------------Following are file view functions-------------------//
 
 	public void initFileViews(){
 		stubList = (ViewStub) findViewById(R.id.stub_list);
@@ -117,36 +146,6 @@ public class MainActivity extends Activity {
 
 		switchView();
 	}
-
-	public void searchAllFiles(){
-        ArrayList<EditText> editTextList = new ArrayList<>(
-        //Set All EditTexts ArrayList
-                Arrays.asList(et_fileName, et_startDate, et_endDate, et_minSize, et_maxSize));
-		int iEditTextListSize = editTextList.size();
-
-        List<String> textValueList = new ArrayList<String>(Arrays.asList(new String[iEditTextListSize]));
-        Collections.fill(textValueList, null);
-
-
-		//search
-		FileSearcher fileSearcher = new FileSearcher(textValueList);
-		matchedFileList = fileSearcher.searchFiles();
-	}
-
-	public void findViews(){
-		btn_search = (Button) findViewById(R.id.activity_main_btn_search);
-		btn_searchDupFile = (Button) findViewById(R.id.activity_main_btn_searchDupFile);
-		et_fileName = (EditText) findViewById(R.id.activity_main_et_fileName);
-		ll = (LinearLayout) findViewById(R.id.ll);
-		//start & end date
-		et_startDate = (EditText) findViewById(R.id.activity_main_et_startDate);
-		et_endDate = (EditText) findViewById(R.id.activity_main_et_endDate);
-		//size
-		et_minSize = (EditText) findViewById(R.id.activity_main_et_minSize);
-		et_maxSize = (EditText) findViewById(R.id.activity_main_et_maxSize);
-	}
-
-	//---------Following are file view functions-------------------
 
 	private void switchView() {
 
@@ -210,5 +209,6 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
+	//----------------End of file view functions-------------------//
 
 }
