@@ -15,7 +15,7 @@ import java.util.List;
 public class FileSearcher {
     //getting SDcard root path
 //        root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-    public File dir = new File("/storage/emulated/0/Download");
+    public File root = new File("/storage/emulated/0/Download");
 
     private ArrayList<File> directoryList = new ArrayList<File>();
     private ArrayList<File> matchedFileList = new ArrayList<File>();
@@ -37,7 +37,7 @@ public class FileSearcher {
     }
 
     public void setDirectoryPath(File dir){
-        this.dir = dir;
+        this.root = dir;
     }
 
     public Date getInputStartDate(){
@@ -65,7 +65,7 @@ public class FileSearcher {
         return iArrDate;
     }
 
-    private void setSearchVariables(List<String> inputTextList){
+    private void setInputVariables(List<String> inputTextList){
         this.inputTextList = inputTextList;
 
         //parse text values
@@ -125,33 +125,19 @@ public class FileSearcher {
     }
 
     public ArrayList<File> searchFiles(List<String> inputTextList){
-        if(inputTextList != null)
-            setSearchVariables(inputTextList);
+        if(inputTextList != null)  //has input
+            setInputVariables(inputTextList);
 
-        directoryList.add(dir);
+        searchBasedOnRootPath();
 
-        //Search all directory paths
-        int count = 0, iDirectoryListSize = directoryList.size();
-        while(count < iDirectoryListSize) {
-            getFile(directoryList.get(count));
-            count++;
-        }
-
-        if(inputTextList != null)
+        if(inputTextList != null) //has input
             return filterSearchResult(matchedFileList);
 
         return matchedFileList;
     }
 
     public ArrayList<File> searchDupFiles(){
-        directoryList.add(dir);
-
-        //Search all directory paths
-        int count = 0, iDirectoryListSize = directoryList.size();
-        while(count < iDirectoryListSize) {
-            getFile(directoryList.get(count));
-            count++;
-        }
+        searchBasedOnRootPath();
 
         try {
             findDuplicatedFiles(matchedFileList);
@@ -160,6 +146,17 @@ public class FileSearcher {
         }
 
         return dupFileList;
+    }
+
+    private void searchBasedOnRootPath(){
+        directoryList.add(root); //based on root path
+
+        //store inner directory paths
+        int i = 0;
+        while(i < directoryList.size()) {
+            getFile(directoryList.get(i));
+            i++;
+        }
     }
 
     public ArrayList<File> filterSearchResult(ArrayList<File> toBeFilteredFileList){
