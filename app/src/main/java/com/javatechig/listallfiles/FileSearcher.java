@@ -116,7 +116,7 @@ public class FileSearcher {
         calendar.set(Calendar.MONTH, month - 1);
         if(isEndDate) day++;
         calendar.set(Calendar.DAY_OF_MONTH, day);
-        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);// for 0 min
         calendar.set(Calendar.SECOND, 0);// for 0 sec
         Date date = new Date(calendar.getTimeInMillis());
