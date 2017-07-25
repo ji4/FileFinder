@@ -1,5 +1,7 @@
 package com.javatechig.listallfiles;
 
+import android.os.Environment;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -14,8 +16,8 @@ import java.util.List;
 
 public class FileSearcher {
     //getting SDcard root path
-//        root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-    public File root = new File("/storage/emulated/0/Download");
+    private File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+//    private File root = new File("/storage/emulated/0/Download");
 
     private ArrayList<File> arrltDirectories = new ArrayList<File>();
     private ArrayList<File> arrltMatchedFiles = new ArrayList<File>();
@@ -128,7 +130,7 @@ public class FileSearcher {
         if(inputTextList != null)  //has input
             setInputVariables(inputTextList);
 
-        searchBasedOnRootPath();
+        searchUnderRootPath();
 
         if(inputTextList != null) //has input
             return filterSearchResult(arrltMatchedFiles);
@@ -137,7 +139,7 @@ public class FileSearcher {
     }
 
     public ArrayList<File> searchDupFiles(){
-        searchBasedOnRootPath();
+        searchUnderRootPath();
 
         try {
             findDuplicatedFiles(arrltMatchedFiles);
@@ -148,7 +150,7 @@ public class FileSearcher {
         return arrltDupFiles;
     }
 
-    private void searchBasedOnRootPath(){
+    private void searchUnderRootPath(){
         arrltDirectories.add(root); //based on root path
 
         //store inner directory paths

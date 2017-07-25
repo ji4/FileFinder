@@ -47,8 +47,8 @@ public class MainActivity extends Activity {
 	private static final int VIEW_MODE_GRIDVIEW = 1;
 	//-------------file view-------------//
 
-	private static final int MSG_UPDATE_FILEVIEW = 0;
 
+	private static final int MSG_UPDATE_FILEVIEW = 0;
 	Handler handler = new Handler()
 	{
 		@Override
