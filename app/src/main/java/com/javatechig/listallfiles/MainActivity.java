@@ -58,12 +58,19 @@ public class MainActivity extends Activity {
 		btn_search.setOnClickListener(new Button.OnClickListener(){
 			@Override
 			public void onClick(View view) {
+				long startTime = System.currentTimeMillis();//timer
+
 				List<String> inputTextList = detectEditTextInputStatus();
 
 				FileSearcher fileSearcher = new FileSearcher();
 				matchedFileList = fileSearcher.searchFiles(inputTextList);
 
 				setAdapters();
+
+				//timer
+				long stopTime = System.currentTimeMillis();
+				long elapsedTime = stopTime - startTime;
+				System.out.println("elapsedTime in btn_search: "+elapsedTime);
 			}
 		});
 
