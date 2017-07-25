@@ -50,6 +50,8 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		long startTime = System.currentTimeMillis();//timer
+
 		findViews();
 		initFileViews();
 
@@ -74,6 +76,11 @@ public class MainActivity extends Activity {
 				setAdapters();
 			}
 		});
+
+		//timer
+		long stopTime = System.currentTimeMillis();
+		long elapsedTime = stopTime - startTime;
+		System.out.println("elapsedTime: "+elapsedTime);
 	}
 
 	public List<String> detectEditTextInputStatus(){
