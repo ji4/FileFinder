@@ -3,6 +3,8 @@ package com.javatechig.listallfiles;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,6 +47,23 @@ public class MainActivity extends Activity {
 	private static final int VIEW_MODE_GRIDVIEW = 1;
 	//-------------file view-------------//
 
+	private static final int MSG_UPDATE_FILEVIEW = 0;
+
+	Handler handler = new Handler()
+	{
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what){
+				case MSG_UPDATE_FILEVIEW:
+					matchedFileList = (ArrayList<File>) msg.obj;
+
+					setAdapters();
+					break;
+			}
+			super.handleMessage(msg);
+		}
+	};
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -61,9 +80,8 @@ public class MainActivity extends Activity {
 				List<String> inputTextList = detectEditTextInputStatus();
 
 				FileSearcher fileSearcher = new FileSearcher();
-				matchedFileList = fileSearcher.searchFiles(inputTextList);
-
-				setAdapters();
+				Thread r = new Thread(new RunnSearchFile(fileSearcher, inputTextList, matchedFileList));
+				r.start();
 			}
 		});
 
@@ -81,6 +99,25 @@ public class MainActivity extends Activity {
 		long stopTime = System.currentTimeMillis();
 		long elapsedTime = stopTime - startTime;
 		System.out.println("elapsedTime: "+elapsedTime);
+	}
+
+	class RunnSearchFile implements Runnable{
+		FileSearcher fileSearcher;
+		List<String> inputTextList;
+		ArrayList<File> matchedFileList;
+
+		public RunnSearchFile(FileSearcher fileSearcher, List<String> inputTextList, ArrayList<File> matchedFileList) {
+			this.fileSearcher = fileSearcher;
+			this.inputTextList = inputTextList;
+			this.matchedFileList = matchedFileList;
+		}
+
+		@Override
+		public void run() {
+			matchedFileList = fileSearcher.searchFiles(inputTextList);
+			handler.obtainMessage(MSG_UPDATE_FILEVIEW, matchedFileList).sendToTarget();
+
+		}
 	}
 
 	public List<String> detectEditTextInputStatus(){
