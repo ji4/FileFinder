@@ -122,7 +122,7 @@ public class MainActivity extends Activity {
 		@Override
 		public void run() {
 			matchedFileList = fileSearcher.searchFiles(inputTextList);
-//			handler.obtainMessage(MSG_UPDATE_FILEVIEW, matchedFileList).sendToTarget();
+			handler.obtainMessage(MSG_UPDATE_FILEVIEW, matchedFileList).sendToTarget();
 
 		}
 	}
