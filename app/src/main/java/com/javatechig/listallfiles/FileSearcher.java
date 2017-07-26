@@ -138,18 +138,6 @@ public class FileSearcher {
         return arrltMatchedFiles;
     }
 
-    public ArrayList<File> searchDupFiles(){
-        searchUnderRootPath();
-
-        try {
-            findDuplicatedFiles(arrltMatchedFiles);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return arrltDupFiles;
-    }
-
     private void searchUnderRootPath(){
         arrltDirectories.add(root); //based on root path
 
@@ -158,6 +146,21 @@ public class FileSearcher {
         while(i < arrltDirectories.size()) {
             getFile(arrltDirectories.get(i));
             i++;
+        }
+    }
+
+    private void getFile(File dir) {
+        File listFile[] = dir.listFiles();
+
+        if (listFile != null && listFile.length > 0) {
+            for (int i = 0; i < listFile.length; i++) {
+                if (listFile[i].isDirectory()) { //directory
+                    arrltDirectories.add(listFile[i]);
+                }
+                else{ //file
+                    arrltMatchedFiles.add(listFile[i]);
+                }
+            }
         }
     }
 
@@ -196,19 +199,16 @@ public class FileSearcher {
         return toBeFilteredFileList;
     }
 
-    private void getFile(File dir) {
-        File listFile[] = dir.listFiles();
+    public ArrayList<File> searchDupFiles(){
+        searchUnderRootPath();
 
-        if (listFile != null && listFile.length > 0) {
-            for (int i = 0; i < listFile.length; i++) {
-                if (listFile[i].isDirectory()) { //directory
-                    arrltDirectories.add(listFile[i]);
-                }
-                else{ //file
-                    arrltMatchedFiles.add(listFile[i]);
-                }
-            }
+        try {
+            findDuplicatedFiles(arrltMatchedFiles);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+        return arrltDupFiles;
     }
 
     private void findDuplicatedFiles(ArrayList<File> filepaths) {
