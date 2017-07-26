@@ -48,19 +48,23 @@ public class MainActivity extends Activity {
 	//-------------file view-------------//
 
 
-	private static final int MSG_UPDATE_FILEVIEW = 0;
+//	private static final int MSG_UPDATE_FILEVIEW = 0;
+	FileReceiver fileReceiver;
 	Handler handler = new Handler()
 	{
 		@Override
 		public void handleMessage(Message msg) {
-			switch (msg.what){
-				case MSG_UPDATE_FILEVIEW:
-					matchedFileList = (ArrayList<File>) msg.obj;
-
-					setAdapters();
-					break;
-			}
 			super.handleMessage(msg);
+		}
+	};
+	Runnable runnable = new Runnable() {
+		@Override
+		public void run() {
+			matchedFileList = fileReceiver.getFiles();
+			if(matchedFileList!=null)
+				setAdapters();
+			Log.d("matchedFileList in onClick: ", String.valueOf(matchedFileList));
+			handler.postDelayed(this, 100);
 		}
 	};
 
@@ -82,8 +86,9 @@ public class MainActivity extends Activity {
 				List<String> inputTextList = detectEditTextInputStatus();
 
 				FileSearcher fileSearcher = new FileSearcher();
-				Thread r = new Thread(new RunnSearchFile(fileSearcher, inputTextList, matchedFileList));
-				r.start();
+				fileReceiver = new FileReceiver(fileSearcher);
+				fileReceiver.queryFiles(inputTextList);
+				handler.postDelayed(runnable, 100);
 
 				//timer
 				long stopTime = System.currentTimeMillis();
@@ -108,25 +113,6 @@ public class MainActivity extends Activity {
 		System.out.println("elapsedTime: "+elapsedTime);
 	}
 
-	class RunnSearchFile implements Runnable{
-		FileSearcher fileSearcher;
-		List<String> inputTextList;
-		ArrayList<File> matchedFileList;
-
-		public RunnSearchFile(FileSearcher fileSearcher, List<String> inputTextList, ArrayList<File> matchedFileList) {
-			this.fileSearcher = fileSearcher;
-			this.inputTextList = inputTextList;
-			this.matchedFileList = matchedFileList;
-		}
-
-		@Override
-		public void run() {
-			matchedFileList = fileSearcher.searchFiles(inputTextList);
-			handler.obtainMessage(MSG_UPDATE_FILEVIEW, matchedFileList).sendToTarget();
-
-		}
-	}
-
 	public List<String> detectEditTextInputStatus(){
 		//Add All EditTexts into ArrayList
 		ArrayList<EditText> editTextList = new ArrayList<>(
@@ -148,11 +134,11 @@ public class MainActivity extends Activity {
 		return inputTextList;
 	}
 
-	public void searchAllFiles(){
-		//search
-		FileSearcher fileSearcher = new FileSearcher();
-		matchedFileList = fileSearcher.searchFiles(null);
-	}
+//	public void searchAllFiles(){
+//		//search
+//		FileSearcher fileSearcher = new FileSearcher();
+//		matchedFileList = fileSearcher.searchFiles(null);
+//	}
 
 	public void findViews(){
 		btn_search = (Button) findViewById(R.id.activity_main_btn_search);
@@ -181,7 +167,7 @@ public class MainActivity extends Activity {
 		listView = (ListView) findViewById(R.id.mylistview);
 		gridView = (GridView) findViewById(R.id.mygridview);
 
-		searchAllFiles();
+//		searchAllFiles();
 
 		//get list of files
 		setAdapters();

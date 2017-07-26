@@ -1,7 +1,5 @@
 package com.javatechig.listallfiles;
 
-import android.os.Environment;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,8 +14,8 @@ import java.util.List;
 
 public class FileSearcher {
     //getting SDcard root path
-    private File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-//    private File root = new File("/storage/emulated/0/Download");
+//    private File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+    private File root = new File("/storage/emulated/0/Download");
 
     private ArrayList<File> arrltDirectories = new ArrayList<File>();
     private ArrayList<File> arrltMatchedFiles = new ArrayList<File>();
@@ -126,16 +124,19 @@ public class FileSearcher {
         return date;
     }
 
-    public ArrayList<File> searchFiles(List<String> inputTextList){
+    public void searchFiles(CallBack callBack, List<String> inputTextList){
         if(inputTextList != null)  //has input
             setInputVariables(inputTextList);
 
         searchUnderRootPath();
 
-        if(inputTextList != null) //has input
-            return filterSearchResult(arrltMatchedFiles);
+        if(inputTextList != null) { //has input
+//            return filterSearchResult(arrltMatchedFiles);
 
-        return arrltMatchedFiles;
+            callBack.receiveFiles(filterSearchResult(arrltMatchedFiles));
+        }
+        callBack.receiveFiles(arrltMatchedFiles);
+//        return arrltMatchedFiles;
     }
 
     public ArrayList<File> searchDupFiles(){
