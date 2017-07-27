@@ -1,7 +1,5 @@
 package com.javatechig.listallfiles;
 
-import android.os.Environment;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,8 +14,8 @@ import java.util.List;
 
 public class FileSearcher {
     //getting SDcard root path
-    private File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-//    private File root = new File("/storage/emulated/0/Download");
+//    private File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+    private File root = new File("/storage/emulated/0/Download");
 
     private ArrayList<File> arrltDirectories = new ArrayList<File>();
     private ArrayList<File> arrltMatchedFiles = new ArrayList<File>();
@@ -166,11 +164,11 @@ public class FileSearcher {
 
     public ArrayList<File> filterSearchResult(ArrayList<File> toBeFilteredFileList){
         //Filter result of matchedFileList
-        int i = 0, iInputTextListSize = inputTextList.size();
-        while (i < iInputTextListSize){
-            if(inputTextList.get(i) != null){//has input text
+        int inputField = 0, iInputTextListSize = inputTextList.size();
+        while (inputField < iInputTextListSize){
+            if(inputTextList.get(inputField) != null){//has input text
                 for (Iterator<File> iterator = toBeFilteredFileList.iterator(); iterator.hasNext();) {
-                    switch (i) {
+                    switch (inputField) {
                         case FILE_NAME:
                             if (!iterator.next().getName().contains(getFileName())){
                                 iterator.remove();}
@@ -194,7 +192,7 @@ public class FileSearcher {
                     }
                 }
             }
-            i++;
+            inputField++;
         }
         return toBeFilteredFileList;
     }
