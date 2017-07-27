@@ -82,8 +82,10 @@ public class MainActivity extends Activity {
 				List<String> inputTextList = detectEditTextInputStatus();
 
 				FileSearcher fileSearcher = new FileSearcher();
-				Thread r = new Thread(new RunnSearchFile(fileSearcher, inputTextList, matchedFileList));
-				r.start();
+                matchedFileList = fileSearcher.searchFiles(inputTextList);
+                setAdapters();
+//                Thread r = new Thread(new RunnSearchFile(fileSearcher, inputTextList, matchedFileList));
+//				r.start();
 
 				//timer
 				long stopTime = System.currentTimeMillis();
@@ -108,24 +110,24 @@ public class MainActivity extends Activity {
 		System.out.println("elapsedTime: "+elapsedTime);
 	}
 
-	class RunnSearchFile implements Runnable{
-		FileSearcher fileSearcher;
-		List<String> inputTextList;
-		ArrayList<File> matchedFileList;
-
-		public RunnSearchFile(FileSearcher fileSearcher, List<String> inputTextList, ArrayList<File> matchedFileList) {
-			this.fileSearcher = fileSearcher;
-			this.inputTextList = inputTextList;
-			this.matchedFileList = matchedFileList;
-		}
-
-		@Override
-		public void run() {
-			matchedFileList = fileSearcher.searchFiles(inputTextList);
-			handler.obtainMessage(MSG_UPDATE_FILEVIEW, matchedFileList).sendToTarget();
-
-		}
-	}
+//	class RunnSearchFile implements Runnable{
+//		FileSearcher fileSearcher;
+//		List<String> inputTextList;
+//		ArrayList<File> matchedFileList;
+//
+//		public RunnSearchFile(FileSearcher fileSearcher, List<String> inputTextList, ArrayList<File> matchedFileList) {
+//			this.fileSearcher = fileSearcher;
+//			this.inputTextList = inputTextList;
+//			this.matchedFileList = matchedFileList;
+//		}
+//
+//		@Override
+//		public void run() {
+//			matchedFileList = fileSearcher.searchFiles(inputTextList);
+//			handler.obtainMessage(MSG_UPDATE_FILEVIEW, matchedFileList).sendToTarget();
+//
+//		}
+//	}
 
 	public List<String> detectEditTextInputStatus(){
 		//Add All EditTexts into ArrayList

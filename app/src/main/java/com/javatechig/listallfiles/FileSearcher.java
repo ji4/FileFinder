@@ -162,37 +162,50 @@ public class FileSearcher {
         }
     }
 
-    public ArrayList<File> filterSearchResult(ArrayList<File> toBeFilteredFileList){
+    public ArrayList<File> filterSearchResult(ArrayList<File> toBeFilteredFileList) {
         //Filter result of matchedFileList
-        int inputField = 0, iInputTextListSize = inputTextList.size();
-        while (inputField < iInputTextListSize){
-            if(inputTextList.get(inputField) != null){//has input text
-                for (Iterator<File> iterator = toBeFilteredFileList.iterator(); iterator.hasNext();) {
+        int iInputTextListSize = inputTextList.size();
+        for (Iterator<File> iterator = toBeFilteredFileList.iterator(); iterator.hasNext(); ) {//file list
+            File currentFile = iterator.next();
+            int inputField = 0;
+            scanner:while (inputField < iInputTextListSize) { //filter by each input field
+                if (inputTextList.get(inputField) != null) {//has input text
                     switch (inputField) {
                         case FILE_NAME:
-                            if (!iterator.next().getName().contains(getFileName())){
-                                iterator.remove();}
+                            if (!currentFile.getName().contains(getFileName())) {
+                                iterator.remove();
+                                break scanner;
+                            }
                             break;
                         case START_DATE:
-                            if(new Date(iterator.next().lastModified()).before(getInputStartDate())){
-                                iterator.remove();}
+                            if (new Date(currentFile.lastModified()).before(getInputStartDate())) {
+                                iterator.remove();
+                                break scanner;
+                            }
                             break;
                         case END_DATE:
-                            if(new Date(iterator.next().lastModified()).after(getInputEndDate())){
-                                iterator.remove();}
+                            if (new Date(currentFile.lastModified()).after(getInputEndDate())) {
+                                iterator.remove();
+                                break scanner;
+                            }
                             break;
                         case MIN_SIZE:
-                            if (iterator.next().length() < getInputMinSize()){
-                                iterator.remove();}
+                            if (currentFile.length() < getInputMinSize()) {
+                                iterator.remove();
+                                break scanner;
+                            }
                             break;
                         case MAX_SIZE:
-                            if (iterator.next().length() > getInputMaxSize()){
-                                iterator.remove();}
+                            if (currentFile.length() > getInputMaxSize()) {
+                                iterator.remove();
+                                break scanner;
+                            }else { //found a match file
+                            }
                             break;
                     }
                 }
+                inputField++;
             }
-            inputField++;
         }
         return toBeFilteredFileList;
     }
