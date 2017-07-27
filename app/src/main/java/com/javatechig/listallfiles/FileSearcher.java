@@ -40,31 +40,6 @@ public class FileSearcher {
         this.root = dir;
     }
 
-    public Date getInputStartDate(){
-        return startDate;
-    }
-    public Date getInputEndDate() {
-        return endDate;
-    }
-    public long getInputMinSize() {
-        return minSize;
-    }
-    public long getInputMaxSize() {
-        return maxSize;
-    }
-    public String getFileName() {
-        return strFileName;
-    }
-
-    private int[] parseDateText(String strDate){
-        int[] iArrDate = new int[3];
-        String[] strArrDate = strDate.split("/");
-        for(int i=0; i<3; i++){
-            iArrDate[i] = Integer.parseInt(strArrDate[i]);
-        }
-        return iArrDate;
-    }
-
     private void setInputVariables(List<String> inputTextList){
         this.inputTextList = inputTextList;
 
@@ -110,6 +85,31 @@ public class FileSearcher {
 
     }
 
+    public Date getInputStartDate(){
+        return startDate;
+    }
+    public Date getInputEndDate() {
+        return endDate;
+    }
+    public long getInputMinSize() {
+        return minSize;
+    }
+    public long getInputMaxSize() {
+        return maxSize;
+    }
+    public String getFileName() {
+        return strFileName;
+    }
+
+    private int[] parseDateText(String strDate){
+        int[] iArrDate = new int[3];
+        String[] strArrDate = strDate.split("/");
+        for(int i=0; i<3; i++){
+            iArrDate[i] = Integer.parseInt(strArrDate[i]);
+        }
+        return iArrDate;
+    }
+
     public Date convertToDate(int year, int month, int day, Boolean isEndDate){
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, year);
@@ -139,7 +139,7 @@ public class FileSearcher {
     private void searchUnderRootPath(){
         arrltDirectories.add(root); //based on root path
 
-        //store inner directory paths
+        //scan directory paths
         int i = 0;
         while(i < arrltDirectories.size()) {
             getFile(arrltDirectories.get(i));
@@ -153,7 +153,7 @@ public class FileSearcher {
         if (listFile != null && listFile.length > 0) {
             for (int i = 0; i < listFile.length; i++) {
                 if (listFile[i].isDirectory()) { //directory
-                    arrltDirectories.add(listFile[i]);
+                    arrltDirectories.add(listFile[i]); //store directory path into list
                 }
                 else{ //file
                     arrltMatchedFiles.add(listFile[i]);
