@@ -33,21 +33,21 @@ public class FileSearcher {
     private static final int MIN_SIZE = 3;
     private static final int MAX_SIZE = 4;
 
-    public FileSearcher(){
+    public FileSearcher() {
     }
 
-    public void setDirectoryPath(File dir){
+    public void setDirectoryPath(File dir) {
         this.root = dir;
     }
 
-    private void setInputVariables(List<String> inputTextList){
+    private void setInputVariables(List<String> inputTextList) {
         this.inputTextList = inputTextList;
 
         //parse text values
         int i = 0, iInputTextListSize = inputTextList.size();
-        while(i < iInputTextListSize) {
-            if(inputTextList.get(i) != null){ //has text value
-                switch (i){
+        while (i < iInputTextListSize) {
+            if (inputTextList.get(i) != null) { //has text value
+                switch (i) {
                     case FILE_NAME:
                         this.strFileName = inputTextList.get(i);
                         break;
@@ -85,36 +85,40 @@ public class FileSearcher {
 
     }
 
-    public Date getInputStartDate(){
+    public Date getInputStartDate() {
         return startDate;
     }
+
     public Date getInputEndDate() {
         return endDate;
     }
+
     public long getInputMinSize() {
         return minSize;
     }
+
     public long getInputMaxSize() {
         return maxSize;
     }
+
     public String getFileName() {
         return strFileName;
     }
 
-    private int[] parseDateText(String strDate){
+    private int[] parseDateText(String strDate) {
         int[] iArrDate = new int[3];
         String[] strArrDate = strDate.split("/");
-        for(int i=0; i<3; i++){
+        for (int i = 0; i < 3; i++) {
             iArrDate[i] = Integer.parseInt(strArrDate[i]);
         }
         return iArrDate;
     }
 
-    public Date convertToDate(int year, int month, int day, Boolean isEndDate){
+    public Date convertToDate(int year, int month, int day, Boolean isEndDate) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month - 1);
-        if(isEndDate) day++;
+        if (isEndDate) day++;
         calendar.set(Calendar.DAY_OF_MONTH, day);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);// for 0 min
@@ -124,24 +128,24 @@ public class FileSearcher {
         return date;
     }
 
-    public ArrayList<File> searchFiles(List<String> inputTextList){
-        if(inputTextList != null)  //has input
+    public ArrayList<File> searchFiles(List<String> inputTextList) {
+        if (inputTextList != null)  //has input
             setInputVariables(inputTextList);
 
         searchUnderRootPath();
 
-        if(inputTextList != null) //has input
+        if (inputTextList != null) //has input
             return filterSearchResult(arrltMatchedFiles);
 
         return arrltMatchedFiles;
     }
 
-    private void searchUnderRootPath(){
+    private void searchUnderRootPath() {
         arrltDirectories.add(root); //based on root path
 
         //scan directory paths
         int i = 0;
-        while(i < arrltDirectories.size()) {
+        while (i < arrltDirectories.size()) {
             getFile(arrltDirectories.get(i));
             i++;
         }
@@ -154,8 +158,7 @@ public class FileSearcher {
             for (int i = 0; i < listFile.length; i++) {
                 if (listFile[i].isDirectory()) { //directory
                     arrltDirectories.add(listFile[i]); //store directory path into list
-                }
-                else{ //file
+                } else { //file
                     arrltMatchedFiles.add(listFile[i]);
                 }
             }
@@ -168,7 +171,7 @@ public class FileSearcher {
         for (Iterator<File> iterator = toBeFilteredFileList.iterator(); iterator.hasNext(); ) {//file list
             File currentFile = iterator.next();
             int inputField = 0;
-            scanner:while (inputField < iInputTextListSize) { //filter by each input field
+    scanner:while (inputField < iInputTextListSize) { //filter by each input field
                 if (inputTextList.get(inputField) != null) {//has input text
                     switch (inputField) {
                         case FILE_NAME:
@@ -199,7 +202,7 @@ public class FileSearcher {
                             if (currentFile.length() > getInputMaxSize()) {
                                 iterator.remove();
                                 break scanner;
-                            }else { //found a match file
+                            } else { //found a match file
                             }
                             break;
                     }
@@ -210,7 +213,7 @@ public class FileSearcher {
         return toBeFilteredFileList;
     }
 
-    public ArrayList<File> searchDupFiles(){
+    public ArrayList<File> searchDupFiles() {
         searchUnderRootPath();
 
         try {
@@ -224,8 +227,7 @@ public class FileSearcher {
 
     private void findDuplicatedFiles(ArrayList<File> filepaths) {
         HashMap<String, String> hashmap = new HashMap<String, String>();
-        for(File filepath : filepaths)
-        {
+        for (File filepath : filepaths) {
             String strFilePath = String.valueOf(filepath);
             String md5 = null;
             try {
@@ -233,20 +235,17 @@ public class FileSearcher {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if(hashmap.containsKey(md5))
-            {
+            if (hashmap.containsKey(md5)) {
                 String original = hashmap.get(md5);
                 String duplicate = strFilePath;
 
                 // found a match between original and duplicate
-                    File fileOri = new File(original);
-                    arrltDupFiles.add(fileOri);
+                File fileOri = new File(original);
+                arrltDupFiles.add(fileOri);
 
-                    File fileDup = new File(duplicate);
-                    arrltDupFiles.add(fileDup);
-            }
-            else
-            {
+                File fileDup = new File(duplicate);
+                arrltDupFiles.add(fileDup);
+            } else {
                 hashmap.put(md5, strFilePath);
             }
         }
