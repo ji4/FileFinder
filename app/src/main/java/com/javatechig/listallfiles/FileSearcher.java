@@ -15,17 +15,16 @@ import java.util.List;
 public class FileSearcher {
     //getting SDcard root path
 //    private File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-    private File root = new File("/storage/emulated/0/Download");
+    private File m_root = new File("/storage/emulated/0/Download");
 
-    private ArrayList<File> arrltDirectories = new ArrayList<File>();
-    private ArrayList<File> arrltMatchedFiles = new ArrayList<File>();
-    private ArrayList<File> arrltDupFiles = new ArrayList<File>();
+    private ArrayList<File> m_arrltDirectories = new ArrayList<File>();
+    private ArrayList<File> m_arrltMatchedFiles = new ArrayList<File>();
+    private ArrayList<File> m_arrltDupFiles = new ArrayList<File>();
 
-    private String strFileName;
-    private Date startDate, endDate;
-    private long minSize;
-    private long maxSize;
-    private List<String> inputTextList;
+    private String m_strFileName;
+    private Date m_startDate, m_endDate;
+    private long m_minSize, m_maxSize;
+    private List<String> m_inputTextList;
 
     private static final int FILE_NAME = 0;
     private static final int START_DATE = 1;
@@ -37,11 +36,11 @@ public class FileSearcher {
     }
 
     public void setDirectoryPath(File dir) {
-        this.root = dir;
+        this.m_root = dir;
     }
 
     private void setInputVariables(List<String> inputTextList) {
-        this.inputTextList = inputTextList;
+        this.m_inputTextList = inputTextList;
 
         //parse text values
         int i = 0, iInputTextListSize = inputTextList.size();
@@ -49,7 +48,7 @@ public class FileSearcher {
             if (inputTextList.get(i) != null) { //has text value
                 switch (i) {
                     case FILE_NAME:
-                        this.strFileName = inputTextList.get(i);
+                        this.m_strFileName = inputTextList.get(i);
                         break;
                     case START_DATE:
                         //get text
@@ -58,7 +57,7 @@ public class FileSearcher {
                         int iArrStartDate[] = parseDateText(strStartDate);
                         //format date
                         Date startDate = convertToDate(iArrStartDate[0], iArrStartDate[1], iArrStartDate[2], false); //param: year, month, day
-                        this.startDate = startDate;
+                        this.m_startDate = startDate;
                         break;
                     case END_DATE:
                         //get text
@@ -67,15 +66,15 @@ public class FileSearcher {
                         int iArrEndDate[] = parseDateText(strEndDate);
                         //format date
                         Date endDate = convertToDate(iArrEndDate[0], iArrEndDate[1], iArrEndDate[2], true); //param: year, month, day
-                        this.endDate = endDate;
+                        this.m_endDate = endDate;
                         break;
                     case MIN_SIZE:
                         long min_size = Long.parseLong(inputTextList.get(i)) * 1024 * 1024; //Convert megabytes to bytes
-                        this.minSize = min_size;
+                        this.m_minSize = min_size;
                         break;
                     case MAX_SIZE:
                         long max_size = Long.parseLong(inputTextList.get(i)) * 1024 * 1024; //Convert megabytes to bytes
-                        this.maxSize = max_size;
+                        this.m_maxSize = max_size;
                         break;
                 }
 
@@ -86,23 +85,23 @@ public class FileSearcher {
     }
 
     public Date getInputStartDate() {
-        return startDate;
+        return m_startDate;
     }
 
     public Date getInputEndDate() {
-        return endDate;
+        return m_endDate;
     }
 
     public long getInputMinSize() {
-        return minSize;
+        return m_minSize;
     }
 
     public long getInputMaxSize() {
-        return maxSize;
+        return m_maxSize;
     }
 
     public String getFileName() {
-        return strFileName;
+        return m_strFileName;
     }
 
     private int[] parseDateText(String strDate) {
@@ -135,18 +134,18 @@ public class FileSearcher {
         searchUnderRootPath();
 
         if (inputTextList != null) //has input
-            return filterSearchResult(arrltMatchedFiles);
+            return filterSearchResult(m_arrltMatchedFiles);
 
-        return arrltMatchedFiles;
+        return m_arrltMatchedFiles;
     }
 
     private void searchUnderRootPath() {
-        arrltDirectories.add(root); //based on root path
+        m_arrltDirectories.add(m_root); //based on root path
 
         //scan directory paths
         int i = 0;
-        while (i < arrltDirectories.size()) {
-            getFile(arrltDirectories.get(i));
+        while (i < m_arrltDirectories.size()) {
+            getFile(m_arrltDirectories.get(i));
             i++;
         }
     }
@@ -157,9 +156,9 @@ public class FileSearcher {
         if (listFile != null && listFile.length > 0) {
             for (int i = 0; i < listFile.length; i++) {
                 if (listFile[i].isDirectory()) { //directory
-                    arrltDirectories.add(listFile[i]); //store directory path into list
+                    m_arrltDirectories.add(listFile[i]); //store directory path into list
                 } else { //file
-                    arrltMatchedFiles.add(listFile[i]);
+                    m_arrltMatchedFiles.add(listFile[i]);
                 }
             }
         }
@@ -167,12 +166,12 @@ public class FileSearcher {
 
     public ArrayList<File> filterSearchResult(ArrayList<File> toBeFilteredFileList) {
         //Filter result of matchedFileList
-        int iInputTextListSize = inputTextList.size();
+        int iInputTextListSize = m_inputTextList.size();
         for (Iterator<File> iterator = toBeFilteredFileList.iterator(); iterator.hasNext(); ) {//file list
             File currentFile = iterator.next();
             int inputField = 0;
     scanner:while (inputField < iInputTextListSize) { //filter by each input field
-                if (inputTextList.get(inputField) != null) {//has input text
+                if (m_inputTextList.get(inputField) != null) {//has input text
                     switch (inputField) {
                         case FILE_NAME:
                             if (!currentFile.getName().contains(getFileName())) {
@@ -217,12 +216,12 @@ public class FileSearcher {
         searchUnderRootPath();
 
         try {
-            findDuplicatedFiles(arrltMatchedFiles);
+            findDuplicatedFiles(m_arrltMatchedFiles);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return arrltDupFiles;
+        return m_arrltDupFiles;
     }
 
     private void findDuplicatedFiles(ArrayList<File> filepaths) {
@@ -241,10 +240,10 @@ public class FileSearcher {
 
                 // found a match between original and duplicate
                 File fileOri = new File(original);
-                arrltDupFiles.add(fileOri);
+                m_arrltDupFiles.add(fileOri);
 
                 File fileDup = new File(duplicate);
-                arrltDupFiles.add(fileDup);
+                m_arrltDupFiles.add(fileDup);
             } else {
                 hashmap.put(md5, strFilePath);
             }
