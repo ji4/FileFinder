@@ -20,6 +20,7 @@ public class FileSearcher {
     private ArrayList<File> m_arrltDirectories = new ArrayList<File>();
     private ArrayList<File> m_arrltMatchedFiles = new ArrayList<File>();
     private ArrayList<File> m_arrltDupFiles = new ArrayList<File>();
+    private ArrayList<File> m_arrltTempFiles = new ArrayList<File>(); //new container for matched files
 
     private String m_strFileName;
     private Date m_startDate, m_endDate;
@@ -134,7 +135,7 @@ public class FileSearcher {
         searchUnderRootPath();
 
         if (inputTextList != null) //has input
-            return filterSearchResult(m_arrltMatchedFiles);
+            return filterSearchByInput(m_arrltMatchedFiles);
 
         return m_arrltMatchedFiles;
     }
@@ -164,11 +165,11 @@ public class FileSearcher {
         }
     }
 
-    public ArrayList<File> filterSearchResult(ArrayList<File> toBeFilteredFileList) {
-        //Filter result of matchedFileList
+    public ArrayList<File> filterSearchByInput(ArrayList<File> toBeFilteredFileList) {//Filter files found by input fields
         int iInputTextListSize = m_inputTextList.size();
         for (Iterator<File> iterator = toBeFilteredFileList.iterator(); iterator.hasNext(); ) {//file list
             File currentFile = iterator.next();
+            File matchedFile = null;
             int inputField = 0;
     scanner:while (inputField < iInputTextListSize) { //filter by each input field
                 if (m_inputTextList.get(inputField) != null) {//has input text
@@ -178,37 +179,62 @@ public class FileSearcher {
                                 iterator.remove();
                                 break scanner;
                             }
+                            else{
+                                matchedFile = currentFile;
+                            }
                             break;
                         case START_DATE:
                             if (new Date(currentFile.lastModified()).before(getInputStartDate())) {
                                 iterator.remove();
+                                matchedFile = null;
                                 break scanner;
+                            }
+                            else{
+                                matchedFile = currentFile;
                             }
                             break;
                         case END_DATE:
                             if (new Date(currentFile.lastModified()).after(getInputEndDate())) {
                                 iterator.remove();
+                                matchedFile = null;
                                 break scanner;
+                            }
+                            else{
+                                matchedFile = currentFile;
                             }
                             break;
                         case MIN_SIZE:
                             if (currentFile.length() < getInputMinSize()) {
                                 iterator.remove();
+                                matchedFile = null;
                                 break scanner;
+                            }
+                            else{
+                                matchedFile = currentFile;
                             }
                             break;
                         case MAX_SIZE:
                             if (currentFile.length() > getInputMaxSize()) {
                                 iterator.remove();
+                                matchedFile = null;
                                 break scanner;
-                            } else { //found a match file
+                            } else{
+                                matchedFile = currentFile;
                             }
                             break;
                     }
                 }
                 inputField++;
             }
+            if(matchedFile != null){
+                m_arrltTempFiles.add(matchedFile); //Add to a new arrayList
+                iterator.remove(); //remove element in toBeFilteredFileList (passed-in param)
+                m_arrltMatchedFiles.remove(matchedFile); //remove element in original arraylist
+            }
+
         }
+        if(m_arrltTempFiles.size() > 0)
+            return m_arrltTempFiles;
         return toBeFilteredFileList;
     }
 
