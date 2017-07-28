@@ -11,18 +11,18 @@ import java.util.List;
  */
 
 public class FileReceiver implements CallBack {
-    private ArrayList<File> receivedFiles;
-    private FileSearcher fileSearcher;
-    private Boolean stopReceiving = false;
+    private ArrayList<File> m_receivedFiles;
+    private FileSearcher m_fileSearcher;
+    private Boolean m_stopReceiving = false;
     public FileReceiver(FileSearcher fileSearcher) {
-        this.fileSearcher = fileSearcher;
+        this.m_fileSearcher = fileSearcher;
     }
 
     public void queryFiles(final List<String> inputTextList){
         new Thread(new Runnable() {
             @Override
             public void run() {
-                fileSearcher.searchFiles(FileReceiver.this, inputTextList);
+                m_fileSearcher.searchFiles(FileReceiver.this, inputTextList);
             }
         }).start();
 
@@ -30,17 +30,17 @@ public class FileReceiver implements CallBack {
 
     @Override
     public void receiveFiles(ArrayList<File> arrltFiles, Boolean isFinishFiltering) {
-        this.receivedFiles = arrltFiles;
-        this.stopReceiving = isFinishFiltering;
-        Log.d("jia", "receivedFiles: "+receivedFiles);
+        this.m_receivedFiles = arrltFiles;
+        this.m_stopReceiving = isFinishFiltering;
+        Log.d("jia", "receivedFiles: "+ m_receivedFiles);
 
     }
 
     public ArrayList<File> getFiles(){
-        return receivedFiles;
+        return m_receivedFiles;
     }
 
     public Boolean getStopReceiving() {
-        return stopReceiving;
+        return m_stopReceiving;
     }
 }

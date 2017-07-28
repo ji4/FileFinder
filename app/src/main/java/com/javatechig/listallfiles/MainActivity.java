@@ -48,21 +48,20 @@ public class MainActivity extends Activity {
 	//-------------file view-------------//
 
 
-//	private static final int MSG_UPDATE_FILEVIEW = 0;
-	FileReceiver fileReceiver;
-	Handler handler = new Handler()
+	FileReceiver m_fileReceiver;
+	Handler m_handler = new Handler()
 	{
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 		}
 	};
-	Runnable runnable = new Runnable() {
+	Runnable m_runnable = new Runnable() {
 		@Override
 		public void run() {
 			//Get data from file receiver
-			m_matchedFileList = fileReceiver.getFiles();
-			Boolean stopReceiving = fileReceiver.getStopReceiving();
+			m_matchedFileList = m_fileReceiver.getFiles();
+			Boolean stopReceiving = m_fileReceiver.getStopReceiving();
 
 			//Refresh UI
 			if(m_matchedFileList!=null)
@@ -71,7 +70,7 @@ public class MainActivity extends Activity {
 
 			//Stop updating UI after finished
 			if(!stopReceiving)
-				handler.postDelayed(this, 100);
+				m_handler.postDelayed(this, 100);
 		}
 	};
 
@@ -93,9 +92,9 @@ public class MainActivity extends Activity {
 				List<String> inputTextList = detectEditTextInputStatus();
 
 				FileSearcher fileSearcher = new FileSearcher();
-				fileReceiver = new FileReceiver(fileSearcher);
-				fileReceiver.queryFiles(inputTextList);
-				handler.postDelayed(runnable, 100);
+				m_fileReceiver = new FileReceiver(fileSearcher);
+				m_fileReceiver.queryFiles(inputTextList);
+				m_handler.postDelayed(m_runnable, 100);
 
 
 				//timer

@@ -18,7 +18,7 @@ public class FileSearcher {
     private File m_root = new File("/storage/emulated/0/Download");
 
     private ArrayList<File> m_arrltDirectories = new ArrayList<File>();
-    private ArrayList<File> m_arrltMatchedFiles = new ArrayList<File>();
+    private ArrayList<File> m_arrltFoundFiles = new ArrayList<File>();
     private ArrayList<File> m_arrltDupFiles = new ArrayList<File>();
     private ArrayList<File> m_arrltTempFiles = new ArrayList<File>(); //new container for matched files
 
@@ -159,7 +159,7 @@ public class FileSearcher {
             public void run() {
                 super.run();
                 if(inputTextList != null) { //has input
-                    filterSearchByInput(m_arrltMatchedFiles);
+                    filterSearchByInput(m_arrltFoundFiles);
                     callBack.receiveFiles(m_arrltTempFiles, m_isFinishFiltering);
                 }else {
                     callBack.receiveFiles(m_arrltTempFiles, m_isFinishFiltering);
@@ -196,7 +196,7 @@ public class FileSearcher {
                 if (listFile[i].isDirectory()) { //directory
                     m_arrltDirectories.add(listFile[i]); //store directory path into list
                 } else { //file
-                    m_arrltMatchedFiles.add(listFile[i]);
+                    m_arrltFoundFiles.add(listFile[i]);
                 }
             }
         }
@@ -266,7 +266,7 @@ public class FileSearcher {
             if(matchedFile != null){
                 m_arrltTempFiles.add(matchedFile); //Add to a new arrayList
                 iterator.remove(); //remove element in toBeFilteredFileList (passed-in param)
-                m_arrltMatchedFiles.remove(matchedFile); //remove element in original arraylist
+                m_arrltFoundFiles.remove(matchedFile); //remove element in original arraylist
             }
 
         }
@@ -277,7 +277,7 @@ public class FileSearcher {
         searchUnderRootPath();
 
         try {
-            findDuplicatedFiles(m_arrltMatchedFiles);
+            findDuplicatedFiles(m_arrltFoundFiles);
         } catch (Exception e) {
             e.printStackTrace();
         }
