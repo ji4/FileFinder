@@ -1,12 +1,15 @@
 package com.javatechig.listallfiles;
 
+import android.os.Environment;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
+
+import static java.lang.Thread.sleep;
 
 /**
  * Created by chiaying.wu on 2017/7/17.
@@ -14,13 +17,14 @@ import java.util.List;
 
 public class FileSearcher {
     //getting SDcard root path
-//    private File m_root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-    private File m_root = new File("/storage/emulated/0/Download");
+    private File m_root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+//    private File m_root = new File("/storage/emulated/0/Download");
 
     private ArrayList<File> m_arrltDirectories = new ArrayList<File>();
     private ArrayList<File> m_arrltFoundFiles = new ArrayList<File>();
     private ArrayList<File> m_arrltDupFiles = new ArrayList<File>();
     private ArrayList<File> m_arrltTempFiles = new ArrayList<File>(); //new container for matched files
+    private File m_lastFoundFile;
 
     private String m_strFileName;
     private Date m_startDate, m_endDate;
@@ -148,11 +152,11 @@ public class FileSearcher {
 //        }.start();
 
         SearchThread searchThread = new SearchThread();
-//        searchThread.setPriority(1);
+        searchThread.setPriority(1);
         searchThread.start();
         try {
-            searchThread.join();
-//            sleep(5000);
+//            searchThread.join();
+            sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -201,6 +205,7 @@ public class FileSearcher {
                     m_arrltDirectories.add(listFile[i]); //store directory path into list
                 } else { //file
                     m_arrltFoundFiles.add(listFile[i]);
+                    m_lastFoundFile = listFile[i];
                 }
             }
         }
@@ -208,8 +213,9 @@ public class FileSearcher {
 
     public void filterSearchByInput() {//Filter files found by input fields
         int iInputTextListSize = m_inputTextList.size();
-        for (Iterator<File> iterator = m_arrltFoundFiles.iterator(); iterator.hasNext(); ) {//file list
-            File currentFile = iterator.next();
+        File currentFile = null;
+        while (m_arrltFoundFiles.size() > 0 || currentFile != m_lastFoundFile){
+            currentFile = m_arrltFoundFiles.get(0);
             File matchedFile = null;
             int inputField = 0;
     scanner:while (inputField < iInputTextListSize) { //filter by each input field
@@ -217,7 +223,7 @@ public class FileSearcher {
                     switch (inputField) {
                         case FILE_NAME:
                             if (!currentFile.getName().contains(getFileName())) {
-                                iterator.remove();
+                                m_arrltFoundFiles.remove(currentFile);
                                 break scanner;
                             }
                             else{
@@ -226,7 +232,7 @@ public class FileSearcher {
                             break;
                         case START_DATE:
                             if (new Date(currentFile.lastModified()).before(getInputStartDate())) {
-                                iterator.remove();
+                                m_arrltFoundFiles.remove(currentFile);
                                 matchedFile = null;
                                 break scanner;
                             }
@@ -236,7 +242,7 @@ public class FileSearcher {
                             break;
                         case END_DATE:
                             if (new Date(currentFile.lastModified()).after(getInputEndDate())) {
-                                iterator.remove();
+                                m_arrltFoundFiles.remove(currentFile);
                                 matchedFile = null;
                                 break scanner;
                             }
@@ -246,7 +252,7 @@ public class FileSearcher {
                             break;
                         case MIN_SIZE:
                             if (currentFile.length() < getInputMinSize()) {
-                                iterator.remove();
+                                m_arrltFoundFiles.remove(currentFile);
                                 matchedFile = null;
                                 break scanner;
                             }
@@ -256,7 +262,7 @@ public class FileSearcher {
                             break;
                         case MAX_SIZE:
                             if (currentFile.length() > getInputMaxSize()) {
-                                iterator.remove();
+                                m_arrltFoundFiles.remove(currentFile);
                                 matchedFile = null;
                                 break scanner;
                             } else{
@@ -268,11 +274,9 @@ public class FileSearcher {
                 inputField++;
             }
             if(matchedFile != null){
-                m_arrltTempFiles.add(matchedFile); //Add to a new arrayList
-                iterator.remove(); //remove element in iterator
-                m_arrltFoundFiles.remove(matchedFile); //remove element in original arraylist
+                m_arrltTempFiles.add(matchedFile); //Add matched file to a new arrayList
             }
-
+            m_arrltFoundFiles.remove(currentFile);//remove file in original arraylist after authenticated
         }
         m_isFinishFiltering = true;
     }
