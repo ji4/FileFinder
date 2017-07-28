@@ -27,21 +27,21 @@ import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends Activity {
-    private ArrayList<File> matchedFileList = new ArrayList<>();
-	private Button btn_search, btn_searchDupFile;
-    private EditText et_fileName;
+    private ArrayList<File> m_matchedFileList = new ArrayList<>();
+	private Button m_btn_search, m_btn_searchDupFile;
+    private EditText m_et_fileName;
 	private LinearLayout ll;
-	private EditText et_startDate, et_endDate;
-	private EditText et_minSize, et_maxSize;
+	private EditText m_et_startDate, m_et_endDate;
+	private EditText m_et_minSize, m_et_maxSize;
 
 	//-------------file view-------------//
-	private ViewStub stubGrid;
-	private ViewStub stubList;
-	private ListView listView;
-	private GridView gridView;
-	private ListViewAdapter listViewAdapter;
-	private GridViewAdapter gridViewAdapter;
-	private int currentViewMode = 0;
+	private ViewStub m_stubGrid;
+	private ViewStub m_stubList;
+	private ListView m_listView;
+	private GridView m_gridView;
+	private ListViewAdapter m_listViewAdapter;
+	private GridViewAdapter m_gridViewAdapter;
+	private int m_currentViewMode = 0;
 
 	private static final int VIEW_MODE_LISTVIEW = 0;
 	private static final int VIEW_MODE_GRIDVIEW = 1;
@@ -60,10 +60,10 @@ public class MainActivity extends Activity {
 	Runnable runnable = new Runnable() {
 		@Override
 		public void run() {
-			matchedFileList = fileReceiver.getFiles();
-			if(matchedFileList!=null)
+			m_matchedFileList = fileReceiver.getFiles();
+			if(m_matchedFileList!=null)
 				setAdapters();
-			Log.d("matchedFileList in onClick: ", String.valueOf(matchedFileList));
+			Log.d("matchedFileList in onClick: ", String.valueOf(m_matchedFileList));
 			handler.postDelayed(this, 100);
 		}
 	};
@@ -78,7 +78,7 @@ public class MainActivity extends Activity {
 		findViews();
 		initFileViews();
 
-		btn_search.setOnClickListener(new Button.OnClickListener(){
+		m_btn_search.setOnClickListener(new Button.OnClickListener(){
 			@Override
 			public void onClick(View view) {
 				long startTime = System.currentTimeMillis();//timer
@@ -90,6 +90,7 @@ public class MainActivity extends Activity {
 				fileReceiver.queryFiles(inputTextList);
 				handler.postDelayed(runnable, 100);
 
+
 				//timer
 				long stopTime = System.currentTimeMillis();
 				long elapsedTime = stopTime - startTime;
@@ -97,11 +98,11 @@ public class MainActivity extends Activity {
 			}
 		});
 
-		btn_searchDupFile.setOnClickListener(new Button.OnClickListener() {
+		m_btn_searchDupFile.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				FileSearcher fileSearcher = new FileSearcher();
-				matchedFileList = fileSearcher.searchDupFiles();
+				m_matchedFileList = fileSearcher.searchDupFiles();
 
 				setAdapters();
 			}
@@ -116,7 +117,7 @@ public class MainActivity extends Activity {
 	public List<String> detectEditTextInputStatus(){
 		//Add All EditTexts into ArrayList
 		ArrayList<EditText> editTextList = new ArrayList<>(
-				Arrays.asList(et_fileName, et_startDate, et_endDate, et_minSize, et_maxSize));
+				Arrays.asList(m_et_fileName, m_et_startDate, m_et_endDate, m_et_minSize, m_et_maxSize));
 
 		//Initialize input text list with null
 		int iEditTextListSize = editTextList.size();
@@ -134,38 +135,39 @@ public class MainActivity extends Activity {
 		return inputTextList;
 	}
 
+
 //	public void searchAllFiles(){
 //		//search
 //		FileSearcher fileSearcher = new FileSearcher();
-//		matchedFileList = fileSearcher.searchFiles(null);
+//		m_matchedFileList = fileSearcher.searchFiles(null);
 //	}
 
 	public void findViews(){
-		btn_search = (Button) findViewById(R.id.activity_main_btn_search);
-		btn_searchDupFile = (Button) findViewById(R.id.activity_main_btn_searchDupFile);
-		et_fileName = (EditText) findViewById(R.id.activity_main_et_fileName);
+		m_btn_search = (Button) findViewById(R.id.activity_main_btn_search);
+		m_btn_searchDupFile = (Button) findViewById(R.id.activity_main_btn_searchDupFile);
+		m_et_fileName = (EditText) findViewById(R.id.activity_main_et_fileName);
 		ll = (LinearLayout) findViewById(R.id.ll);
 		//start & end date
-		et_startDate = (EditText) findViewById(R.id.activity_main_et_startDate);
-		et_endDate = (EditText) findViewById(R.id.activity_main_et_endDate);
+		m_et_startDate = (EditText) findViewById(R.id.activity_main_et_startDate);
+		m_et_endDate = (EditText) findViewById(R.id.activity_main_et_endDate);
 		//size
-		et_minSize = (EditText) findViewById(R.id.activity_main_et_minSize);
-		et_maxSize = (EditText) findViewById(R.id.activity_main_et_maxSize);
+		m_et_minSize = (EditText) findViewById(R.id.activity_main_et_minSize);
+		m_et_maxSize = (EditText) findViewById(R.id.activity_main_et_maxSize);
 	}
 
 	//----------------Following are file view functions-------------------//
 
 	public void initFileViews(){
-		stubList = (ViewStub) findViewById(R.id.stub_list);
-		stubGrid = (ViewStub) findViewById(R.id.stub_grid);
+		m_stubList = (ViewStub) findViewById(R.id.stub_list);
+		m_stubGrid = (ViewStub) findViewById(R.id.stub_grid);
 
 		//Inflate ViewStub before get view
 
-		stubList.inflate();
-		stubGrid.inflate();
+		m_stubList.inflate();
+		m_stubGrid.inflate();
 
-		listView = (ListView) findViewById(R.id.mylistview);
-		gridView = (GridView) findViewById(R.id.mygridview);
+		m_listView = (ListView) findViewById(R.id.mylistview);
+		m_gridView = (GridView) findViewById(R.id.mygridview);
 
 //		searchAllFiles();
 
@@ -174,37 +176,37 @@ public class MainActivity extends Activity {
 
 		//Get current view mode in share reference
 		SharedPreferences sharedPreferences = getSharedPreferences("ViewMode", MODE_PRIVATE);
-		currentViewMode = sharedPreferences.getInt("currentViewMode", VIEW_MODE_LISTVIEW);//Default is view listview
+		m_currentViewMode = sharedPreferences.getInt("currentViewMode", VIEW_MODE_LISTVIEW);//Default is view listview
 		//Register item lick
-		listView.setOnItemClickListener(onItemClick);
-		gridView.setOnItemClickListener(onItemClick);
+		m_listView.setOnItemClickListener(onItemClick);
+		m_gridView.setOnItemClickListener(onItemClick);
 
 		switchView();
 	}
 
 	private void switchView() {
 
-		if(VIEW_MODE_LISTVIEW == currentViewMode) {
+		if(VIEW_MODE_LISTVIEW == m_currentViewMode) {
 			//Display listview
-			stubList.setVisibility(View.VISIBLE);
+			m_stubList.setVisibility(View.VISIBLE);
 			//Hide gridview
-			stubGrid.setVisibility(View.GONE);
+			m_stubGrid.setVisibility(View.GONE);
 		} else {
 			//Hide listview
-			stubList.setVisibility(View.GONE);
+			m_stubList.setVisibility(View.GONE);
 			//Display gridview
-			stubGrid.setVisibility(View.VISIBLE);
+			m_stubGrid.setVisibility(View.VISIBLE);
 		}
 		setAdapters();
 	}
 
 	private void setAdapters() {
-		if(VIEW_MODE_LISTVIEW == currentViewMode) {
-			listViewAdapter = new ListViewAdapter(this, R.layout.list_item, matchedFileList);
-			listView.setAdapter(listViewAdapter);
+		if(VIEW_MODE_LISTVIEW == m_currentViewMode) {
+			m_listViewAdapter = new ListViewAdapter(this, R.layout.list_item, m_matchedFileList);
+			m_listView.setAdapter(m_listViewAdapter);
 		} else {
-			gridViewAdapter = new GridViewAdapter(this, R.layout.grid_item, matchedFileList);
-			gridView.setAdapter(gridViewAdapter);
+			m_gridViewAdapter = new GridViewAdapter(this, R.layout.grid_item, m_matchedFileList);
+			m_gridView.setAdapter(m_gridViewAdapter);
 		}
 	}
 
@@ -212,7 +214,7 @@ public class MainActivity extends Activity {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			//Do any thing when user click to item
-			Toast.makeText(getApplicationContext(), matchedFileList.get(position).getName() + " - " + ListViewAdapter.convertTime(matchedFileList.get(position).lastModified()), Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), m_matchedFileList.get(position).getName() + " - " + ListViewAdapter.convertTime(m_matchedFileList.get(position).lastModified()), Toast.LENGTH_SHORT).show();
 		}
 	};
 
@@ -226,17 +228,17 @@ public class MainActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.item_menu_1:
-				if(VIEW_MODE_LISTVIEW == currentViewMode) {
-					currentViewMode = VIEW_MODE_GRIDVIEW;
+				if(VIEW_MODE_LISTVIEW == m_currentViewMode) {
+					m_currentViewMode = VIEW_MODE_GRIDVIEW;
 				} else {
-					currentViewMode = VIEW_MODE_LISTVIEW;
+					m_currentViewMode = VIEW_MODE_LISTVIEW;
 				}
 				//Switch view
 				switchView();
 				//Save view mode in share reference
 				SharedPreferences sharedPreferences = getSharedPreferences("ViewMode", MODE_PRIVATE);
 				SharedPreferences.Editor editor = sharedPreferences.edit();
-				editor.putInt("currentViewMode", currentViewMode);
+				editor.putInt("currentViewMode", m_currentViewMode);
 				editor.commit();
 
 				break;
