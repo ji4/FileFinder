@@ -65,7 +65,7 @@ public class MainActivity extends Activity {
 			Boolean stopReceiving = fileReceiver.getStopReceiving();
 
 			//Refresh UI
-			if(m_matchedFileList!=null && m_matchedFileList.size() > 0)
+			if(m_matchedFileList!=null)
 				setAdapters();
 			Log.d("jia", "matchedFileList in onClick: "+String.valueOf(m_matchedFileList));
 
