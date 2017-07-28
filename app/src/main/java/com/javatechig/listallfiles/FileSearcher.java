@@ -14,7 +14,7 @@ import java.util.List;
 
 public class FileSearcher {
     //getting SDcard root path
-//    private File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+//    private File m_root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
     private File m_root = new File("/storage/emulated/0/Download");
 
     private ArrayList<File> m_arrltDirectories = new ArrayList<File>();
@@ -32,6 +32,8 @@ public class FileSearcher {
     private static final int END_DATE = 2;
     private static final int MIN_SIZE = 3;
     private static final int MAX_SIZE = 4;
+
+    private Boolean m_isFinishFiltering = false;
 
     public FileSearcher() {
     }
@@ -128,19 +130,51 @@ public class FileSearcher {
         return date;
     }
 
-    public void searchFiles(CallBack callBack, List<String> inputTextList){
+    public void searchFiles(final CallBack callBack, final List<String> inputTextList){
         if(inputTextList != null)  //has input
             setInputVariables(inputTextList);
 
-        searchUnderRootPath();
-
-        if(inputTextList != null) { //has input
-//            return filterSearchResult(arrltMatchedFiles);
-
-            callBack.receiveFiles(filterSearchByInput(m_arrltMatchedFiles));
+//        new Thread(){
+//            @Override
+//            public void run() {
+////                super.run();
+//                try {
+//                    sleep(2000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                searchUnderRootPath();
+//            }
+//        }.start();
+        SearchThread searchThread = new SearchThread();
+        searchThread.start();
+        try {
+            searchThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        callBack.receiveFiles(m_arrltMatchedFiles);
-//        return arrltMatchedFiles;
+
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                if(inputTextList != null) { //has input
+                    filterSearchByInput(m_arrltMatchedFiles);
+                    callBack.receiveFiles(m_arrltTempFiles, m_isFinishFiltering);
+                }else {
+                    callBack.receiveFiles(m_arrltTempFiles, m_isFinishFiltering);
+                }
+            }
+        }.start();
+
+
+    }
+    class SearchThread extends Thread{
+        @Override
+        public void run() {
+            super.run();
+            searchUnderRootPath();
+        }
     }
 
     private void searchUnderRootPath() {
@@ -168,7 +202,7 @@ public class FileSearcher {
         }
     }
 
-    public ArrayList<File> filterSearchByInput(ArrayList<File> toBeFilteredFileList) {//Filter files found by input fields
+    public void filterSearchByInput(ArrayList<File> toBeFilteredFileList) {//Filter files found by input fields
         int iInputTextListSize = m_inputTextList.size();
         for (Iterator<File> iterator = toBeFilteredFileList.iterator(); iterator.hasNext(); ) {//file list
             File currentFile = iterator.next();
@@ -236,9 +270,7 @@ public class FileSearcher {
             }
 
         }
-        if(m_arrltTempFiles.size() > 0)
-            return m_arrltTempFiles;
-        return toBeFilteredFileList;
+        m_isFinishFiltering = true;
     }
 
     public ArrayList<File> searchDupFiles() {

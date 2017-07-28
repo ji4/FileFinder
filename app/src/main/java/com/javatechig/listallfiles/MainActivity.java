@@ -60,11 +60,18 @@ public class MainActivity extends Activity {
 	Runnable runnable = new Runnable() {
 		@Override
 		public void run() {
+			//Get data from file receiver
 			m_matchedFileList = fileReceiver.getFiles();
-			if(m_matchedFileList!=null)
+			Boolean stopReceiving = fileReceiver.getStopReceiving();
+
+			//Refresh UI
+			if(m_matchedFileList!=null && m_matchedFileList.size() > 0)
 				setAdapters();
-			Log.d("matchedFileList in onClick: ", String.valueOf(m_matchedFileList));
-			handler.postDelayed(this, 100);
+			Log.d("jia", "matchedFileList in onClick: "+String.valueOf(m_matchedFileList));
+
+			//Stop updating UI after finished
+			if(!stopReceiving)
+				handler.postDelayed(this, 100);
 		}
 	};
 
