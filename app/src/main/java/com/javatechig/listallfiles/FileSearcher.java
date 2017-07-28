@@ -137,7 +137,7 @@ public class FileSearcher {
 //        new Thread(){
 //            @Override
 //            public void run() {
-////                super.run();
+//                super.run();
 //                try {
 //                    sleep(2000);
 //                } catch (InterruptedException e) {
@@ -146,10 +146,13 @@ public class FileSearcher {
 //                searchUnderRootPath();
 //            }
 //        }.start();
+
         SearchThread searchThread = new SearchThread();
+//        searchThread.setPriority(1);
         searchThread.start();
         try {
             searchThread.join();
+//            sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -158,8 +161,9 @@ public class FileSearcher {
             @Override
             public void run() {
                 super.run();
+//                yield();//
                 if(inputTextList != null) { //has input
-                    filterSearchByInput(m_arrltFoundFiles);
+                    filterSearchByInput();
                     callBack.receiveFiles(m_arrltTempFiles, m_isFinishFiltering);
                 }else {
                     callBack.receiveFiles(m_arrltTempFiles, m_isFinishFiltering);
@@ -202,9 +206,9 @@ public class FileSearcher {
         }
     }
 
-    public void filterSearchByInput(ArrayList<File> toBeFilteredFileList) {//Filter files found by input fields
+    public void filterSearchByInput() {//Filter files found by input fields
         int iInputTextListSize = m_inputTextList.size();
-        for (Iterator<File> iterator = toBeFilteredFileList.iterator(); iterator.hasNext(); ) {//file list
+        for (Iterator<File> iterator = m_arrltFoundFiles.iterator(); iterator.hasNext(); ) {//file list
             File currentFile = iterator.next();
             File matchedFile = null;
             int inputField = 0;
@@ -265,7 +269,7 @@ public class FileSearcher {
             }
             if(matchedFile != null){
                 m_arrltTempFiles.add(matchedFile); //Add to a new arrayList
-                iterator.remove(); //remove element in toBeFilteredFileList (passed-in param)
+                iterator.remove(); //remove element in iterator
                 m_arrltFoundFiles.remove(matchedFile); //remove element in original arraylist
             }
 

@@ -68,8 +68,7 @@ public class MainActivity extends Activity {
 				setAdapters();
 			Log.d("jia", "matchedFileList in onClick: "+String.valueOf(m_matchedFileList));
 
-			//Stop updating UI after finished
-			if(!stopReceiving)
+			if(!stopReceiving)//Stop updating UI after finished
 				m_handler.postDelayed(this, 100);
 		}
 	};
