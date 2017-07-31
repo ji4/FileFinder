@@ -213,7 +213,7 @@ public class FileSearcher {
             File matchedFile = null;
             int inputField = 0;
     scanner:while (inputField < iInputTextListSize) { //filter by each input field
-                if (m_inputTextList.get(inputField) != null) {//has input text
+                if (m_inputTextList.get(inputField) != null && currentFile != null) {//has input text
                     switch (inputField) {
                         case FILE_NAME:
                             if (!currentFile.getName().contains(getFileName())) {
