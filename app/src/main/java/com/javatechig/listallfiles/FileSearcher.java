@@ -21,7 +21,7 @@ public class FileSearcher {
     private ArrayList<File> m_arrltDirectories = new ArrayList<File>();
     private ArrayList<File> m_arrltFoundFiles = new ArrayList<File>();
     private ArrayList<File> m_arrltDupFiles = new ArrayList<File>();
-    private ArrayList<File> m_arrltTempFiles = new ArrayList<File>(); //new container for matched files
+    private ArrayList<File> m_arrltResultFiles = new ArrayList<File>(); //new container for matched files
     private File m_lastFoundFile;
 
     private String m_strFileName;
@@ -172,9 +172,9 @@ public class FileSearcher {
             }
             if(inputTextList != null) { //has input
                 filterSearchByInput();
-                callBack.receiveFiles(m_arrltTempFiles, m_isFinishFiltering);
+                callBack.receiveFiles(m_arrltResultFiles, m_isFinishFiltering);
             }else {
-                callBack.receiveFiles(m_arrltTempFiles, m_isFinishFiltering);
+                callBack.receiveFiles(m_arrltResultFiles, m_isFinishFiltering);
             }
         }
     }
@@ -268,7 +268,7 @@ public class FileSearcher {
                 inputField++;
             }
             if(matchedFile != null){
-                m_arrltTempFiles.add(matchedFile); //Add matched file to a new arrayList
+                m_arrltResultFiles.add(matchedFile); //Add matched file to a new arrayList
             }
             m_arrltFoundFiles.remove(currentFile);//remove file in original arraylist after authenticated
         }
