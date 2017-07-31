@@ -1,6 +1,7 @@
 package com.javatechig.listallfiles;
 
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -138,42 +139,12 @@ public class FileSearcher {
         if(inputTextList != null)  //has input
             setInputVariables(inputTextList);
 
-//        new Thread(){
-//            @Override
-//            public void run() {
-//                super.run();
-//                try {
-//                    sleep(2000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                searchUnderRootPath();
-//            }
-//        }.start();
-
         SearchThread searchThread = new SearchThread();
         searchThread.setPriority(1);
         searchThread.start();
-        try {
-//            searchThread.join();
-            sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-//                yield();//
-                if(inputTextList != null) { //has input
-                    filterSearchByInput();
-                    callBack.receiveFiles(m_arrltTempFiles, m_isFinishFiltering);
-                }else {
-                    callBack.receiveFiles(m_arrltTempFiles, m_isFinishFiltering);
-                }
-            }
-        }.start();
+        FilterThread filterThread = new FilterThread(inputTextList, callBack);
+        filterThread.start();
 
 
     }
@@ -182,6 +153,32 @@ public class FileSearcher {
         public void run() {
             super.run();
             searchUnderRootPath();
+        }
+    }
+
+    class FilterThread extends Thread{
+        private List<String> inputTextList;
+        private CallBack callBack;
+
+        FilterThread(List<String> inputTextList, CallBack callBack) {
+            this.inputTextList = inputTextList;
+            this.callBack = callBack;
+        }
+
+        @Override
+        public void run() {
+            super.run();
+            try {
+                sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if(inputTextList != null) { //has input
+                filterSearchByInput(callBack);
+                callBack.receiveFiles(m_arrltTempFiles, m_isFinishFiltering);
+            }else {
+                callBack.receiveFiles(m_arrltTempFiles, m_isFinishFiltering);
+            }
         }
     }
 
