@@ -22,7 +22,6 @@ public class FileSearcher {
     private ArrayList<File> m_arrltFoundFiles = new ArrayList<File>();
     private ArrayList<File> m_arrltDupFiles = new ArrayList<File>();
     private ArrayList<File> m_arrltResultFiles = new ArrayList<File>(); //new container for matched files
-    private File m_lastFoundFile;
 
     private String m_strFileName;
     private Date m_startDate, m_endDate;
@@ -35,6 +34,7 @@ public class FileSearcher {
     private static final int MIN_SIZE = 3;
     private static final int MAX_SIZE = 4;
 
+    private Boolean m_isFinishSearching = false;
     private Boolean m_isFinishFiltering = false;
 
     public FileSearcher() {
@@ -137,7 +137,7 @@ public class FileSearcher {
             setInputVariables(inputTextList);
 
         SearchThread searchThread = new SearchThread();
-        searchThread.setPriority(1);
+        searchThread.setPriority(1); //not sure necessary
         searchThread.start();
 
         FilterThread filterThread = new FilterThread(inputTextList, callBack);
@@ -188,6 +188,7 @@ public class FileSearcher {
             getFile(m_arrltDirectories.get(i));
             i++;
         }
+        m_isFinishSearching = true;
     }
 
     private void getFile(File dir) {
@@ -199,7 +200,6 @@ public class FileSearcher {
                     m_arrltDirectories.add(listFile[i]); //store directory path into list
                 } else { //file
                     m_arrltFoundFiles.add(listFile[i]);
-                    m_lastFoundFile = listFile[i];
                 }
             }
         }
@@ -208,7 +208,7 @@ public class FileSearcher {
     public void filterSearchByInput() {//Filter files found by input fields
         int iInputTextListSize = m_inputTextList.size();
         File currentFile = null;
-        while (m_arrltFoundFiles.size() > 0 || currentFile != m_lastFoundFile){
+        while (m_arrltFoundFiles.size() > 0/* || !m_isFinishSearching*/){
             currentFile = m_arrltFoundFiles.get(0);
             File matchedFile = null;
             int inputField = 0;
