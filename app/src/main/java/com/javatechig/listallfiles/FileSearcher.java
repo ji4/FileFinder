@@ -1,7 +1,6 @@
 package com.javatechig.listallfiles;
 
 import android.os.Environment;
-import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -9,8 +8,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-
-import static java.lang.Thread.sleep;
 
 /**
  * Created by chiaying.wu on 2017/7/17.
@@ -174,7 +171,7 @@ public class FileSearcher {
                 e.printStackTrace();
             }
             if(inputTextList != null) { //has input
-                filterSearchByInput(callBack);
+                filterSearchByInput();
                 callBack.receiveFiles(m_arrltTempFiles, m_isFinishFiltering);
             }else {
                 callBack.receiveFiles(m_arrltTempFiles, m_isFinishFiltering);
