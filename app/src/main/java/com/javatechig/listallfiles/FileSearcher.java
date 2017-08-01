@@ -120,12 +120,12 @@ public class FileSearcher {
         return iArrDate;
     }
 
-    public Date convertToDate(int year, int month, int day, Boolean isEndDate) {
+    public Date convertToDate(int iYear, int iMonth, int iDay, Boolean isEndDate) {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month - 1);
-        if (isEndDate) day++;
-        calendar.set(Calendar.DAY_OF_MONTH, day);
+        calendar.set(Calendar.YEAR, iYear);
+        calendar.set(Calendar.MONTH, iMonth - 1);
+        if (isEndDate) iDay++;
+        calendar.set(Calendar.DAY_OF_MONTH, iDay);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);// for 0 min
         calendar.set(Calendar.SECOND, 0);// for 0 sec
