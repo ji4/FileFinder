@@ -29,9 +29,9 @@ public class FileReceiver implements CallBack {
     }
 
     @Override
-    public void receiveFiles(ArrayList<File> arrltFiles, Boolean isFinishFiltering) {
+    public void receiveFiles(ArrayList<File> arrltFiles, Boolean isFinishSearching) {
         this.m_receivedFiles = arrltFiles;
-        this.m_stopReceiving = isFinishFiltering;
+        this.m_stopReceiving = isFinishSearching;
         Log.d("jia", "receivedFiles: "+ m_receivedFiles);
 
     }

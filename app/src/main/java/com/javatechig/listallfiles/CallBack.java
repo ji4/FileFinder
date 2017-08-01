@@ -8,5 +8,5 @@ import java.util.ArrayList;
  */
 
 public interface CallBack {
-    public void receiveFiles(ArrayList<File> arrltFiles, Boolean isFinishFiltering);
+    public void receiveFiles(ArrayList<File> arrltFiles, Boolean isFinishSearching);
 }

@@ -1,6 +1,7 @@
 package com.javatechig.listallfiles;
 
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,7 +36,8 @@ public class FileSearcher {
     private static final int MAX_SIZE = 4;
 
     private Boolean m_isFinishSearching = false;
-    private Boolean m_isFinishFiltering = false;
+    private int m_iFileFoundCount = 0;
+    private int m_iFileFilteredCount = 0;
 
     public FileSearcher() {
     }
@@ -132,6 +134,10 @@ public class FileSearcher {
         return date;
     }
 
+    /*Flow:
+       'searchThread' found some files -> 'filterThread' filter files just found
+    -> Make 'searchThread' continously runs -> 'filterThread' runs again -> ..loop..
+    -> finishes & tell UI to stop refreshing */
     public void searchFiles(final CallBack callBack, final List<String> inputTextList){
         if(inputTextList != null)  //has input
             setInputVariables(inputTextList);
@@ -142,13 +148,12 @@ public class FileSearcher {
 
         FilterThread filterThread = new FilterThread(inputTextList, callBack);
         filterThread.start();
-
-
     }
     class SearchThread extends Thread{
         @Override
         public void run() {
             super.run();
+            Log.d("jia", "searchThread starts to run");
             searchUnderRootPath();
         }
     }
@@ -165,30 +170,46 @@ public class FileSearcher {
         @Override
         public void run() {
             super.run();
+            Log.d("jia", "filterThread starts to run");
             try {
                 sleep(200);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if(inputTextList != null) { //has input
-                filterSearchByInput();
-                callBack.receiveFiles(m_arrltResultFiles, m_isFinishFiltering);
-            }else {
-                callBack.receiveFiles(m_arrltResultFiles, m_isFinishFiltering);
+
+            /* conditions in while:
+            Keep filterThread running when searching; Continue filtering files if there are files found not filtered yet after searchThread finishes*/
+            while(!m_isFinishSearching || m_arrltFoundFiles.size() > 0) {
+                if (inputTextList != null) { //has input
+                    filterSearchByInput();
+                    callBack.receiveFiles(m_arrltResultFiles, m_isFinishSearching);
+
+                    try {
+                        sleep(200); //Make searchThread's turn after filterThread finishes files just found
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    callBack.receiveFiles(m_arrltResultFiles, m_isFinishSearching);
+                }
             }
+            callBack.receiveFiles(m_arrltResultFiles, m_isFinishSearching); //tell UI to stop refreshing
+            Log.d("jia", "filterThread finishes.");
         }
     }
 
     private void searchUnderRootPath() {
         m_arrltDirectories.add(m_root); //based on root path
 
-        //scan directory paths
         int i = 0;
-        while (i < m_arrltDirectories.size()) {
-            getFile(m_arrltDirectories.get(i));
-            i++;
+        while (!m_isFinishSearching) { //Keep searchThread running
+            while (i < m_arrltDirectories.size()) {//Scan directory paths
+                getFile(m_arrltDirectories.get(i));
+                i++;
+            }
+            m_isFinishSearching = true;
         }
-        m_isFinishSearching = true;
     }
 
     private void getFile(File dir) {
@@ -200,6 +221,8 @@ public class FileSearcher {
                     m_arrltDirectories.add(listFile[i]); //store directory path into list
                 } else { //file
                     m_arrltFoundFiles.add(listFile[i]);
+                    Log.d("jia", "the "+m_iFileFoundCount+" th file found");
+                    m_iFileFoundCount++;
                 }
             }
         }
@@ -207,9 +230,11 @@ public class FileSearcher {
 
     public void filterSearchByInput() {//Filter files found by input fields
         int iInputTextListSize = m_inputTextList.size();
-        File currentFile = null;
-        while (m_arrltFoundFiles.size() > 0/* || !m_isFinishSearching*/){
+        File currentFile;
+        while (m_arrltFoundFiles.size() > 0){
             currentFile = m_arrltFoundFiles.get(0);
+            Log.d("jia", "filtering file "+m_iFileFilteredCount+": "+currentFile);
+            m_iFileFilteredCount++;
             File matchedFile = null;
             int inputField = 0;
     scanner:while (inputField < iInputTextListSize) { //filter by each input field
@@ -272,7 +297,6 @@ public class FileSearcher {
             }
             m_arrltFoundFiles.remove(currentFile);//remove file in original arraylist after authenticated
         }
-        m_isFinishFiltering = true;
     }
 
     public ArrayList<File> searchDupFiles() {
