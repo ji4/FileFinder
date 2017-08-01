@@ -146,7 +146,7 @@ public class FileSearcher {
         searchThread.setPriority(1); //not sure necessary
         searchThread.start();
 
-        FilterThread filterThread = new FilterThread(inputTextList, callBack);
+        FilterThread filterThread = new FilterThread(callBack, inputTextList);
         filterThread.start();
     }
     class SearchThread extends Thread{
@@ -159,12 +159,12 @@ public class FileSearcher {
     }
 
     class FilterThread extends Thread{
-        private List<String> inputTextList;
         private CallBack callBack;
+        private List<String> inputTextList;
 
-        FilterThread(List<String> inputTextList, CallBack callBack) {
-            this.inputTextList = inputTextList;
+        FilterThread(CallBack callBack, List<String> inputTextList) {
             this.callBack = callBack;
+            this.inputTextList = inputTextList;
         }
 
         @Override
