@@ -172,7 +172,7 @@ public class FileSearcher {
             super.run();
             Log.d("jia", "filterThread starts to run");
             try {
-                sleep(200);
+                sleep(200); //Make searchThread
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -228,7 +228,7 @@ public class FileSearcher {
         }
     }
 
-    public void filterSearchByInput() {//Filter files found by input fields
+    private void filterSearchByInput() {//Filter files found by input fields
         int iInputTextListSize = m_inputTextList.size();
         File currentFile;
         while (m_arrltFoundFiles.size() > 0){

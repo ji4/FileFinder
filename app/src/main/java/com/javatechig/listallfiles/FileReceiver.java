@@ -19,14 +19,15 @@ public class FileReceiver implements CallBack {
     }
 
     public void queryFiles(final List<String> inputTextList){
-        new Thread(new Runnable() {
+        Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 m_fileSearcher.searchFiles(FileReceiver.this, inputTextList);
             }
-        }).start();
-
+        };
+        new Thread(runnable).start();
     }
+
 
     @Override
     public void receiveFiles(ArrayList<File> arrltFiles) {
