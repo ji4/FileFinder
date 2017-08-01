@@ -182,7 +182,7 @@ public class FileSearcher {
             while(!m_isFinishSearching || m_arrltFoundFiles.size() > 0) {
                 if (inputTextList != null) { //has input
                     filterSearchByInput();
-                    callBack.receiveFiles(m_arrltResultFiles, m_isFinishSearching);
+                    callBack.receiveFiles(m_arrltResultFiles);
 
                     try {
                         sleep(200); //Make searchThread's turn after filterThread finishes files just found
@@ -191,10 +191,10 @@ public class FileSearcher {
                     }
 
                 } else {
-                    callBack.receiveFiles(m_arrltResultFiles, m_isFinishSearching);
+                    callBack.receiveFiles(m_arrltResultFiles);
                 }
             }
-            callBack.receiveFiles(m_arrltResultFiles, m_isFinishSearching); //tell UI to stop refreshing
+            callBack.receiveSearchStatus(m_isFinishSearching); //tell UI to stop refreshing
             Log.d("jia", "filterThread finishes.");
         }
     }

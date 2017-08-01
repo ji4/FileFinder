@@ -29,13 +29,18 @@ public class FileReceiver implements CallBack {
     }
 
     @Override
-    public void receiveFiles(ArrayList<File> arrltFiles, Boolean isFinishSearching) {
+    public void receiveFiles(ArrayList<File> arrltFiles) {
         this.m_receivedFiles = arrltFiles;
-        this.m_stopReceiving = isFinishSearching;
         Log.d("jia", "receivedFiles: "+ m_receivedFiles);
 
     }
 
+    @Override
+    public void receiveSearchStatus(Boolean isFinishSearching) {
+        this.m_stopReceiving = isFinishSearching;
+    }
+
+    //------------Functions call for UI------------
     public ArrayList<File> getReceivedFiles(){
         return m_receivedFiles;
     }
@@ -43,4 +48,6 @@ public class FileReceiver implements CallBack {
     public Boolean getStopReceiving() {
         return m_stopReceiving;
     }
+
+
 }

@@ -8,5 +8,6 @@ import java.util.ArrayList;
  */
 
 public interface CallBack {
-    public void receiveFiles(ArrayList<File> arrltFiles, Boolean isFinishSearching);
+    public void receiveFiles(ArrayList<File> arrltFiles);
+    public void receiveSearchStatus(Boolean isFinishSearching);
 }
