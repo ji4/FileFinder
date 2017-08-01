@@ -60,7 +60,7 @@ public class MainActivity extends Activity {
 		@Override
 		public void run() {
 			//Get data from file receiver
-			m_matchedFileList = m_fileReceiver.getFiles();
+			m_matchedFileList = m_fileReceiver.getReceivedFiles();
 			Boolean stopReceiving = m_fileReceiver.getStopReceiving();
 
 			//Refresh UI

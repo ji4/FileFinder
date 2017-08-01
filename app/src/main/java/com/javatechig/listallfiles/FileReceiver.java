@@ -36,7 +36,7 @@ public class FileReceiver implements CallBack {
 
     }
 
-    public ArrayList<File> getFiles(){
+    public ArrayList<File> getReceivedFiles(){
         return m_receivedFiles;
     }
 
