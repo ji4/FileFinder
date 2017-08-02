@@ -89,11 +89,11 @@ public class MainActivity extends Activity {
 			public void onClick(View view) {
 				long startTime = System.currentTimeMillis();//timer
 
-				List<String> inputTextList = detectEditTextInputStatus();
+				List<String> strListinputText = detectEditTextInputStatus();
 
 				FileSearcher fileSearcher = new FileSearcher();
 				m_fileReceiver = new FileReceiver(fileSearcher);
-				m_fileReceiver.queryFiles(inputTextList);
+				m_fileReceiver.queryFiles(strListinputText);
 				m_handler.postDelayed(m_runnable, 100);
 
 

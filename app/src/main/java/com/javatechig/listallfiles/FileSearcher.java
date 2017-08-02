@@ -1,6 +1,5 @@
 package com.javatechig.listallfiles;
 
-import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
@@ -17,8 +16,8 @@ import java.util.ListIterator;
 
 public class FileSearcher {
     //getting SDcard root path
-    private File m_root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-//    private File m_root = new File("/storage/emulated/0/Download");
+//    private File m_root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+    private File m_root = new File("/storage/emulated/0/Download");
 
     private ArrayList<File> m_arrltDirectories = new ArrayList<File>();
     private ArrayList<File> m_arrltFoundFiles = new ArrayList<File>();
@@ -28,13 +27,14 @@ public class FileSearcher {
     private String m_strFileName;
     private Date m_startDate, m_endDate;
     private long m_minSize, m_maxSize;
-    private List<String> m_inputTextList;
+    private List<String> m_strListInputText;
 
     private static final int FILE_NAME = 0;
     private static final int START_DATE = 1;
     private static final int END_DATE = 2;
     private static final int MIN_SIZE = 3;
     private static final int MAX_SIZE = 4;
+    private ArrayList<InputField> m_inputFields = new ArrayList<>();
 
     private Boolean m_isFinishSearching = false;
     private int m_iFileFoundCount = 0;
@@ -47,13 +47,22 @@ public class FileSearcher {
         this.m_root = dir;
     }
 
-    private void setInputVariables(List<String> inputTextList) {
-        this.m_inputTextList = inputTextList;
+    private void setInputVariables(List<String> strListinputText) {
+        this.m_strListInputText = strListinputText;
+
+        //Initailize inputFields:  [[iCode, strValue], ...]
+        int iInputTextListSize = strListinputText.size();
+        for(int i = 0; i<iInputTextListSize; i++){
+            m_inputFields.add(new InputField());
+            m_inputFields.get(i).iCode = i;
+            m_inputFields.get(i).strValue = m_strListInputText.get(i);
+        }
+        Log.d("jia,m_inputFields", String.valueOf(m_inputFields));
 
         //parse text values
-        for(ListIterator<String> iterator = inputTextList.listIterator(); iterator.hasNext();){
-            int iInputIndex = iterator.nextIndex();
-            String strInputValue = iterator.next();
+        int iInputIndex = 0;
+        for(ListIterator<InputField> iterator = m_inputFields.listIterator(); iterator.hasNext();){
+            String strInputValue = iterator.next().strValue;
             if (strInputValue != null) { //has text value
                 switch (iInputIndex) {
                     case FILE_NAME:
@@ -86,8 +95,10 @@ public class FileSearcher {
                         this.m_maxSize = max_size;
                         break;
                 }
-
+            } else{
+                iterator.remove();
             }
+            iInputIndex++;
         }
 
     }
@@ -139,15 +150,15 @@ public class FileSearcher {
        'searchThread' found some files -> 'filterThread' filter files just found
     -> Make 'searchThread' continously runs -> 'filterThread' runs again -> ..loop..
     -> finishes & tell UI to stop refreshing */
-    public void searchFiles(final CallBack callBack, final List<String> inputTextList){
-        if(inputTextList != null)  //has input
-            setInputVariables(inputTextList);
+    public void searchFiles(final CallBack callBack, final List<String> strListInputText){
+        if(strListInputText != null)  //has input
+            setInputVariables(strListInputText);
 
         SearchThread searchThread = new SearchThread();
         searchThread.setPriority(1); //not sure necessary
         searchThread.start();
 
-        FilterThread filterThread = new FilterThread(callBack, inputTextList);
+        FilterThread filterThread = new FilterThread(callBack, strListInputText);
         filterThread.start();
     }
     class SearchThread extends Thread{
@@ -230,73 +241,74 @@ public class FileSearcher {
     }
 
     private void filterSearchByInput() {//Filter files found by input fields
-        int iInputTextListSize = m_inputTextList.size();
-        File currentFile;
+        int iInputFieldsSize = m_inputFields.size();
+        File scanningFile;
         while (m_arrltFoundFiles.size() > 0){
-            currentFile = m_arrltFoundFiles.get(0);
-            Log.d("jia", "filtering file "+m_iFileFilteredCount+": "+currentFile);
+            scanningFile = m_arrltFoundFiles.get(0);
+            Log.d("jia", "filtering file "+m_iFileFilteredCount+": "+scanningFile);
             m_iFileFilteredCount++;
             File matchedFile = null;
-            int inputField = 0;
-    scanner:while (inputField < iInputTextListSize) { //filter by each input field
-                if (m_inputTextList.get(inputField) != null && currentFile != null) {//has input text
-                    switch (inputField) {
+            int i = 0;
+            scanner:while (i < iInputFieldsSize) { //filter by each input field
+                if (scanningFile != null) {//has input text
+                    switch (m_inputFields.get(i).iCode) {
                         case FILE_NAME:
-                            if (!currentFile.getName().contains(getFileName())) {
-                                m_arrltFoundFiles.remove(currentFile);
+                            if (!scanningFile.getName().contains(
+                                    getFileName())) {
+                                m_arrltFoundFiles.remove(scanningFile);
                                 break scanner;
                             }
                             else{
-                                matchedFile = currentFile;
+                                matchedFile = scanningFile;
                             }
                             break;
                         case START_DATE:
-                            if (new Date(currentFile.lastModified()).before(getInputStartDate())) {
-                                m_arrltFoundFiles.remove(currentFile);
+                            if (new Date(scanningFile.lastModified()).before(getInputStartDate())) {
+                                m_arrltFoundFiles.remove(scanningFile);
                                 matchedFile = null;
                                 break scanner;
                             }
                             else{
-                                matchedFile = currentFile;
+                                matchedFile = scanningFile;
                             }
                             break;
                         case END_DATE:
-                            if (new Date(currentFile.lastModified()).after(getInputEndDate())) {
-                                m_arrltFoundFiles.remove(currentFile);
+                            if (new Date(scanningFile.lastModified()).after(getInputEndDate())) {
+                                m_arrltFoundFiles.remove(scanningFile);
                                 matchedFile = null;
                                 break scanner;
                             }
                             else{
-                                matchedFile = currentFile;
+                                matchedFile = scanningFile;
                             }
                             break;
                         case MIN_SIZE:
-                            if (currentFile.length() < getInputMinSize()) {
-                                m_arrltFoundFiles.remove(currentFile);
+                            if (scanningFile.length() < getInputMinSize()) {
+                                m_arrltFoundFiles.remove(scanningFile);
                                 matchedFile = null;
                                 break scanner;
                             }
                             else{
-                                matchedFile = currentFile;
+                                matchedFile = scanningFile;
                             }
                             break;
                         case MAX_SIZE:
-                            if (currentFile.length() > getInputMaxSize()) {
-                                m_arrltFoundFiles.remove(currentFile);
+                            if (scanningFile.length() > getInputMaxSize()) {
+                                m_arrltFoundFiles.remove(scanningFile);
                                 matchedFile = null;
                                 break scanner;
                             } else{
-                                matchedFile = currentFile;
+                                matchedFile = scanningFile;
                             }
                             break;
                     }
                 }
-                inputField++;
+                i++;
             }
             if(matchedFile != null){
                 m_arrltResultFiles.add(matchedFile); //Add matched file to a new arrayList
             }
-            m_arrltFoundFiles.remove(currentFile);//remove file in original arraylist after authenticated
+            m_arrltFoundFiles.remove(scanningFile);//remove file in original arraylist after authenticated
         }
     }
 
@@ -337,4 +349,8 @@ public class FileSearcher {
             }
         }
     }
+}
+class InputField{
+    int iCode;
+    String strValue;
 }
