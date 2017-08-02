@@ -27,7 +27,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends Activity {
-    private ArrayList<File> m_matchedFileList = new ArrayList<>();
+    private ArrayList<File> m_matchedFileList = new ArrayList<File>();
 	private Button m_btn_search, m_btn_searchDupFile;
     private EditText m_et_fileName;
 	private LinearLayout ll;
@@ -122,7 +122,7 @@ public class MainActivity extends Activity {
 
 	public List<String> detectEditTextInputStatus(){
 		//Add All EditTexts into ArrayList
-		ArrayList<EditText> editTextList = new ArrayList<>(
+		ArrayList<EditText> editTextList = new ArrayList<EditText>(
 				Arrays.asList(m_et_fileName, m_et_startDate, m_et_endDate, m_et_minSize, m_et_maxSize));
 
 		//Initialize input text list with null

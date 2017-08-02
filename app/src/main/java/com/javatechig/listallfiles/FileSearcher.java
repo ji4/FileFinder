@@ -1,3 +1,4 @@
+
 package com.javatechig.listallfiles;
 
 import android.util.Log;
@@ -24,11 +25,6 @@ public class FileSearcher {
     private ArrayList<File> m_arrltDupFiles = new ArrayList<File>();
     private ArrayList<File> m_arrltResultFiles = new ArrayList<File>(); //new container for matched files
 
-    private String m_strFileName;
-    private Date m_startDate, m_endDate;
-    private long m_minSize, m_maxSize;
-    private List<String> m_strListInputText;
-
     private static final int FILE_NAME = 0;
     private static final int START_DATE = 1;
     private static final int END_DATE = 2;
@@ -48,58 +44,47 @@ public class FileSearcher {
     }
 
     private void setInputVariables(List<String> strListinputText) {
-        this.m_strListInputText = strListinputText;
-        m_inputFields = new ArrayList<>(Arrays.asList(new InputField[strListinputText.size()]));
+        m_inputFields = new ArrayList<InputField>(Arrays.asList(new InputField[strListinputText.size()]));
 
         //parse text values
-        int count = 0;
+        int iInputFieldCode = 0;
         for(ListIterator<InputField> iterator = m_inputFields.listIterator(); iterator.hasNext();){
-            int iInputIndex = iterator.nextIndex();
+            int iInputtedIndex = iterator.nextIndex();
             iterator.next();
-            String strInputValue = m_strListInputText.get(count);
+            String strInputValue = strListinputText.get(iInputFieldCode); //get inputField's text
             if (strInputValue != null) { //has text value
-                switch (count) {
+                switch (iInputFieldCode) {
                     case FILE_NAME:
-                        this.m_strFileName = strInputValue;
-                        m_inputFields.set(iInputIndex, new InputField(m_strFileName));
+                        m_inputFields.set(iInputtedIndex, new InputField(strInputValue));
                         break;
                     case START_DATE:
-                        //get text
-                        String strStartDate = strInputValue;
                         //parse text
-                        int iArrStartDate[] = DataConverter.parseDateText(strStartDate);
+                        int iArrStartDate[] = DataConverter.parseDateText(strInputValue);
                         //format date
                         Date startDate = DataConverter.convertToDate(iArrStartDate[0], iArrStartDate[1], iArrStartDate[2], false); //param: year, month, day
-                        this.m_startDate = startDate;
-                        m_inputFields.set(iInputIndex, new InputField(m_startDate));
+                        m_inputFields.set(iInputtedIndex, new InputField(startDate));
                         break;
                     case END_DATE:
-                        //get text
-                        String strEndDate = strInputValue;
                         //parse text
-                        int iArrEndDate[] = DataConverter.parseDateText(strEndDate);
+                        int iArrEndDate[] = DataConverter.parseDateText(strInputValue);
                         //format date
                         Date endDate = DataConverter.convertToDate(iArrEndDate[0], iArrEndDate[1], iArrEndDate[2], true); //param: year, month, day
-                        this.m_endDate = endDate;
-                        m_inputFields.set(iInputIndex, new InputField(m_endDate));
+                        m_inputFields.set(iInputtedIndex, new InputField(endDate));
                         break;
                     case MIN_SIZE:
                         long min_size = Long.parseLong(strInputValue) * 1024 * 1024; //Convert megabytes to bytes
-                        this.m_minSize = min_size;
-                        m_inputFields.set(iInputIndex, new InputField(m_minSize));
+                        m_inputFields.set(iInputtedIndex, new InputField(min_size));
                         break;
                     case MAX_SIZE:
                         long max_size = Long.parseLong(strInputValue) * 1024 * 1024; //Convert megabytes to bytes
-                        this.m_maxSize = max_size;
-                        m_inputFields.set(iInputIndex, new InputField(m_maxSize));
+                        m_inputFields.set(iInputtedIndex, new InputField(max_size));
                         break;
                 }
-                m_inputFields.get(iInputIndex).iCode = count;
-                m_inputFields.get(iInputIndex).strValue = m_strListInputText.get(count);
+                m_inputFields.get(iInputtedIndex).g_iCode = iInputFieldCode;
             } else{
                 iterator.remove();
             }
-            count++;
+            iInputFieldCode++;
         }
 
         Log.d("jia,m_inputFields", String.valueOf(m_inputFields));
@@ -145,7 +130,7 @@ public class FileSearcher {
             super.run();
             Log.d("jia", "filterThread starts to run");
             try {
-                sleep(200); //Make searchThread
+                sleep(200); //Make searchThread starts searching ahead
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -202,25 +187,22 @@ public class FileSearcher {
     }
 
     private void filterSearchByInput() {//Filter files found by input fields
-        int iInputFieldsSize = m_inputFields.size();
-        File scanningFile;
         while (m_arrltFoundFiles.size() > 0){
-            scanningFile = m_arrltFoundFiles.get(0);
+            File scanningFile = m_arrltFoundFiles.get(0);
             Log.d("jia", "filtering file "+m_iFileFilteredCount+": "+scanningFile);
             m_iFileFilteredCount++;
             File matchedFile = null;
-            int i = 0;
-            while (i < iInputFieldsSize) { //filter by each input field
-                if(scanningFile != null)
-                    if(m_inputFields.get(i).isMatch(scanningFile, m_inputFields.get(i).iCode)){
+            int iInputtedFieldsSize = m_inputFields.size();
+            for(int i = 0; i < iInputtedFieldsSize; i++){ //filter by each input field
+                if(scanningFile != null) {
+                    if (m_inputFields.get(i).isMatch(scanningFile, m_inputFields.get(i).g_iCode)) {
                         matchedFile = scanningFile;
-                    }
-                    else {
+                    } else {
                         m_arrltFoundFiles.remove(scanningFile);
                         matchedFile = null;
                         break;
                     }
-                i++;
+                }
             }
             if(matchedFile != null){
                 m_arrltResultFiles.add(matchedFile); //Add matched file to a new arrayList
@@ -265,51 +247,5 @@ public class FileSearcher {
                 hashmap.put(md5, strFilePath);
             }
         }
-    }
-}
-class InputField{
-    int iCode;
-    String strValue;
-
-    private static final int FILE_NAME = 0;
-    private static final int START_DATE = 1;
-    private static final int END_DATE = 2;
-    private static final int MIN_SIZE = 3;
-    private static final int MAX_SIZE = 4;
-    private Boolean boolMatch;
-
-    private String strInputValue;
-    private Date dateInputValue;
-    private long longInputSize;
-
-    public InputField (String _strInputValue) {
-        this.strInputValue = _strInputValue;
-    }
-    public InputField (Date _dateInputValue) {
-        this.dateInputValue = _dateInputValue;
-    }
-    public InputField (long _longInputSize){
-        this.longInputSize = _longInputSize;
-    }
-
-    public Boolean isMatch(File _scanningFile, int _iCode){
-        switch (_iCode){
-            case FILE_NAME:
-                boolMatch = _scanningFile.getName().contains(strInputValue);
-                break;
-            case START_DATE:
-                boolMatch = new Date(_scanningFile.lastModified()).after(dateInputValue);
-                break;
-            case END_DATE:
-                boolMatch = new Date(_scanningFile.lastModified()).before(dateInputValue);
-                break;
-            case MIN_SIZE:
-                boolMatch = _scanningFile.length() > longInputSize;
-                break;
-            case MAX_SIZE:
-                boolMatch = _scanningFile.length() < longInputSize;
-                break;
-        }
-        return boolMatch;
     }
 }
