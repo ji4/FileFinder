@@ -220,7 +220,7 @@ public class MainActivity extends Activity {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			//Do any thing when user click to item
-			Toast.makeText(getApplicationContext(), m_matchedFileList.get(position).getName() + " - " + ListViewAdapter.convertTime(m_matchedFileList.get(position).lastModified()), Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), m_matchedFileList.get(position).getName() + " - " + DataConverter.convertTime(m_matchedFileList.get(position).lastModified()), Toast.LENGTH_SHORT).show();
 		}
 	};
 

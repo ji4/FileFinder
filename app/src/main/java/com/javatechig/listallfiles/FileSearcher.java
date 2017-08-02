@@ -4,7 +4,6 @@ import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -72,18 +71,18 @@ public class FileSearcher {
                         //get text
                         String strStartDate = strInputValue;
                         //parse text
-                        int iArrStartDate[] = parseDateText(strStartDate);
+                        int iArrStartDate[] = DataConverter.parseDateText(strStartDate);
                         //format date
-                        Date startDate = convertToDate(iArrStartDate[0], iArrStartDate[1], iArrStartDate[2], false); //param: year, month, day
+                        Date startDate = DataConverter.convertToDate(iArrStartDate[0], iArrStartDate[1], iArrStartDate[2], false); //param: year, month, day
                         this.m_startDate = startDate;
                         break;
                     case END_DATE:
                         //get text
                         String strEndDate = strInputValue;
                         //parse text
-                        int iArrEndDate[] = parseDateText(strEndDate);
+                        int iArrEndDate[] = DataConverter.parseDateText(strEndDate);
                         //format date
-                        Date endDate = convertToDate(iArrEndDate[0], iArrEndDate[1], iArrEndDate[2], true); //param: year, month, day
+                        Date endDate = DataConverter.convertToDate(iArrEndDate[0], iArrEndDate[1], iArrEndDate[2], true); //param: year, month, day
                         this.m_endDate = endDate;
                         break;
                     case MIN_SIZE:
@@ -121,29 +120,6 @@ public class FileSearcher {
 
     public String getFileName() {
         return m_strFileName;
-    }
-
-    private int[] parseDateText(String strDate) {
-        int[] iArrDate = new int[3];
-        String[] strArrDate = strDate.split("/");
-        for (int i = 0; i < 3; i++) {
-            iArrDate[i] = Integer.parseInt(strArrDate[i]);
-        }
-        return iArrDate;
-    }
-
-    public Date convertToDate(int iYear, int iMonth, int iDay, Boolean isEndDate) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, iYear);
-        calendar.set(Calendar.MONTH, iMonth - 1);
-        if (isEndDate) iDay++;
-        calendar.set(Calendar.DAY_OF_MONTH, iDay);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);// for 0 min
-        calendar.set(Calendar.SECOND, 0);// for 0 sec
-        Date date = new Date(calendar.getTimeInMillis());
-
-        return date;
     }
 
     /*Flow:
@@ -253,8 +229,7 @@ public class FileSearcher {
                 if (scanningFile != null) {//has input text
                     switch (m_inputFields.get(i).iCode) {
                         case FILE_NAME:
-                            if (!scanningFile.getName().contains(
-                                    getFileName())) {
+                            if (!scanningFile.getName().contains(getFileName())) {
                                 m_arrltFoundFiles.remove(scanningFile);
                                 break scanner;
                             }
