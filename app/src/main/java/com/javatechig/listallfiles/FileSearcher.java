@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +34,7 @@ public class FileSearcher {
     private static final int END_DATE = 2;
     private static final int MIN_SIZE = 3;
     private static final int MAX_SIZE = 4;
-    private ArrayList<InputField> m_inputFields = new ArrayList<>();
+    private ArrayList<InputField> m_inputFields;
 
     private Boolean m_isFinishSearching = false;
     private int m_iFileFoundCount = 0;
@@ -48,24 +49,19 @@ public class FileSearcher {
 
     private void setInputVariables(List<String> strListinputText) {
         this.m_strListInputText = strListinputText;
-
-        //Initailize inputFields:  [[iCode, strValue], ...]
-        int iInputTextListSize = strListinputText.size();
-        for(int i = 0; i<iInputTextListSize; i++){
-            m_inputFields.add(new InputField());
-            m_inputFields.get(i).iCode = i;
-            m_inputFields.get(i).strValue = m_strListInputText.get(i);
-        }
-        Log.d("jia,m_inputFields", String.valueOf(m_inputFields));
+        m_inputFields = new ArrayList<>(Arrays.asList(new InputField[strListinputText.size()]));
 
         //parse text values
-        int iInputIndex = 0;
+        int count = 0;
         for(ListIterator<InputField> iterator = m_inputFields.listIterator(); iterator.hasNext();){
-            String strInputValue = iterator.next().strValue;
+            int iInputIndex = iterator.nextIndex();
+            iterator.next();
+            String strInputValue = m_strListInputText.get(count);
             if (strInputValue != null) { //has text value
-                switch (iInputIndex) {
+                switch (count) {
                     case FILE_NAME:
                         this.m_strFileName = strInputValue;
+                        m_inputFields.set(iInputIndex, new InputField(m_strFileName));
                         break;
                     case START_DATE:
                         //get text
@@ -75,6 +71,7 @@ public class FileSearcher {
                         //format date
                         Date startDate = DataConverter.convertToDate(iArrStartDate[0], iArrStartDate[1], iArrStartDate[2], false); //param: year, month, day
                         this.m_startDate = startDate;
+                        m_inputFields.set(iInputIndex, new InputField(m_startDate));
                         break;
                     case END_DATE:
                         //get text
@@ -84,42 +81,30 @@ public class FileSearcher {
                         //format date
                         Date endDate = DataConverter.convertToDate(iArrEndDate[0], iArrEndDate[1], iArrEndDate[2], true); //param: year, month, day
                         this.m_endDate = endDate;
+                        m_inputFields.set(iInputIndex, new InputField(m_endDate));
                         break;
                     case MIN_SIZE:
                         long min_size = Long.parseLong(strInputValue) * 1024 * 1024; //Convert megabytes to bytes
                         this.m_minSize = min_size;
+                        m_inputFields.set(iInputIndex, new InputField(m_minSize));
                         break;
                     case MAX_SIZE:
                         long max_size = Long.parseLong(strInputValue) * 1024 * 1024; //Convert megabytes to bytes
                         this.m_maxSize = max_size;
+                        m_inputFields.set(iInputIndex, new InputField(m_maxSize));
                         break;
                 }
+                m_inputFields.get(iInputIndex).iCode = count;
+                m_inputFields.get(iInputIndex).strValue = m_strListInputText.get(count);
             } else{
                 iterator.remove();
             }
-            iInputIndex++;
+            count++;
         }
 
-    }
+        Log.d("jia,m_inputFields", String.valueOf(m_inputFields));
 
-    public Date getInputStartDate() {
-        return m_startDate;
-    }
 
-    public Date getInputEndDate() {
-        return m_endDate;
-    }
-
-    public long getInputMinSize() {
-        return m_minSize;
-    }
-
-    public long getInputMaxSize() {
-        return m_maxSize;
-    }
-
-    public String getFileName() {
-        return m_strFileName;
     }
 
     /*Flow:
@@ -225,59 +210,16 @@ public class FileSearcher {
             m_iFileFilteredCount++;
             File matchedFile = null;
             int i = 0;
-            scanner:while (i < iInputFieldsSize) { //filter by each input field
-                if (scanningFile != null) {//has input text
-                    switch (m_inputFields.get(i).iCode) {
-                        case FILE_NAME:
-                            if (!scanningFile.getName().contains(getFileName())) {
-                                m_arrltFoundFiles.remove(scanningFile);
-                                break scanner;
-                            }
-                            else{
-                                matchedFile = scanningFile;
-                            }
-                            break;
-                        case START_DATE:
-                            if (new Date(scanningFile.lastModified()).before(getInputStartDate())) {
-                                m_arrltFoundFiles.remove(scanningFile);
-                                matchedFile = null;
-                                break scanner;
-                            }
-                            else{
-                                matchedFile = scanningFile;
-                            }
-                            break;
-                        case END_DATE:
-                            if (new Date(scanningFile.lastModified()).after(getInputEndDate())) {
-                                m_arrltFoundFiles.remove(scanningFile);
-                                matchedFile = null;
-                                break scanner;
-                            }
-                            else{
-                                matchedFile = scanningFile;
-                            }
-                            break;
-                        case MIN_SIZE:
-                            if (scanningFile.length() < getInputMinSize()) {
-                                m_arrltFoundFiles.remove(scanningFile);
-                                matchedFile = null;
-                                break scanner;
-                            }
-                            else{
-                                matchedFile = scanningFile;
-                            }
-                            break;
-                        case MAX_SIZE:
-                            if (scanningFile.length() > getInputMaxSize()) {
-                                m_arrltFoundFiles.remove(scanningFile);
-                                matchedFile = null;
-                                break scanner;
-                            } else{
-                                matchedFile = scanningFile;
-                            }
-                            break;
+            while (i < iInputFieldsSize) { //filter by each input field
+                if(scanningFile != null)
+                    if(m_inputFields.get(i).isMatch(scanningFile, m_inputFields.get(i).iCode)){
+                        matchedFile = scanningFile;
                     }
-                }
+                    else {
+                        m_arrltFoundFiles.remove(scanningFile);
+                        matchedFile = null;
+                        break;
+                    }
                 i++;
             }
             if(matchedFile != null){
@@ -328,4 +270,46 @@ public class FileSearcher {
 class InputField{
     int iCode;
     String strValue;
+
+    private static final int FILE_NAME = 0;
+    private static final int START_DATE = 1;
+    private static final int END_DATE = 2;
+    private static final int MIN_SIZE = 3;
+    private static final int MAX_SIZE = 4;
+    private Boolean boolMatch;
+
+    private String strInputValue;
+    private Date dateInputValue;
+    private long longInputSize;
+
+    public InputField (String _strInputValue) {
+        this.strInputValue = _strInputValue;
+    }
+    public InputField (Date _dateInputValue) {
+        this.dateInputValue = _dateInputValue;
+    }
+    public InputField (long _longInputSize){
+        this.longInputSize = _longInputSize;
+    }
+
+    public Boolean isMatch(File _scanningFile, int _iCode){
+        switch (_iCode){
+            case FILE_NAME:
+                boolMatch = _scanningFile.getName().contains(strInputValue);
+                break;
+            case START_DATE:
+                boolMatch = new Date(_scanningFile.lastModified()).after(dateInputValue);
+                break;
+            case END_DATE:
+                boolMatch = new Date(_scanningFile.lastModified()).before(dateInputValue);
+                break;
+            case MIN_SIZE:
+                boolMatch = _scanningFile.length() > longInputSize;
+                break;
+            case MAX_SIZE:
+                boolMatch = _scanningFile.length() < longInputSize;
+                break;
+        }
+        return boolMatch;
+    }
 }
