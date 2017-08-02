@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Created by chiaying.wu on 2017/7/17.
@@ -50,16 +51,17 @@ public class FileSearcher {
         this.m_inputTextList = inputTextList;
 
         //parse text values
-        int i = 0, iInputTextListSize = inputTextList.size();
-        while (i < iInputTextListSize) {
-            if (inputTextList.get(i) != null) { //has text value
-                switch (i) {
+        for(ListIterator<String> iterator = inputTextList.listIterator(); iterator.hasNext();){
+            int iInputIndex = iterator.nextIndex();
+            String strInputValue = iterator.next();
+            if (strInputValue != null) { //has text value
+                switch (iInputIndex) {
                     case FILE_NAME:
-                        this.m_strFileName = inputTextList.get(i);
+                        this.m_strFileName = strInputValue;
                         break;
                     case START_DATE:
                         //get text
-                        String strStartDate = inputTextList.get(i);
+                        String strStartDate = strInputValue;
                         //parse text
                         int iArrStartDate[] = parseDateText(strStartDate);
                         //format date
@@ -68,7 +70,7 @@ public class FileSearcher {
                         break;
                     case END_DATE:
                         //get text
-                        String strEndDate = inputTextList.get(i);
+                        String strEndDate = strInputValue;
                         //parse text
                         int iArrEndDate[] = parseDateText(strEndDate);
                         //format date
@@ -76,17 +78,16 @@ public class FileSearcher {
                         this.m_endDate = endDate;
                         break;
                     case MIN_SIZE:
-                        long min_size = Long.parseLong(inputTextList.get(i)) * 1024 * 1024; //Convert megabytes to bytes
+                        long min_size = Long.parseLong(strInputValue) * 1024 * 1024; //Convert megabytes to bytes
                         this.m_minSize = min_size;
                         break;
                     case MAX_SIZE:
-                        long max_size = Long.parseLong(inputTextList.get(i)) * 1024 * 1024; //Convert megabytes to bytes
+                        long max_size = Long.parseLong(strInputValue) * 1024 * 1024; //Convert megabytes to bytes
                         this.m_maxSize = max_size;
                         break;
                 }
 
             }
-            i++;
         }
 
     }
