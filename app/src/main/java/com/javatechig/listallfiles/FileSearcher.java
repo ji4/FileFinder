@@ -51,6 +51,7 @@ public class FileSearcher {
         for(ListIterator<InputField> iterator = m_inputFields.listIterator(); iterator.hasNext();){
             int iInputtedIndex = iterator.nextIndex();
             iterator.next();
+
             String strInputValue = strListinputText.get(iInputFieldCode); //get inputField's text
             if (strInputValue != null) { //has text value
                 switch (iInputFieldCode) {
