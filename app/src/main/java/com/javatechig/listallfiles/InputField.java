@@ -8,7 +8,7 @@ import java.util.Date;
  */
 
 public class InputField {
-    public int g_iCode;
+    private int m_iCode;
 
     private static final int FILE_NAME = 0;
     private static final int START_DATE = 1;
@@ -29,6 +29,14 @@ public class InputField {
     }
     public InputField (long longInputSize){
         this.m_longInputSize = longInputSize;
+    }
+
+    public int getCode() {
+        return m_iCode;
+    }
+
+    public void setCode(int m_iCode) {
+        this.m_iCode = m_iCode;
     }
 
     public Boolean isMatch(File scanningFile, int iCode){

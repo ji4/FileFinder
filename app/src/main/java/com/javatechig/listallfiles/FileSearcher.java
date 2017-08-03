@@ -81,7 +81,7 @@ public class FileSearcher {
                         m_inputFields.set(iInputtedIndex, new InputField(max_size));
                         break;
                 }
-                m_inputFields.get(iInputtedIndex).g_iCode = iInputFieldCode;
+                m_inputFields.get(iInputtedIndex).setCode(iInputFieldCode);
             } else{
                 iterator.remove();
             }
@@ -200,7 +200,7 @@ public class FileSearcher {
             int iInputtedFieldsSize = m_inputFields.size();
             for(int i = 0; i < iInputtedFieldsSize; i++){ //filter by each inputted field
                 if(scanningFile != null) {
-                    if (m_inputFields.get(i).isMatch(scanningFile, m_inputFields.get(i).g_iCode)) {
+                    if (m_inputFields.get(i).isMatch(scanningFile, m_inputFields.get(i).getCode())) {
                         matchedFile = scanningFile;
                     } else {
                         m_arrltFoundFiles.remove(scanningFile);
