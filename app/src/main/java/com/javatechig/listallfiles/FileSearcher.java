@@ -43,7 +43,7 @@ public class FileSearcher {
         this.m_root = dir;
     }
 
-    private void setInputVariables(List<String> strListinputText) {
+    private void setInputData(List<String> strListinputText) {
         m_inputFields = new ArrayList<InputField>(Arrays.asList(new InputField[strListinputText.size()]));
 
         //parse text values
@@ -99,7 +99,7 @@ public class FileSearcher {
     -> finishes & tell UI to stop refreshing */
     public void searchFiles(final CallBack callBack, final List<String> strListInputText){
         if(strListInputText != null)  //has input
-            setInputVariables(strListInputText);
+            setInputData(strListInputText);
 
         SearchThread searchThread = new SearchThread();
         searchThread.setPriority(1); //not sure necessary
@@ -119,11 +119,11 @@ public class FileSearcher {
 
     class FilterThread extends Thread{
         private CallBack callBack;
-        private List<String> inputTextList;
+        private List<String> strListInputText;
 
-        FilterThread(CallBack callBack, List<String> inputTextList) {
+        FilterThread(CallBack callBack, List<String> strListInputText) {
             this.callBack = callBack;
-            this.inputTextList = inputTextList;
+            this.strListInputText = strListInputText;
         }
 
         @Override
@@ -139,7 +139,7 @@ public class FileSearcher {
             /* conditions in while:
             Keep filterThread running when searching; Continue filtering files if there are files found not filtered yet after searchThread finishes*/
             while(!m_isFinishSearching || m_arrltFoundFiles.size() > 0) {
-                if (inputTextList != null) { //has input
+                if (strListInputText != null) { //has input
                     filterSearchByInput();
                     callBack.receiveFiles(m_arrltResultFiles);
 
