@@ -1,6 +1,7 @@
 
 package com.javatechig.listallfiles;
 
+import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
@@ -17,8 +18,8 @@ import java.util.ListIterator;
 
 public class FileSearcher {
     //getting SDcard root path
-//    private File m_root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-    private File m_root = new File("/storage/emulated/0/Download");
+    private File m_root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+//    private File m_root = new File("/storage/emulated/0/Download");
 
     private ArrayList<File> m_arrltDirectories = new ArrayList<File>();
     private ArrayList<File> m_arrltFoundFiles = new ArrayList<File>();

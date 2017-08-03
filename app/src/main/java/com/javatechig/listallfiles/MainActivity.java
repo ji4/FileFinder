@@ -27,9 +27,10 @@ import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends Activity {
-    private ArrayList<File> m_matchedFileList = new ArrayList<File>();
+	private ArrayList<File> m_matchedFileList = new ArrayList<File>();
+	private ArrayList<File> m_receivedFileList = new ArrayList<File>();
 	private Button m_btn_search, m_btn_searchDupFile;
-    private EditText m_et_fileName;
+	private EditText m_et_fileName;
 	private LinearLayout ll;
 	private EditText m_et_startDate, m_et_endDate;
 	private EditText m_et_minSize, m_et_maxSize;
@@ -60,14 +61,14 @@ public class MainActivity extends Activity {
 		@Override
 		public void run() {
 			//Get data from file receiver
-			m_matchedFileList = m_fileReceiver.getReceivedFiles();
+			m_receivedFileList = m_fileReceiver.getReceivedFiles();
 			Boolean stopReceiving = m_fileReceiver.getStopReceiving();
 
 			//Refresh UI
-			if(m_matchedFileList!=null)
-				setAdapters();
-			Log.d("jia", "matchedFileList in onClick: "+String.valueOf(m_matchedFileList));
-            Log.d("jia", "stopReceiving: "+stopReceiving);
+			if(m_receivedFileList!=null)
+				addFilesToAdapter();
+			Log.d("jia", "matchedFileList in onClick: "+String.valueOf(m_receivedFileList));
+			Log.d("jia", "stopReceiving: "+stopReceiving);
 
 			if(!stopReceiving)//Stop updating UI after finished
 				m_handler.postDelayed(this, 100);
@@ -79,15 +80,14 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		long startTime = System.currentTimeMillis();//timer
-
 		findViews();
 		initFileViews();
 
 		m_btn_search.setOnClickListener(new Button.OnClickListener(){
 			@Override
 			public void onClick(View view) {
-				long startTime = System.currentTimeMillis();//timer
+				m_matchedFileList.clear(); //clear previous view when clicked again
+//				m_handler.removeCallbacksAndMessages(m_runnable);
 
 				List<String> strListinputText = detectEditTextInputStatus();
 
@@ -95,12 +95,6 @@ public class MainActivity extends Activity {
 				m_fileReceiver = new FileReceiver(fileSearcher);
 				m_fileReceiver.queryFiles(strListinputText);
 				m_handler.postDelayed(m_runnable, 100);
-
-
-				//timer
-				long stopTime = System.currentTimeMillis();
-				long elapsedTime = stopTime - startTime;
-				System.out.println("elapsedTime in btn_search: "+elapsedTime);
 			}
 		});
 
@@ -113,11 +107,6 @@ public class MainActivity extends Activity {
 				setAdapters();
 			}
 		});
-
-		//timer
-		long stopTime = System.currentTimeMillis();
-		long elapsedTime = stopTime - startTime;
-		System.out.println("elapsedTime: "+elapsedTime);
 	}
 
 	public List<String> detectEditTextInputStatus(){
@@ -204,6 +193,16 @@ public class MainActivity extends Activity {
 			m_stubGrid.setVisibility(View.VISIBLE);
 		}
 		setAdapters();
+	}
+
+	private void addFilesToAdapter() {
+		m_matchedFileList.addAll(m_receivedFileList);
+
+		if(VIEW_MODE_LISTVIEW == m_currentViewMode) {
+			m_listViewAdapter.notifyDataSetChanged();
+		}else {
+			m_gridViewAdapter.notifyDataSetChanged();
+		}
 	}
 
 	private void setAdapters() {
