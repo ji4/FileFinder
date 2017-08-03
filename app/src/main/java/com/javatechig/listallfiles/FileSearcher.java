@@ -142,7 +142,7 @@ public class FileSearcher {
             while(!m_isFinishSearching || m_arrltFoundFiles.size() > 0) {
                 if (strListInputText != null) { //has input
                     filterSearchByInput();
-                    callBack.receiveFiles(m_arrltMatchFiles);
+                        callBack.receiveFiles(m_arrltMatchFiles);
                 } else {
                     currentFile = m_arrltFoundFiles.get(m_arrltFoundFiles.size()-1);
                     if(currentFile == preFile) //m_arrltFoundFiles.size() is always > 0 without filtering, so add this check to break

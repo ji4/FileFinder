@@ -50,6 +50,7 @@ public class MainActivity extends Activity {
 
 
 	FileReceiver m_fileReceiver;
+	File curlastFile, prelastFile;
 	Handler m_handler = new Handler()
 	{
 		@Override
@@ -65,8 +66,15 @@ public class MainActivity extends Activity {
 			Boolean stopReceiving = m_fileReceiver.getStopReceiving();
 
 			//Refresh UI
-			if(m_receivedFileList!=null)
-				addFilesToAdapter();
+			if (m_receivedFileList != null && m_receivedFileList.size() > 0) {
+				curlastFile = m_receivedFileList.get(m_receivedFileList.size() - 1);
+
+				if (curlastFile != prelastFile) {
+					addFilesToAdapter();
+				}
+			}
+
+			prelastFile = curlastFile;
 			Log.d("jia", "matchedFileList in onClick: "+String.valueOf(m_receivedFileList));
 			Log.d("jia", "stopReceiving: "+stopReceiving);
 
@@ -86,8 +94,7 @@ public class MainActivity extends Activity {
 		m_btn_search.setOnClickListener(new Button.OnClickListener(){
 			@Override
 			public void onClick(View view) {
-				m_matchedFileList.clear(); //clear previous view when clicked again
-//				m_handler.removeCallbacksAndMessages(m_runnable);
+				m_matchedFileList.clear(); //clear previous view when button clicked again
 
 				List<String> strListinputText = detectEditTextInputStatus();
 
