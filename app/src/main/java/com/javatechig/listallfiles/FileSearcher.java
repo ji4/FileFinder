@@ -1,7 +1,6 @@
 
 package com.javatechig.listallfiles;
 
-import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
@@ -18,13 +17,13 @@ import java.util.ListIterator;
 
 public class FileSearcher {
     //getting SDcard root path
-    private File m_root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-//    private File m_root = new File("/storage/emulated/0/Download");
+//    private File m_root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+    private File m_root = new File("/storage/emulated/0/Download");
 
     private ArrayList<File> m_arrltDirectories = new ArrayList<File>();
     private ArrayList<File> m_arrltFoundFiles = new ArrayList<File>();
     private ArrayList<File> m_arrltDupFiles = new ArrayList<File>();
-    private ArrayList<File> m_arrltResultFiles = new ArrayList<File>(); //new container for matched files
+    private ArrayList<File> m_arrltMatchFiles = new ArrayList<File>(); //new container for matched files
 
     private static final int FILE_NAME = 0;
     private static final int START_DATE = 1;
@@ -137,21 +136,25 @@ public class FileSearcher {
                 e.printStackTrace();
             }
 
+            File currentFile, preFile = null;
             /* conditions in while:
             Keep filterThread running when searching; Continue filtering files if there are files found not filtered yet after searchThread finishes*/
             while(!m_isFinishSearching || m_arrltFoundFiles.size() > 0) {
                 if (strListInputText != null) { //has input
                     filterSearchByInput();
-                    callBack.receiveFiles(m_arrltResultFiles);
-
-                    try {
-                        sleep(200); //Make searchThread's turn after filterThread finishes files just found
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
+                    callBack.receiveFiles(m_arrltMatchFiles);
                 } else {
-                    callBack.receiveFiles(m_arrltResultFiles);
+                    currentFile = m_arrltFoundFiles.get(m_arrltFoundFiles.size()-1);
+                    if(currentFile == preFile) //m_arrltFoundFiles.size() is always > 0 without filtering, so add this check to break
+                        break;
+                    callBack.receiveFiles(m_arrltFoundFiles);
+                    preFile = currentFile;
+                }
+
+                try {
+                    sleep(200); //Make searchThread's turn after filterThread finishes files just found
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
             callBack.receiveSearchStatus(m_isFinishSearching); //tell UI to stop refreshing
@@ -195,7 +198,7 @@ public class FileSearcher {
             m_iFileFilteredCount++;
             File matchedFile = null;
             int iInputtedFieldsSize = m_inputFields.size();
-            for(int i = 0; i < iInputtedFieldsSize; i++){ //filter by each input field
+            for(int i = 0; i < iInputtedFieldsSize; i++){ //filter by each inputted field
                 if(scanningFile != null) {
                     if (m_inputFields.get(i).isMatch(scanningFile, m_inputFields.get(i).g_iCode)) {
                         matchedFile = scanningFile;
@@ -207,7 +210,7 @@ public class FileSearcher {
                 }
             }
             if(matchedFile != null){
-                m_arrltResultFiles.add(matchedFile); //Add matched file to a new arrayList
+                m_arrltMatchFiles.add(matchedFile); //Add matched file to a new arrayList
             }
             m_arrltFoundFiles.remove(scanningFile);//remove file in original arraylist after authenticated
         }

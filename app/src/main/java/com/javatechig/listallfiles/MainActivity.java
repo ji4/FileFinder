@@ -116,18 +116,24 @@ public class MainActivity extends Activity {
 
 		//Initialize input text list with null
 		int iEditTextListSize = editTextList.size();
-		List<String> inputTextList = new ArrayList<String>(Arrays.asList(new String[iEditTextListSize]));
-		Collections.fill(inputTextList, null);
+		List<String> strListInputText = new ArrayList<String>(Arrays.asList(new String[iEditTextListSize]));
+		Collections.fill(strListInputText, null);
 
-		//Fill in inputTextList if EditText has text
+		//Fill in strListInputText if EditText has text
+        int iInputNullCount = 0;
 		for(int i = 0; i < iEditTextListSize; i++){
 			String strInputValue = editTextList.get(i).getText().toString().trim();
 			if(!strInputValue.matches("")){//has input text
-				inputTextList.set(i, strInputValue);
-			}
-			Log.d("inputTextList", String.valueOf(inputTextList.get(i)));
+				strListInputText.set(i, strInputValue);
+			}else{
+                iInputNullCount++;
+            }
 		}
-		return inputTextList;
+		if(iInputNullCount == iEditTextListSize)
+		    strListInputText = null;
+
+		Log.d("strListInputText", String.valueOf(strListInputText));
+		return strListInputText;
 	}
 
 
