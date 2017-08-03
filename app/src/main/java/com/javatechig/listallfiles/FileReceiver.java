@@ -1,7 +1,5 @@
 package com.javatechig.listallfiles;
 
-import android.util.Log;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +38,7 @@ public class FileReceiver implements CallBack {
     @Override
     public void receiveFiles(ArrayList<File> arrltFiles) {
         this.m_receivedFiles = arrltFiles;
-        Log.d("jia", "receivedFiles: "+ m_receivedFiles);
+//        Log.d("jia", "receivedFiles: "+ m_receivedFiles);
 
     }
 

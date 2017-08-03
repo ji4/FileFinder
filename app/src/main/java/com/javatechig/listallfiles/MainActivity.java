@@ -75,7 +75,7 @@ public class MainActivity extends Activity {
 			}
 
 			prelastFile = curlastFile;
-			Log.d("jia", "matchedFileList in onClick: "+String.valueOf(m_receivedFileList));
+//			Log.d("jia", "matchedFileList in onClick: "+String.valueOf(m_receivedFileList));
 			Log.d("jia", "stopReceiving: "+stopReceiving);
 
 			if(!stopReceiving)//Stop updating UI after finished
