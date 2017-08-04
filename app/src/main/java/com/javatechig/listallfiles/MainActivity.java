@@ -14,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -31,11 +30,10 @@ public class MainActivity extends Activity {
 	private ArrayList<File> m_receivedFileList = new ArrayList<File>();
 	private Button m_btn_search, m_btn_searchDupFile;
 	private EditText m_et_fileName;
-	private LinearLayout ll;
 	private EditText m_et_startDate, m_et_endDate;
 	private EditText m_et_minSize, m_et_maxSize;
 
-	//-------------file view-------------//
+	//-------------file view variables-------------//
 	private ViewStub m_stubGrid;
 	private ViewStub m_stubList;
 	private ListView m_listView;
@@ -46,9 +44,9 @@ public class MainActivity extends Activity {
 
 	private static final int VIEW_MODE_LISTVIEW = 0;
 	private static final int VIEW_MODE_GRIDVIEW = 1;
-	//-------------file view-------------//
+	//----------End of file view variables-----------//
 
-
+	//-------------UI Thread-------------//
 	FileReceiver m_fileReceiver;
 	File curlastFile, prelastFile;
 	Handler m_handler = new Handler()
@@ -82,6 +80,13 @@ public class MainActivity extends Activity {
 				m_handler.postDelayed(this, 100);
 		}
 	};
+	//-------------End of UI Thread-------------//
+
+	@Override
+	protected void onDestroy() {
+		if(m_handler!=null) m_handler.removeCallbacks(m_runnable);
+		super.onDestroy();
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -154,7 +159,6 @@ public class MainActivity extends Activity {
 		m_btn_search = (Button) findViewById(R.id.activity_main_btn_search);
 		m_btn_searchDupFile = (Button) findViewById(R.id.activity_main_btn_searchDupFile);
 		m_et_fileName = (EditText) findViewById(R.id.activity_main_et_fileName);
-		ll = (LinearLayout) findViewById(R.id.ll);
 		//start & end date
 		m_et_startDate = (EditText) findViewById(R.id.activity_main_et_startDate);
 		m_et_endDate = (EditText) findViewById(R.id.activity_main_et_endDate);
