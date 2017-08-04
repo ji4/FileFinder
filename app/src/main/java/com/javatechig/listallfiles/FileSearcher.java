@@ -44,10 +44,10 @@ public class FileSearcher {
         this.m_root = dir;
     }
 
-    private void setInputData(List<String> strListinputText) {
-        m_inputFields = new ArrayList<InputField>(Arrays.asList(new InputField[strListinputText.size()]));
+    private void createInputFieldInstances(List<String> strListinputText) {
+        m_inputFields = new ArrayList<InputField>(Arrays.asList(new InputField[strListinputText.size()])); //create instances
 
-        //parse text values
+        //parse text values & set data to instances
         int iInputFieldCode = 0;
         for(ListIterator<InputField> iterator = m_inputFields.listIterator(); iterator.hasNext();){
             int iInputtedIndex = iterator.nextIndex();
@@ -60,16 +60,12 @@ public class FileSearcher {
                         m_inputFields.set(iInputtedIndex, new InputField(strInputValue));
                         break;
                     case START_DATE:
-                        //parse text
                         int iArrStartDate[] = DataConverter.parseDateText(strInputValue);
-                        //format date
                         Date startDate = DataConverter.convertToDate(iArrStartDate[0], iArrStartDate[1], iArrStartDate[2], false); //param: year, month, day
                         m_inputFields.set(iInputtedIndex, new InputField(startDate));
                         break;
                     case END_DATE:
-                        //parse text
                         int iArrEndDate[] = DataConverter.parseDateText(strInputValue);
-                        //format date
                         Date endDate = DataConverter.convertToDate(iArrEndDate[0], iArrEndDate[1], iArrEndDate[2], true); //param: year, month, day
                         m_inputFields.set(iInputtedIndex, new InputField(endDate));
                         break;
@@ -100,7 +96,7 @@ public class FileSearcher {
     -> finishes & tell UI to stop refreshing */
     public void searchFiles(final CallBack callBack, final List<String> strListInputText){
         if(strListInputText != null)  //has input
-            setInputData(strListInputText);
+            createInputFieldInstances(strListInputText);
 
         SearchThread searchThread = new SearchThread();
         searchThread.setPriority(1); //not sure necessary
@@ -179,8 +175,9 @@ public class FileSearcher {
     private void getFile(File dir) {
         File listFile[] = dir.listFiles();
 
-        if (listFile != null && listFile.length > 0) {
-            for (int i = 0; i < listFile.length; i++) {
+        int iListFileLenth = listFile.length;
+        if (listFile != null && iListFileLenth > 0) {
+            for (int i = 0; i < iListFileLenth; i++) {
                 if (listFile[i].isDirectory()) { //directory
                     m_arrltDirectories.add(listFile[i]); //store directory path into list
                 } else { //file
