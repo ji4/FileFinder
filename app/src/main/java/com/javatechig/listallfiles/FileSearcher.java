@@ -1,10 +1,10 @@
 
 package com.javatechig.listallfiles;
 
-import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -18,8 +18,8 @@ import java.util.ListIterator;
 
 public class FileSearcher {
     //getting SDcard root path
-    private File m_root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-//    private File m_root = new File("/storage/emulated/0/Download");
+//    private File m_root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+    private File m_root = new File("/storage/emulated/0/Download");
 
     private ArrayList<File> m_arrltDirectories = new ArrayList<File>();
     private ArrayList<File> m_arrltFoundFiles = new ArrayList<File>();
@@ -226,9 +226,29 @@ public class FileSearcher {
         return m_arrltDupFiles;
     }
 
-    private void findDuplicatedFiles(ArrayList<File> filepaths) {
+    private void findDuplicatedFiles(ArrayList<File> filepaths) throws IOException {
         HashMap<String, String> hashmap = new HashMap<String, String>();
+        ArrayList<File> fileSameSizepaths = new ArrayList<>();
+
         for (File filepath : filepaths) {
+            String strFilePath = String.valueOf(filepath);
+            String strFileSize = null;
+            strFileSize = String.valueOf(new File(strFilePath).length());
+
+            if (hashmap.containsKey(strFileSize)) {
+                String strOriginalFilePath = hashmap.get(strFileSize);
+                String strDuplicatedFilePath = strFilePath;
+
+                fileSameSizepaths.add(new File(strOriginalFilePath));
+                fileSameSizepaths.add(new File(strDuplicatedFilePath));
+
+            } else {
+                hashmap.put(strFileSize, strFilePath);
+            }
+        }
+
+        HashMap<String, String> md5hashmap = new HashMap<String, String>();
+        for (File filepath : fileSameSizepaths) {
             String strFilePath = String.valueOf(filepath);
             String md5 = null;
             try {
@@ -236,8 +256,8 @@ public class FileSearcher {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if (hashmap.containsKey(md5)) {
-                String original = hashmap.get(md5);
+            if (md5hashmap.containsKey(md5)) {
+                String original = md5hashmap.get(md5);
                 String duplicate = strFilePath;
 
                 // found a match between original and duplicate
@@ -247,8 +267,11 @@ public class FileSearcher {
                 File fileDup = new File(duplicate);
                 m_arrltDupFiles.add(fileDup);
             } else {
-                hashmap.put(md5, strFilePath);
+                md5hashmap.put(md5, strFilePath);
             }
         }
+
     }
+
+
 }
