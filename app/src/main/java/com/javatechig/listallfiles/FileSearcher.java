@@ -4,7 +4,6 @@ package com.javatechig.listallfiles;
 import android.util.Log;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -217,20 +216,17 @@ public class FileSearcher {
     public ArrayList<File> searchDupFiles() {
         searchUnderRootPath();
 
-        try {
-            findDuplicatedFiles(m_arrltFoundFiles);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ArrayList<File> sameSizeFiles = findTheSameSizeFiles(m_arrltFoundFiles);
+        findTheSameMD5Files(sameSizeFiles);
 
         return m_arrltDupFiles;
     }
 
-    private void findDuplicatedFiles(ArrayList<File> filepaths) throws IOException {
+    private ArrayList<File> findTheSameSizeFiles(ArrayList<File> filePaths){
         HashMap<String, String> hashmap = new HashMap<String, String>();
-        ArrayList<File> fileSameSizepaths = new ArrayList<>();
+        ArrayList<File> fileSameSizePaths = new ArrayList<>();
 
-        for (File filepath : filepaths) {
+        for (File filepath : filePaths) {
             String strFilePath = String.valueOf(filepath);
             String strFileSize = null;
             strFileSize = String.valueOf(new File(strFilePath).length());
@@ -239,16 +235,19 @@ public class FileSearcher {
                 String strOriginalFilePath = hashmap.get(strFileSize);
                 String strDuplicatedFilePath = strFilePath;
 
-                fileSameSizepaths.add(new File(strOriginalFilePath));
-                fileSameSizepaths.add(new File(strDuplicatedFilePath));
+                fileSameSizePaths.add(new File(strOriginalFilePath));
+                fileSameSizePaths.add(new File(strDuplicatedFilePath));
 
             } else {
                 hashmap.put(strFileSize, strFilePath);
             }
         }
+        return fileSameSizePaths;
+    }
 
+    private void findTheSameMD5Files(ArrayList<File> fileSameSizePaths){
         HashMap<String, String> md5hashmap = new HashMap<String, String>();
-        for (File filepath : fileSameSizepaths) {
+        for (File filepath : fileSameSizePaths) {
             String strFilePath = String.valueOf(filepath);
             String md5 = null;
             try {
@@ -272,6 +271,4 @@ public class FileSearcher {
         }
 
     }
-
-
 }
