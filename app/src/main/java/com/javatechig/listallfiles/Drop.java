@@ -8,7 +8,9 @@ import java.util.ArrayList;
  */
 
 public class Drop {
-    public ArrayList<File> m_arrltFoundFiles = new ArrayList<File>();
+    public ArrayList<File> m_arrltFileFound = new ArrayList<File>();
+    public ArrayList<File> m_arrltFileFiltered = new ArrayList<File>(); //new container for matched files
+
     private Boolean m_isFinishSearching = false;
 
     public void setIsFinishSearching(Boolean m_isFinishSearching) {
@@ -19,7 +21,24 @@ public class Drop {
         return m_isFinishSearching;
     }
 
+    /*-------Methods invoked for thread fileSearcher & fileFilter------*/
     public synchronized void put(File fileFound){
-        m_arrltFoundFiles.add(fileFound);
+        m_arrltFileFound.add(fileFound);
+        notifyAll();
+    }
+
+    public synchronized ArrayList<File> take(){
+        notifyAll();
+        return m_arrltFileFound;
+    }
+
+    /*-------Methods invoked for thread fileFilter & main------*/
+        m_arrltFileFiltered.add(fileFiltered);
+        notifyAll();
+    }
+
+    public synchronized ArrayList<File> getMatchedFiles(){
+        notifyAll();
+        return m_arrltFileFiltered;
     }
 }

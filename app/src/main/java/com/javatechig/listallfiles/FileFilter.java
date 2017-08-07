@@ -2,11 +2,14 @@ package com.javatechig.listallfiles;
 
 import android.util.Log;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
+
+import static java.lang.Thread.sleep;
 
 /**
  * Created by chiaying.wu on 2017/8/7.
@@ -73,8 +76,55 @@ public class FileFilter implements Runnable {
         Log.d("jia,m_inputFields", String.valueOf(m_inputFields));
     }
 
+
+    private void filterSearchByInput() {//Filter files found by input fields
+        while (drop.take().size() > 0){
+            File scanningFile = drop.take().get(0);
+            Log.d("jia", "filtering file "+m_iFileFilteredCount+": "+scanningFile);
+            m_iFileFilteredCount++;
+            File matchedFile = null;
+            int iInputtedFieldsSize = m_inputFields.size();
+            for(int i = 0; i < iInputtedFieldsSize; i++){ //filter by each inputted field
+                if(scanningFile != null) {
+                    if (m_inputFields.get(i).isMatch(scanningFile, m_inputFields.get(i).getCode())) {
+                        matchedFile = scanningFile;
+                    } else {
+                        drop.take().remove(scanningFile);
+                        matchedFile = null;
+                        break;
+                    }
+                }
+            }
+            if(matchedFile != null){
+                drop.addToMatchedList(matchedFile);  //Add matched file to a new arrayList
+            }
+            drop.take().remove(scanningFile);//remove file in original arraylist after authenticated
+        }
+    }
+
+
+
     @Override
     public void run() {
+        Log.d("jia", "filterThread starts to run");
+        try {
+            sleep(200); //Make searchThread starts searching ahead
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
+        /* conditions in while:
+        Keep filterThread running when searching; Continue filtering files if there are files found not filtered yet after searchThread finishes*/
+        while(!drop.getIsFinishSearching() || drop.take().size() > 0) {
+            filterSearchByInput();
+
+            try {
+                sleep(200); //Make searchThread's turn after filterThread finishes files just found
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+//        callBack.receiveSearchStatus(drop.getIsFinishSearching()); //tell UI to stop refreshing
+        Log.d("jia", "filterThread finishes.");
     }
 }

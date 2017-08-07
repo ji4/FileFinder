@@ -129,18 +129,6 @@ public class MainActivity extends Activity {
 
 
 	}
-	private class SearchRunnable implements Runnable{
-		private List<String> strListInputText;
-
-		SearchRunnable(List<String> strListInputText) {
-			this.strListInputText = strListInputText;
-		}
-
-		@Override
-		public void run() {
-			m_fileReceiver.queryFiles(strListInputText);
-		}
-	}
 
 	public List<String> detectEditTextInputStatus(){
 		//Add All EditTexts into ArrayList

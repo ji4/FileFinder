@@ -12,15 +12,13 @@ import java.util.HashMap;
  */
 
 public class FileSearcher implements Runnable {
+    private Drop drop;
     //getting SDcard root path
 //    private File m_root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-    private Drop drop;
     private File m_root = new File("/storage/emulated/0/Download");
 
     private ArrayList<File> m_arrltDirectories = new ArrayList<File>();
     private ArrayList<File> m_arrltDupFiles = new ArrayList<File>();
-    private ArrayList<File> m_arrltMatchFiles = new ArrayList<File>(); //new container for matched files
-
 
     private int m_iFileFoundCount = 0;
 
@@ -32,15 +30,9 @@ public class FileSearcher implements Runnable {
         this.m_root = dir;
     }
 
-
-    /*Flow:
-       'searchThread' found some files -> 'filterThread' filter files just found
-    -> Make 'searchThread' continously runs -> 'filterThread' runs again -> ..loop..
-    -> finishes & tell UI to stop refreshing */
     public void searchFiles(){
         searchUnderRootPath();
     }
-
 
     private void searchUnderRootPath() {
         m_arrltDirectories.add(m_root); //based on root path
@@ -72,14 +64,6 @@ public class FileSearcher implements Runnable {
         }
     }
 
-    public ArrayList<File> searchDupFiles() {
-        searchUnderRootPath();
-
-        ArrayList<File> sameSizeFiles = findTheSameSizeFiles(m_arrltFoundFiles);
-        findTheSameMD5Files(sameSizeFiles);
-
-        return m_arrltDupFiles;
-    }
 
     private ArrayList<File> findTheSameSizeFiles(ArrayList<File> filePaths){
         HashMap<String, String> hashmap = new HashMap<String, String>();
