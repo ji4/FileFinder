@@ -22,7 +22,6 @@ public class FileSearcher implements Runnable {
     private File m_root = new File("/storage/emulated/0/Download");
 
     private ArrayList<File> m_arrltDirectories = new ArrayList<File>();
-    private ArrayList<File> m_arrltFoundFiles = new ArrayList<File>();
     private ArrayList<File> m_arrltDupFiles = new ArrayList<File>();
     private ArrayList<File> m_arrltMatchFiles = new ArrayList<File>(); //new container for matched files
 
@@ -95,60 +94,10 @@ public class FileSearcher implements Runnable {
        'searchThread' found some files -> 'filterThread' filter files just found
     -> Make 'searchThread' continously runs -> 'filterThread' runs again -> ..loop..
     -> finishes & tell UI to stop refreshing */
-    public void searchFiles(final CallBack callBack, final List<String> strListInputText){
-        if(strListInputText != null)  //has input
-            createInputFieldInstances(strListInputText);
-
+    public void searchFiles(){
         searchUnderRootPath();
-
-        FilterThread filterThread = new FilterThread(callBack, strListInputText);
-        filterThread.start();
     }
 
-    class FilterThread extends Thread{
-        private CallBack callBack;
-        private List<String> strListInputText;
-
-        FilterThread(CallBack callBack, List<String> strListInputText) {
-            this.callBack = callBack;
-            this.strListInputText = strListInputText;
-        }
-
-        @Override
-        public void run() {
-            super.run();
-            Log.d("jia", "filterThread starts to run");
-            try {
-                sleep(200); //Make searchThread starts searching ahead
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            File currentFile, preFile = null;
-            /* conditions in while:
-            Keep filterThread running when searching; Continue filtering files if there are files found not filtered yet after searchThread finishes*/
-            while(!m_isFinishSearching || m_arrltFoundFiles.size() > 0) {
-                if (strListInputText != null) { //has input
-                    filterSearchByInput();
-                        callBack.receiveFiles(m_arrltMatchFiles);
-                } else {
-                    currentFile = m_arrltFoundFiles.get(m_arrltFoundFiles.size()-1);
-                    if(currentFile == preFile) //m_arrltFoundFiles.size() is always > 0 without filtering, so add this check to break
-                        break;
-                    callBack.receiveFiles(m_arrltFoundFiles);
-                    preFile = currentFile;
-                }
-
-                try {
-                    sleep(200); //Make searchThread's turn after filterThread finishes files just found
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            callBack.receiveSearchStatus(m_isFinishSearching); //tell UI to stop refreshing
-            Log.d("jia", "filterThread finishes.");
-        }
-    }
 
     private void searchUnderRootPath() {
         m_arrltDirectories.add(m_root); //based on root path
@@ -172,36 +121,11 @@ public class FileSearcher implements Runnable {
                 if (listFile[i].isDirectory()) { //directory
                     m_arrltDirectories.add(listFile[i]); //store directory path into list
                 } else { //file
-                    m_arrltFoundFiles.add(listFile[i]);
+                    drop.put(listFile[i]);
                     Log.d("jia", "the "+m_iFileFoundCount+" th file found");
                     m_iFileFoundCount++;
                 }
             }
-        }
-    }
-
-    private void filterSearchByInput() {//Filter files found by input fields
-        while (m_arrltFoundFiles.size() > 0){
-            File scanningFile = m_arrltFoundFiles.get(0);
-            Log.d("jia", "filtering file "+m_iFileFilteredCount+": "+scanningFile);
-            m_iFileFilteredCount++;
-            File matchedFile = null;
-            int iInputtedFieldsSize = m_inputFields.size();
-            for(int i = 0; i < iInputtedFieldsSize; i++){ //filter by each inputted field
-                if(scanningFile != null) {
-                    if (m_inputFields.get(i).isMatch(scanningFile, m_inputFields.get(i).getCode())) {
-                        matchedFile = scanningFile;
-                    } else {
-                        m_arrltFoundFiles.remove(scanningFile);
-                        matchedFile = null;
-                        break;
-                    }
-                }
-            }
-            if(matchedFile != null){
-                m_arrltMatchFiles.add(matchedFile); //Add matched file to a new arrayList
-            }
-            m_arrltFoundFiles.remove(scanningFile);//remove file in original arraylist after authenticated
         }
     }
 
@@ -266,6 +190,6 @@ public class FileSearcher implements Runnable {
 
     @Override
     public void run() {
-
+        searchFiles();
     }
 }

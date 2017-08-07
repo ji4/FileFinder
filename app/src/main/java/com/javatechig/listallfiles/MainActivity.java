@@ -105,6 +105,7 @@ public class MainActivity extends Activity {
 
 				FileSearcher fileSearcher = new FileSearcher();
 				m_fileReceiver = new FileReceiver(fileSearcher);
+                (new Thread(new FileSearcher(drop))).start();
 
 				SearchRunnable searchRunnable = new SearchRunnable(strListInputText);
 				Thread searchThread = new Thread(searchRunnable);
