@@ -15,9 +15,10 @@ import java.util.ListIterator;
  * Created by chiaying.wu on 2017/7/17.
  */
 
-public class FileSearcher {
+public class FileSearcher implements Runnable {
     //getting SDcard root path
 //    private File m_root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+    private Drop drop;
     private File m_root = new File("/storage/emulated/0/Download");
 
     private ArrayList<File> m_arrltDirectories = new ArrayList<File>();
@@ -36,7 +37,8 @@ public class FileSearcher {
     private int m_iFileFoundCount = 0;
     private int m_iFileFilteredCount = 0;
 
-    public FileSearcher() {
+    public FileSearcher(Drop drop) {
+        this.drop = drop;
     }
 
     public void setDirectoryPath(File dir) {
@@ -259,6 +261,11 @@ public class FileSearcher {
                 md5hashmap.put(md5, strFilePath);
             }
         }
+
+    }
+
+    @Override
+    public void run() {
 
     }
 }
