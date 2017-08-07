@@ -47,7 +47,6 @@ public class MainActivity extends Activity {
 	//----------End of file view variables-----------//
 
 	//-------------UI Thread-------------//
-	FileReceiver m_fileReceiver;
     Drop drop = new Drop();
 	File curlastFile, prelastFile;
 	Handler m_handler = new Handler()
@@ -61,8 +60,7 @@ public class MainActivity extends Activity {
 		@Override
 		public void run() {
 			//Get data from file receiver
-			m_receivedFileList = m_fileReceiver.getReceivedFiles();
-			Boolean stopReceiving = m_fileReceiver.getStopReceiving();
+            m_receivedFileList = drop.getMatchedFiles();
 
 			//Refresh UI
 			if (m_receivedFileList != null && m_receivedFileList.size() > 0) {
@@ -75,9 +73,9 @@ public class MainActivity extends Activity {
 
 			prelastFile = curlastFile;
 //			Log.d("jia", "matchedFileList in onClick: "+String.valueOf(m_receivedFileList));
-			Log.d("jia", "stopReceiving: "+stopReceiving);
+//			Log.d("jia", "stopReceiving: "+stopReceiving);
 
-			if(!stopReceiving)//Stop updating UI after finished
+//			if(!stopReceiving)//Stop updating UI after finished
 				m_handler.postDelayed(this, 100);
 		}
 	};
@@ -104,27 +102,25 @@ public class MainActivity extends Activity {
 
 				List<String> strListInputText = detectEditTextInputStatus();
 
-				FileSearcher fileSearcher = new FileSearcher();
-				m_fileReceiver = new FileReceiver(fileSearcher);
                 (new Thread(new FileSearcher(drop))).start();
 
-				SearchRunnable searchRunnable = new SearchRunnable(strListInputText);
-				Thread searchThread = new Thread(searchRunnable);
-				searchThread.start();
+				if (strListInputText != null) { //has input
+					(new Thread(new FileFilter(drop, strListInputText))).start();
+				}
 
 				m_handler.postDelayed(m_runnable, 100);
 			}
 		});
 
-		m_btn_searchDupFile.setOnClickListener(new Button.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				FileSearcher fileSearcher = new FileSearcher();
-				m_matchedFileList = fileSearcher.searchDupFiles();
-
-				setAdapters();
-			}
-		});
+//		m_btn_searchDupFile.setOnClickListener(new Button.OnClickListener() {
+//			@Override
+//			public void onClick(View view) {
+//				FileSearcher fileSearcher = new FileSearcher();
+//				m_matchedFileList = fileSearcher.searchDupFiles();
+//
+//				setAdapters();
+//			}
+//		});
 
 
 

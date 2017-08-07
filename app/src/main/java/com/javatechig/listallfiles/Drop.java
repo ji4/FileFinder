@@ -33,6 +33,7 @@ public class Drop {
     }
 
     /*-------Methods invoked for thread fileFilter & main------*/
+    public synchronized void addToMatchedList(File fileFiltered){
         m_arrltFileFiltered.add(fileFiltered);
         notifyAll();
     }
