@@ -97,20 +97,10 @@ public class FileSearcher {
         if(strListInputText != null)  //has input
             createInputFieldInstances(strListInputText);
 
-        SearchThread searchThread = new SearchThread();
-        searchThread.setPriority(1); //not sure necessary
-        searchThread.start();
+        searchUnderRootPath();
 
         FilterThread filterThread = new FilterThread(callBack, strListInputText);
         filterThread.start();
-    }
-    class SearchThread extends Thread{
-        @Override
-        public void run() {
-            super.run();
-            Log.d("jia", "searchThread starts to run");
-            searchUnderRootPath();
-        }
     }
 
     class FilterThread extends Thread{

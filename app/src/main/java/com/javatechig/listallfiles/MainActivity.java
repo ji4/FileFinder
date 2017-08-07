@@ -101,11 +101,15 @@ public class MainActivity extends Activity {
 			public void onClick(View view) {
 				m_matchedFileList.clear(); //clear previous view when button clicked again
 
-				List<String> strListinputText = detectEditTextInputStatus();
+				List<String> strListInputText = detectEditTextInputStatus();
 
 				FileSearcher fileSearcher = new FileSearcher();
 				m_fileReceiver = new FileReceiver(fileSearcher);
-				m_fileReceiver.queryFiles(strListinputText);
+
+				SearchRunnable searchRunnable = new SearchRunnable(strListInputText);
+				Thread searchThread = new Thread(searchRunnable);
+				searchThread.start();
+
 				m_handler.postDelayed(m_runnable, 100);
 			}
 		});
@@ -119,6 +123,21 @@ public class MainActivity extends Activity {
 				setAdapters();
 			}
 		});
+
+
+
+	}
+	private class SearchRunnable implements Runnable{
+		private List<String> strListInputText;
+
+		SearchRunnable(List<String> strListInputText) {
+			this.strListInputText = strListInputText;
+		}
+
+		@Override
+		public void run() {
+			m_fileReceiver.queryFiles(strListInputText);
+		}
 	}
 
 	public List<String> detectEditTextInputStatus(){
