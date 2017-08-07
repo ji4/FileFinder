@@ -48,6 +48,7 @@ public class MainActivity extends Activity {
 
 	//-------------UI Thread-------------//
 	FileReceiver m_fileReceiver;
+    Drop drop = new Drop();
 	File curlastFile, prelastFile;
 	Handler m_handler = new Handler()
 	{
