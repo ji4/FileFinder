@@ -32,7 +32,6 @@ public class FileSearcher implements Runnable {
     private static final int MAX_SIZE = 4;
     private ArrayList<InputField> m_inputFields;
 
-    private Boolean m_isFinishSearching = false;
     private int m_iFileFoundCount = 0;
     private int m_iFileFilteredCount = 0;
 
@@ -103,12 +102,12 @@ public class FileSearcher implements Runnable {
         m_arrltDirectories.add(m_root); //based on root path
 
         int i = 0;
-        while (!m_isFinishSearching) { //Keep searchThread running
+        while (!drop.getIsFinishSearching()) { //Keep searchThread running
             while (i < m_arrltDirectories.size()) {//Scan directory paths
                 getFile(m_arrltDirectories.get(i));
                 i++;
             }
-            m_isFinishSearching = true;
+            drop.setIsFinishSearching(true);
         }
     }
 

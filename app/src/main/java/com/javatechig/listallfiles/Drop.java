@@ -9,9 +9,17 @@ import java.util.ArrayList;
 
 public class Drop {
     public ArrayList<File> m_arrltFoundFiles = new ArrayList<File>();
+    private Boolean m_isFinishSearching = false;
+
+    public void setIsFinishSearching(Boolean m_isFinishSearching) {
+        this.m_isFinishSearching = m_isFinishSearching;
+    }
+
+    public Boolean getIsFinishSearching() {
+        return m_isFinishSearching;
+    }
 
     public synchronized void put(File fileFound){
         m_arrltFoundFiles.add(fileFound);
     }
-
 }
