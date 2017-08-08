@@ -22,23 +22,23 @@ public class Drop {
     }
 
     /*-------Methods invoked for thread fileSearcher & fileFilter------*/
-    public synchronized void put(File fileFound){
+    public synchronized void put(File fileFound) {
         m_arrltFileFound.add(fileFound);
         notifyAll();
     }
 
-    public synchronized ArrayList<File> take(){
+    public synchronized ArrayList<File> take() {
         notifyAll();
         return m_arrltFileFound;
     }
 
     /*-------Methods invoked for thread fileFilter & main------*/
-    public synchronized void addToMatchedList(File fileFiltered){
+    public synchronized void addToMatchedList(File fileFiltered) {
         m_arrltFileFiltered.add(fileFiltered);
         notifyAll();
     }
 
-    public synchronized ArrayList<File> getMatchedFiles(){
+    public synchronized ArrayList<File> getMatchedFiles() {
         notifyAll();
         return m_arrltFileFiltered;
     }

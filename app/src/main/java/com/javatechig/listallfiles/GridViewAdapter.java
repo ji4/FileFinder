@@ -26,8 +26,8 @@ public class GridViewAdapter extends ArrayAdapter<File> {
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
 
-        if(null == v) {
-            LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        if (null == v) {
+            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(R.layout.grid_item, null);
         }
 

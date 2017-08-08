@@ -21,13 +21,15 @@ public class InputField {
     private Date m_dateInputValue;
     private long m_longInputSize;
 
-    public InputField (String strInputValue) {
+    public InputField(String strInputValue) {
         this.m_strInputValue = strInputValue;
     }
-    public InputField (Date dateInputValue) {
+
+    public InputField(Date dateInputValue) {
         this.m_dateInputValue = dateInputValue;
     }
-    public InputField (long longInputSize){
+
+    public InputField(long longInputSize) {
         this.m_longInputSize = longInputSize;
     }
 
@@ -39,8 +41,8 @@ public class InputField {
         this.m_iCode = m_iCode;
     }
 
-    public Boolean isMatch(File scanningFile, int iCode){
-        switch (iCode){
+    public Boolean isMatch(File scanningFile, int iCode) {
+        switch (iCode) {
             case FILE_NAME:
                 m_isMatch = scanningFile.getName().contains(m_strInputValue);
                 break;

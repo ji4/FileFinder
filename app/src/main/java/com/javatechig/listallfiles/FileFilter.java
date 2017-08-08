@@ -37,7 +37,7 @@ public class FileFilter implements Runnable {
 
         //parse text values & set data to instances
         int iInputFieldCode = 0;
-        for(ListIterator<InputField> iterator = m_inputFields.listIterator(); iterator.hasNext();){
+        for (ListIterator<InputField> iterator = m_inputFields.listIterator(); iterator.hasNext(); ) {
             int iInputtedIndex = iterator.nextIndex();
             iterator.next();
 
@@ -67,7 +67,7 @@ public class FileFilter implements Runnable {
                         break;
                 }
                 m_inputFields.get(iInputtedIndex).setCode(iInputFieldCode);
-            } else{
+            } else {
                 iterator.remove();
             }
             iInputFieldCode++;
@@ -78,14 +78,14 @@ public class FileFilter implements Runnable {
 
 
     private void filterSearchByInput() {//Filter files found by input fields
-        while (drop.take().size() > 0){
+        while (drop.take().size() > 0) {
             File scanningFile = drop.take().get(0);
-            Log.d("jia", "filtering file "+m_iFileFilteredCount+": "+scanningFile);
+            Log.d("jia", "filtering file " + m_iFileFilteredCount + ": " + scanningFile);
             m_iFileFilteredCount++;
             File matchedFile = null;
             int iInputtedFieldsSize = m_inputFields.size();
-            for(int i = 0; i < iInputtedFieldsSize; i++){ //filter by each inputted field
-                if(scanningFile != null) {
+            for (int i = 0; i < iInputtedFieldsSize; i++) { //filter by each inputted field
+                if (scanningFile != null) {
                     if (m_inputFields.get(i).isMatch(scanningFile, m_inputFields.get(i).getCode())) {
                         matchedFile = scanningFile;
                     } else {
@@ -95,13 +95,12 @@ public class FileFilter implements Runnable {
                     }
                 }
             }
-            if(matchedFile != null){
+            if (matchedFile != null) {
                 drop.addToMatchedList(matchedFile);  //Add matched file to a new arrayList
             }
             drop.take().remove(scanningFile);//remove file in original arraylist after authenticated
         }
     }
-
 
 
     @Override
@@ -115,7 +114,7 @@ public class FileFilter implements Runnable {
 
         /* conditions in while:
         Keep filterThread running when searching; Continue filtering files if there are files found not filtered yet after searchThread finishes*/
-        while(!drop.getIsFinishSearching() || drop.take().size() > 0) {
+        while (!drop.getIsFinishSearching() || drop.take().size() > 0) {
             filterSearchByInput();
 
             try {

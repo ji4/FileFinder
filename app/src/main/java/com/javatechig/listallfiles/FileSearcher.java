@@ -30,7 +30,7 @@ public class FileSearcher implements Runnable {
         this.m_root = dir;
     }
 
-    public void searchFiles(){
+    public void searchFiles() {
         searchUnderRootPath();
     }
 
@@ -57,7 +57,7 @@ public class FileSearcher implements Runnable {
                     m_arrltDirectories.add(listFile[i]); //store directory path into list
                 } else { //file
                     drop.put(listFile[i]);
-                    Log.d("jia", "the "+m_iFileFoundCount+" th file found");
+                    Log.d("jia", "the " + m_iFileFoundCount + " th file found");
                     m_iFileFoundCount++;
                 }
             }
@@ -65,7 +65,7 @@ public class FileSearcher implements Runnable {
     }
 
 
-    private ArrayList<File> findTheSameSizeFiles(ArrayList<File> filePaths){
+    private ArrayList<File> findTheSameSizeFiles(ArrayList<File> filePaths) {
         HashMap<String, String> hashmap = new HashMap<String, String>();
         ArrayList<File> fileSameSizePaths = new ArrayList<>();
 
@@ -88,7 +88,7 @@ public class FileSearcher implements Runnable {
         return fileSameSizePaths;
     }
 
-    private void findTheSameMD5Files(ArrayList<File> fileSameSizePaths){
+    private void findTheSameMD5Files(ArrayList<File> fileSameSizePaths) {
         HashMap<String, String> md5hashmap = new HashMap<String, String>();
         for (File filepath : fileSameSizePaths) {
             String strFilePath = String.valueOf(filepath);
