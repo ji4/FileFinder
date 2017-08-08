@@ -99,26 +99,7 @@
             },
             {
                 "to": {
-                    "startLine": 9,
-                    "startColumn": 4,
-                    "startOffset": 428,
-                    "endColumn": 55,
-                    "endOffset": 479
-                },
-                "from": {
-                    "file": "C:\\Users\\chiaying.wu\\AndroidStudioProjects\\ListAllFiles\\app\\src\\main\\res\\values\\strings.xml",
-                    "position": {
-                        "startLine": 7,
-                        "startColumn": 4,
-                        "startOffset": 278,
-                        "endColumn": 55,
-                        "endOffset": 329
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 10,
+                    "startLine": 7,
                     "startColumn": 4,
                     "startOffset": 335,
                     "endColumn": 58,
