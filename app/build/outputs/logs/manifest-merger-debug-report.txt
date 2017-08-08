@@ -17,7 +17,6 @@ ADDED from C:\Users\chiaying.wu\AndroidStudioProjects\ListAllFiles\app\src\main\
 		ADDED from C:\Users\chiaying.wu\AndroidStudioProjects\ListAllFiles\app\src\main\AndroidManifest.xml:2:11-69
 uses-sdk
 ADDED from C:\Users\chiaying.wu\AndroidStudioProjects\ListAllFiles\app\src\main\AndroidManifest.xml:7:5-9:41
-MERGED from [com.android.support:appcompat-v7:18.0.0] C:\Users\chiaying.wu\.android\build-cache\b3481537c1dc7077a4ec6af8e053040ae5c35c7c\output\AndroidManifest.xml:18:5-42
 	android:targetSdkVersion
 		ADDED from C:\Users\chiaying.wu\AndroidStudioProjects\ListAllFiles\app\src\main\AndroidManifest.xml:9:9-38
 		INJECTED from C:\Users\chiaying.wu\AndroidStudioProjects\ListAllFiles\app\src\main\AndroidManifest.xml
@@ -40,7 +39,6 @@ ADDED from C:\Users\chiaying.wu\AndroidStudioProjects\ListAllFiles\app\src\main\
 		ADDED from C:\Users\chiaying.wu\AndroidStudioProjects\ListAllFiles\app\src\main\AndroidManifest.xml:15:22-72
 application
 ADDED from C:\Users\chiaying.wu\AndroidStudioProjects\ListAllFiles\app\src\main\AndroidManifest.xml:17:5-32:19
-MERGED from [com.android.support:appcompat-v7:18.0.0] C:\Users\chiaying.wu\.android\build-cache\b3481537c1dc7077a4ec6af8e053040ae5c35c7c\output\AndroidManifest.xml:19:5-20
 	android:label
 		ADDED from C:\Users\chiaying.wu\AndroidStudioProjects\ListAllFiles\app\src\main\AndroidManifest.xml:20:9-41
 	android:allowBackup
