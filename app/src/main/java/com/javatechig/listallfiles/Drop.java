@@ -8,8 +8,8 @@ import java.util.ArrayList;
  */
 
 public class Drop {
-    public ArrayList<File> m_arrltFileFound = new ArrayList<File>();
-    public ArrayList<File> m_arrltFileFiltered = new ArrayList<File>(); //new container for matched files
+    private ArrayList<File> m_arrltFileFound = new ArrayList<File>();
+    private ArrayList<File> m_arrltFileFiltered = new ArrayList<File>(); //new container for matched files
 
     private Boolean m_isFinishSearching = false;
 
