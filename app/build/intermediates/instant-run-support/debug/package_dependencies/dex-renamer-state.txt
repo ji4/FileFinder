@@ -1,4 +1,10 @@
-#Fri Jul 14 09:07:41 CST 2017
-base.0=C\:\\Users\\chiaying.wu\\AndroidStudioProjects\\ListAllFiles\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\support-v4-18.0.0_1e06cab7c3da96f6e19bba8c82a427fabca1153a
-renamed.0=classes.dex
-file.0=C\:\\Users\\chiaying.wu\\AndroidStudioProjects\\ListAllFiles\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\support-v4-18.0.0_1e06cab7c3da96f6e19bba8c82a427fabca1153a\\classes.dex
+#Fri Aug 04 11:47:36 CST 2017
+renamed.2=classes.dex
+renamed.1=classes3.dex
+renamed.0=classes2.dex
+base.2=C\:\\Users\\chiaying.wu\\AndroidStudioProjects\\ListAllFiles\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\classes_533e1c4c1d6f18baf361dcb5ec33f14109ee5ea9
+base.1=C\:\\Users\\chiaying.wu\\AndroidStudioProjects\\ListAllFiles\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\support-v4-18.0.0_1e06cab7c3da96f6e19bba8c82a427fabca1153a
+base.0=C\:\\Users\\chiaying.wu\\AndroidStudioProjects\\ListAllFiles\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\commons-io-1.3.2_4cde985218b493ef255ebb922c2fa5a9f9fe6f8f
+file.2=C\:\\Users\\chiaying.wu\\AndroidStudioProjects\\ListAllFiles\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\classes_533e1c4c1d6f18baf361dcb5ec33f14109ee5ea9\\classes.dex
+file.1=C\:\\Users\\chiaying.wu\\AndroidStudioProjects\\ListAllFiles\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\support-v4-18.0.0_1e06cab7c3da96f6e19bba8c82a427fabca1153a\\classes.dex
+file.0=C\:\\Users\\chiaying.wu\\AndroidStudioProjects\\ListAllFiles\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\commons-io-1.3.2_4cde985218b493ef255ebb922c2fa5a9f9fe6f8f\\classes.dex
