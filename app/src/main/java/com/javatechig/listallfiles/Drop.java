@@ -12,13 +12,22 @@ public class Drop {
     private ArrayList<File> m_arrltFileFiltered = new ArrayList<File>(); //new container for matched files
 
     private Boolean m_isFinishSearching = false;
+    private Boolean m_isFinishFiltering = false;
 
     public void setIsFinishSearching(Boolean m_isFinishSearching) {
         this.m_isFinishSearching = m_isFinishSearching;
     }
 
+    public void setIsFinishFiltering(Boolean m_isFinishFiltering) {
+        this.m_isFinishFiltering = m_isFinishFiltering;
+    }
+
     public Boolean getIsFinishSearching() {
         return m_isFinishSearching;
+    }
+
+    public Boolean getIsFinishFiltering() {
+        return m_isFinishFiltering;
     }
 
     /*-------Methods invoked for thread fileSearcher & fileFilter------*/

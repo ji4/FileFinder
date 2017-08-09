@@ -124,6 +124,7 @@ public class FileFilter implements Runnable {
             }
         }
 //        callBack.receiveSearchStatus(drop.getIsFinishSearching()); //tell UI to stop refreshing
+        drop.setIsFinishFiltering(true);
         Log.d("jia", "filterThread finishes.");
     }
 }
