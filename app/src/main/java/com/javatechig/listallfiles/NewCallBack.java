@@ -10,5 +10,6 @@ import java.util.ArrayList;
 public interface NewCallBack {
     void put(File fileProvided);
     ArrayList<File> take();
-    Boolean isProviderFinished(Boolean isFininshed);
+    void setIsProviderFinished(Boolean isFininshed);
+    Boolean getIsProviderFinished();
 }
