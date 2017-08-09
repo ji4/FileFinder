@@ -8,17 +8,17 @@ import java.util.ArrayList;
  */
 
 public class SharedFiles implements CallBack {
-    private ArrayList<File> m_arrltFileFound = new ArrayList<File>();
+    private ArrayList<File> m_arrltFileProvided = new ArrayList<File>();
     private Boolean isProviderFinished = false;
 
     @Override
     public synchronized void put(File fileToProvide) {
-        m_arrltFileFound.add(fileToProvide);
+        m_arrltFileProvided.add(fileToProvide);
     }
 
     @Override
     public synchronized ArrayList<File> take() {
-        return m_arrltFileFound;
+        return m_arrltFileProvided;
     }
 
     @Override

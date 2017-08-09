@@ -108,11 +108,6 @@ public class FileFilter implements Runnable {
     @Override
     public void run() {
         Log.d("jia", "filterThread starts to run");
-        try {
-            sleep(200); //Make searchThread starts searching ahead
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         /* conditions in while:
         Keep filterThread running when searching; Continue filtering files if there are files found not filtered yet after searchThread finishes*/
@@ -125,7 +120,6 @@ public class FileFilter implements Runnable {
                 e.printStackTrace();
             }
         }
-//        callBack.receiveSearchStatus(drop.getIsFinishSearching()); //tell UI to stop refreshing
         fileReceiver.setIsFinishedPut(true); //tell UI it's finished filtering
         Log.d("jia", "filterThread finishes.");
     }
