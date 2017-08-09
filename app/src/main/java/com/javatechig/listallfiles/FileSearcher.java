@@ -30,11 +30,12 @@ public class FileSearcher implements Runnable {
         this.m_root = dir;
     }
 
-    public void searchFiles() {
-        searchUnderRootPath();
+    @Override
+    public void run() {
+        searchFiles();
     }
 
-    private void searchUnderRootPath() {
+    private void searchFiles() {
         m_arrltDirectories.add(m_root); //based on root path
 
         int i = 0;
@@ -113,10 +114,5 @@ public class FileSearcher implements Runnable {
             }
         }
 
-    }
-
-    @Override
-    public void run() {
-        searchFiles();
     }
 }

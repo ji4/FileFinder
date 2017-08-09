@@ -34,6 +34,25 @@ public class FileFilter implements Runnable {
         createInputFieldInstances(strListinputText);
     }
 
+    @Override
+    public void run() {
+        Log.d("jia", "filterThread starts to run");
+
+        /* conditions in while:
+        Keep filterThread running when searching; Continue filtering files if there are files found not filtered yet after searchThread finishes*/
+        while (!fileProvider.getIsProviderFinished() || fileProvider.take().size() > 0) {
+            filterSearchByInput();
+
+            try {
+                sleep(200); //Make searchThread's turn after filterThread finishes files just found
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        fileReceiver.setIsFinishedPut(true); //tell UI it's finished filtering
+        Log.d("jia", "filterThread finishes.");
+    }
+
     private void createInputFieldInstances(List<String> strListinputText) {
         m_inputFields = new ArrayList<InputField>(Arrays.asList(new InputField[strListinputText.size()])); //create instances
 
@@ -103,25 +122,4 @@ public class FileFilter implements Runnable {
             fileProvider.take().remove(scanningFile);//remove file in original arraylist after authenticated
         }
     }
-
-
-    @Override
-    public void run() {
-        Log.d("jia", "filterThread starts to run");
-
-        /* conditions in while:
-        Keep filterThread running when searching; Continue filtering files if there are files found not filtered yet after searchThread finishes*/
-        while (!fileProvider.getIsProviderFinished() || fileProvider.take().size() > 0) {
-            filterSearchByInput();
-
-            try {
-                sleep(200); //Make searchThread's turn after filterThread finishes files just found
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        fileReceiver.setIsFinishedPut(true); //tell UI it's finished filtering
-        Log.d("jia", "filterThread finishes.");
-    }
-
 }
