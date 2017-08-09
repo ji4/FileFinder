@@ -101,10 +101,14 @@ public class MainActivity extends Activity {
 
                 List<String> strListInputText = detectEditTextInputStatus();
 
-                (new Thread(new FileSearcher(drop))).start();
+                Runnable fileSearcher  = new FileSearcher(drop);
+                Thread searchThread = new Thread(fileSearcher);
+                searchThread.start();
 
                 if (strListInputText != null) { //has input
-                    (new Thread(new FileFilter(drop, strListInputText))).start();
+                    Runnable fileFilter  = new FileFilter(drop, strListInputText);
+                    Thread filterThread = new Thread(fileFilter);
+                    filterThread.start();
                 }
 
                 m_handler.postDelayed(m_runnable, 100);
