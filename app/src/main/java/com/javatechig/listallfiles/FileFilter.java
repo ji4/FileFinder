@@ -16,7 +16,8 @@ import static java.lang.Thread.sleep;
  */
 
 public class FileFilter implements Runnable {
-    private Drop drop;
+    private SharedFiles fileProvider;
+    private SharedFiles fileReceiver;
     private int m_iFileFilteredCount = 0;
 
     private static final int FILE_NAME = 0;
@@ -26,8 +27,9 @@ public class FileFilter implements Runnable {
     private static final int MAX_SIZE = 4;
     private ArrayList<InputField> m_inputFields;
 
-    public FileFilter(Drop drop, List<String> strListinputText) {
-        this.drop = drop;
+    public FileFilter(SharedFiles fileProvider, SharedFiles fileReceiver, List<String> strListinputText) {
+        this.fileProvider = fileProvider;
+        this.fileReceiver = fileReceiver;
 
         createInputFieldInstances(strListinputText);
     }
@@ -78,8 +80,8 @@ public class FileFilter implements Runnable {
 
 
     private void filterSearchByInput() {//Filter files found by input fields
-        while (drop.take().size() > 0) {
-            File scanningFile = drop.take().get(0);
+        while (fileProvider.take().size() > 0) {
+            File scanningFile = fileProvider.take().get(0);
             Log.d("jia", "filtering file " + m_iFileFilteredCount + ": " + scanningFile);
             m_iFileFilteredCount++;
             File matchedFile = null;
@@ -89,16 +91,16 @@ public class FileFilter implements Runnable {
                     if (m_inputFields.get(i).isMatch(scanningFile, m_inputFields.get(i).getCode())) {
                         matchedFile = scanningFile;
                     } else {
-                        drop.take().remove(scanningFile);
+                        fileProvider.take().remove(scanningFile);
                         matchedFile = null;
                         break;
                     }
                 }
             }
             if (matchedFile != null) {
-                drop.addToMatchedList(matchedFile);  //Add matched file to a new arrayList
+                fileReceiver.put(matchedFile);  //Add matched file to a new arrayList
             }
-            drop.take().remove(scanningFile);//remove file in original arraylist after authenticated
+            fileProvider.take().remove(scanningFile);//remove file in original arraylist after authenticated
         }
     }
 
@@ -114,7 +116,7 @@ public class FileFilter implements Runnable {
 
         /* conditions in while:
         Keep filterThread running when searching; Continue filtering files if there are files found not filtered yet after searchThread finishes*/
-        while (!drop.getIsFinishSearching() || drop.take().size() > 0) {
+        while (!fileProvider.getIsProviderFinished() || fileProvider.take().size() > 0) {
             filterSearchByInput();
 
             try {
@@ -124,7 +126,8 @@ public class FileFilter implements Runnable {
             }
         }
 //        callBack.receiveSearchStatus(drop.getIsFinishSearching()); //tell UI to stop refreshing
-        drop.setIsFinishFiltering(true);
+        fileReceiver.setIsFinishedPut(true); //tell UI it's finished filtering
         Log.d("jia", "filterThread finishes.");
     }
+
 }

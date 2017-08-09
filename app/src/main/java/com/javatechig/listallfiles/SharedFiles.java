@@ -12,8 +12,8 @@ public class SharedFiles implements NewCallBack {
     private Boolean isProviderFinished = false;
 
     @Override
-    public synchronized void put(File fileProvided) {
-        m_arrltFileFound.add(fileProvided);
+    public synchronized void put(File fileToProvide) {
+        m_arrltFileFound.add(fileToProvide);
     }
 
     @Override
@@ -22,7 +22,7 @@ public class SharedFiles implements NewCallBack {
     }
 
     @Override
-    public void setIsProviderFinished(Boolean isFininshed) {
+    public void setIsFinishedPut(Boolean isFininshed) {
         this.isProviderFinished = isFininshed;
     }
 
