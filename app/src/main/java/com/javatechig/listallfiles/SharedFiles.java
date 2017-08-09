@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * Created by chiaying.wu on 2017/8/9.
  */
 
-public class SharedFiles implements NewCallBack {
+public class SharedFiles implements CallBack {
     private ArrayList<File> m_arrltFileFound = new ArrayList<File>();
     private Boolean isProviderFinished = false;
 

@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * Created by chiaying.wu on 2017/8/9.
  */
 
-public interface NewCallBack {
+public interface CallBack {
     void put(File fileProvided);
     ArrayList<File> take();
     void setIsFinishedPut(Boolean isFininshed);

@@ -12,7 +12,7 @@ import java.util.HashMap;
  */
 
 public class FileSearcher implements Runnable {
-    private SharedFiles callback;
+    private CallBack callback;
     //getting SDcard root path
 //    private File m_root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
     private File m_root = new File("/storage/emulated/0/Download");
@@ -22,7 +22,7 @@ public class FileSearcher implements Runnable {
 
     private int m_iFileFoundCount = 0;
 
-    public FileSearcher(SharedFiles callback) {
+    public FileSearcher(CallBack callback) {
         this.callback = callback;
     }
 
@@ -43,7 +43,7 @@ public class FileSearcher implements Runnable {
                 getFile(m_arrltDirectories.get(i));
                 i++;
             }
-            callback.setIsProviderFinished(true);
+            callback.setIsFinishedPut(true);
         }
     }
 

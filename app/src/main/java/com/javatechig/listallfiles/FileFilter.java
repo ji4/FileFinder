@@ -16,8 +16,8 @@ import static java.lang.Thread.sleep;
  */
 
 public class FileFilter implements Runnable {
-    private SharedFiles fileProvider;
-    private SharedFiles fileReceiver;
+    private CallBack fileProvider;
+    private CallBack fileReceiver;
     private int m_iFileFilteredCount = 0;
 
     private static final int FILE_NAME = 0;
@@ -27,7 +27,7 @@ public class FileFilter implements Runnable {
     private static final int MAX_SIZE = 4;
     private ArrayList<InputField> m_inputFields;
 
-    public FileFilter(SharedFiles fileProvider, SharedFiles fileReceiver, List<String> strListinputText) {
+    public FileFilter(CallBack fileProvider, CallBack fileReceiver, List<String> strListinputText) {
         this.fileProvider = fileProvider;
         this.fileReceiver = fileReceiver;
 

@@ -46,8 +46,8 @@ public class MainActivity extends Activity {
     private static final int VIEW_MODE_GRIDVIEW = 1;
     //----------End of file view variables-----------//
 
+    CallBack fileForDisplay = new SharedFiles();
     //-------------UI Thread-------------//
-    Drop drop = new Drop();
     File curlastFile, prelastFile;
     Handler m_handler = new Handler() {
         @Override
@@ -59,7 +59,7 @@ public class MainActivity extends Activity {
         @Override
         public void run() {
             //Get data from file receiver
-            m_receivedFileList = drop.getMatchedFiles();
+            m_receivedFileList = fileForDisplay.take();
 
             //Refresh UI
             if (m_receivedFileList != null && m_receivedFileList.size() > 0) {
@@ -101,12 +101,14 @@ public class MainActivity extends Activity {
 
                 List<String> strListInputText = detectEditTextInputStatus();
 
-                Runnable fileSearcher  = new FileSearcher(drop);
+                CallBack fileForFilter = new SharedFiles();
+
+                Runnable fileSearcher  = new FileSearcher(fileForFilter);
                 Thread searchThread = new Thread(fileSearcher);
                 searchThread.start();
 
                 if (strListInputText != null) { //has input
-                    Runnable fileFilter  = new FileFilter(drop, strListInputText);
+                    Runnable fileFilter  = new FileFilter(fileForFilter, fileForDisplay, strListInputText);
                     Thread filterThread = new Thread(fileFilter);
                     filterThread.start();
                 }
