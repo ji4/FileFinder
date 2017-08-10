@@ -82,13 +82,13 @@ public class MainActivity extends Activity {
 
                 CallBack fileForFilter = new SharedFiles();
 
-                Runnable fileSearcher  = new FileSearcher(fileForFilter);
-                Thread searchThread = new Thread(fileSearcher);
+                Runnable searchRunnable  = new FileSearcher(fileForFilter);
+                Thread searchThread = new Thread(searchRunnable);
                 searchThread.start();
 
                 if (strListInputText != null) { //has input
-                    Runnable fileFilter  = new FileFilter(fileForFilter, m_handler, strListInputText);
-                    Thread filterThread = new Thread(fileFilter);
+                    Runnable filterRunnable  = new FileFilter(fileForFilter, m_handler, strListInputText);
+                    Thread filterThread = new Thread(filterRunnable);
                     filterThread.start();
                 }
 
