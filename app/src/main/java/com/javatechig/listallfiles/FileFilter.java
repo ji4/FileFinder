@@ -1,5 +1,6 @@
 package com.javatechig.listallfiles;
 
+import android.os.Handler;
 import android.util.Log;
 
 import java.io.File;
@@ -16,8 +17,9 @@ import static java.lang.Thread.sleep;
  */
 
 public class FileFilter implements Runnable {
-    private CallBack fileProvider;
-    private CallBack fileReceiver;
+    private CallBack m_fileProvider;
+    private Handler m_handler;
+
     private int m_iFileFilteredCount = 0;
 
     private static final int FILE_NAME = 0;
@@ -27,9 +29,9 @@ public class FileFilter implements Runnable {
     private static final int MAX_SIZE = 4;
     private ArrayList<InputField> m_inputFields;
 
-    public FileFilter(CallBack fileProvider, CallBack fileReceiver, List<String> strListinputText) {
-        this.fileProvider = fileProvider;
-        this.fileReceiver = fileReceiver;
+    public FileFilter(CallBack fileProvider, Handler handler, List<String> strListinputText) {
+        this.m_fileProvider = fileProvider;
+        m_handler = handler;
 
         createInputFieldInstances(strListinputText);
     }
@@ -40,7 +42,7 @@ public class FileFilter implements Runnable {
 
         /* conditions in while:
         Keep filterThread running when searching; Continue filtering files if there are files found not filtered yet after searchThread finishes*/
-        while (!fileProvider.getIsProviderFinished() || fileProvider.take().size() > 0) {
+        while (!m_fileProvider.getIsProviderFinished() || m_fileProvider.take().size() > 0) {
             filterSearchByInput();
 
             try {
@@ -49,7 +51,6 @@ public class FileFilter implements Runnable {
                 e.printStackTrace();
             }
         }
-        fileReceiver.setIsFinishedPut(true); //tell UI it's finished filtering
         Log.d("jia", "filterThread finishes.");
     }
 
@@ -99,8 +100,8 @@ public class FileFilter implements Runnable {
 
 
     private void filterSearchByInput() {//Filter files found by input fields
-        while (fileProvider.take().size() > 0) {
-            File scanningFile = fileProvider.take().get(0);
+        while (m_fileProvider.take().size() > 0) {
+            File scanningFile = m_fileProvider.take().get(0);
             Log.d("jia", "filtering file " + m_iFileFilteredCount + ": " + scanningFile);
             m_iFileFilteredCount++;
             File matchedFile = null;
@@ -110,16 +111,16 @@ public class FileFilter implements Runnable {
                     if (m_inputFields.get(i).isMatch(scanningFile, m_inputFields.get(i).getCode())) {
                         matchedFile = scanningFile;
                     } else {
-                        fileProvider.take().remove(scanningFile);
+                        m_fileProvider.take().remove(scanningFile);
                         matchedFile = null;
                         break;
                     }
                 }
             }
             if (matchedFile != null) {
-                fileReceiver.put(matchedFile);  //Add matched file to a new arrayList
+                m_handler.obtainMessage(1, matchedFile).sendToTarget(); //Send matched file to UI
             }
-            fileProvider.take().remove(scanningFile);//remove file in original arraylist after authenticated
+            m_fileProvider.take().remove(scanningFile);//remove file in original arraylist after authenticated
         }
     }
 }

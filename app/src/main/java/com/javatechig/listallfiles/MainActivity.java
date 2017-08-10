@@ -27,7 +27,6 @@ import java.util.List;
 
 public class MainActivity extends Activity {
     private ArrayList<File> m_matchedFileList = new ArrayList<File>();
-    private ArrayList<File> m_receivedFileList = new ArrayList<File>();
     private Button m_btn_search, m_btn_searchDupFile;
     private EditText m_et_fileName;
     private EditText m_et_startDate, m_et_endDate;
@@ -46,45 +45,25 @@ public class MainActivity extends Activity {
     private static final int VIEW_MODE_GRIDVIEW = 1;
     //----------End of file view variables-----------//
 
-    CallBack m_fileForDisplay = new SharedFiles();
-    //-------------UI Thread-------------//
-    File curlastFile, prelastFile;
+    //-------------UI Handler-------------//
     Handler m_handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-        }
-    };
-    Runnable m_runnable = new Runnable() {
-        @Override
-        public void run() {
-            //Get data from file receiver
-            m_receivedFileList = m_fileForDisplay.take();
-
-            //Refresh UI
-            if (m_receivedFileList != null && m_receivedFileList.size() > 0) {
-                curlastFile = m_receivedFileList.get(m_receivedFileList.size() - 1);
-
-                if (curlastFile != prelastFile) {
-                    addFilesToAdapter();
-                }
+            switch (msg.what){
+                case 1:
+                    File receivedFile = (File) msg.obj;
+                    addFilesToAdapter(receivedFile);
             }
-
-            prelastFile = curlastFile;
-//			Log.d("jia", "matchedFileList in onClick: "+String.valueOf(m_receivedFileList));
-//			Log.d("jia", "stopReceiving: "+stopReceiving);
-
-//			if(!stopReceiving)//Stop updating UI after finished
-            m_handler.postDelayed(this, 100);
         }
     };
-    //-------------End of UI Thread-------------//
+    //---------End of UI Handler---------//
 
-    @Override
-    protected void onDestroy() {
-        if (m_handler != null) m_handler.removeCallbacks(m_runnable);
-        super.onDestroy();
-    }
+//    @Override
+//    protected void onDestroy() {
+//        if (m_handler != null) m_handler.removeCallbacks(m_runnable);
+//        super.onDestroy();
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +77,6 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 m_matchedFileList.clear(); //clear previous view when button clicked again
-                m_receivedFileList.clear();
 
                 List<String> strListInputText = detectEditTextInputStatus();
 
@@ -109,12 +87,11 @@ public class MainActivity extends Activity {
                 searchThread.start();
 
                 if (strListInputText != null) { //has input
-                    Runnable fileFilter  = new FileFilter(fileForFilter, m_fileForDisplay, strListInputText);
+                    Runnable fileFilter  = new FileFilter(fileForFilter, m_handler, strListInputText);
                     Thread filterThread = new Thread(fileFilter);
                     filterThread.start();
                 }
 
-                m_handler.postDelayed(m_runnable, 100);
             }
         });
 
@@ -222,8 +199,8 @@ public class MainActivity extends Activity {
         setAdapters();
     }
 
-    private void addFilesToAdapter() {
-        m_matchedFileList.addAll(m_receivedFileList);
+    private void addFilesToAdapter(File receivedFile) {
+        m_matchedFileList.add(receivedFile);
 
         if (VIEW_MODE_LISTVIEW == m_currentViewMode) {
             m_listViewAdapter.notifyDataSetChanged();
