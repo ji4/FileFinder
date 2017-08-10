@@ -8,8 +8,18 @@ import java.util.ArrayList;
  */
 
 public class SharedFiles implements CallBack {
+    private ArrayList<File> m_arrltDirectories = new ArrayList<File>();
     private ArrayList<File> m_arrltFileProvided = new ArrayList<File>();
     private Boolean isProviderFinished = false;
+
+    @Override
+    public synchronized void putDirectory(File directory) {
+        m_arrltDirectories.add(directory);
+    }
+    @Override
+    public synchronized ArrayList<File> takeDirectories() {
+        return m_arrltDirectories;
+    }
 
     @Override
     public synchronized void put(File fileToProvide) {

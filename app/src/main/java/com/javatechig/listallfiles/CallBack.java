@@ -10,6 +10,8 @@ import java.util.ArrayList;
 public interface CallBack {
     void put(File fileProvided);
     ArrayList<File> take();
+    void putDirectory(File directory);
+    ArrayList<File> takeDirectories();
     void setIsFinishedPut(Boolean isFininshed);
     Boolean getIsProviderFinished();
 }

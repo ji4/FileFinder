@@ -17,7 +17,6 @@ public class FileSearcher implements Runnable {
 //    private File m_root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
     private File m_root = new File("/storage/emulated/0/Download");
 
-    private ArrayList<File> m_arrltDirectories = new ArrayList<File>();
     private ArrayList<File> m_arrltDupFiles = new ArrayList<File>();
 
     private int m_iFileFoundCount = 0;
@@ -32,16 +31,18 @@ public class FileSearcher implements Runnable {
 
     @Override
     public void run() {
+        Log.d("jia", "searchThread starts to run");
         searchFiles();
+        Log.d("jia", "searchThread finishes.");
     }
 
     private void searchFiles() {
-        m_arrltDirectories.add(m_root); //based on root path
+        callback.putDirectory(m_root);
 
         int i = 0;
         while (!callback.getIsProviderFinished()) { //Keep searchThread running
-            while (i < m_arrltDirectories.size()) {//Scan directory paths
-                getFile(m_arrltDirectories.get(i));
+            while (i < callback.takeDirectories().size()) {//Scan directory paths
+                getFile(callback.takeDirectories().get(i));
                 i++;
             }
             callback.setIsFinishedPut(true);
@@ -55,7 +56,7 @@ public class FileSearcher implements Runnable {
         if (listFile != null && iListFileLenth > 0) {
             for (int i = 0; i < iListFileLenth; i++) {
                 if (listFile[i].isDirectory()) { //directory
-                    m_arrltDirectories.add(listFile[i]); //store directory path into list
+                    callback.putDirectory(listFile[i]); //store directory path into list
                 } else { //file
                     callback.put(listFile[i]);
                     Log.d("jia", "the " + m_iFileFoundCount + " th file found");
