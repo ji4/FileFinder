@@ -59,6 +59,7 @@ public class MainActivity extends Activity {
     };
     //---------End of UI Handler---------//
 
+    private Controller m_controller = new Controller();
 //    @Override
 //    protected void onDestroy() {
 //        if (m_handler != null) m_handler.removeCallbacks(m_runnable);
@@ -76,22 +77,9 @@ public class MainActivity extends Activity {
         m_btn_search.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                m_matchedFileList.clear(); //clear previous view when button clicked again
-
+                m_matchedFileList.clear(); //reset view
                 List<String> strListInputText = detectEditTextInputStatus();
-
-                CallBack fileForFilter = new SharedFiles();
-
-                Runnable searchRunnable  = new FileSearcher(fileForFilter);
-                Thread searchThread = new Thread(searchRunnable);
-                searchThread.start();
-
-                if (strListInputText != null) { //has input
-                    Runnable filterRunnable  = new FileFilter(fileForFilter, m_handler, strListInputText);
-                    Thread filterThread = new Thread(filterRunnable);
-                    filterThread.start();
-                }
-
+                m_controller.startSearching(m_handler, strListInputText);
             }
         });
 
