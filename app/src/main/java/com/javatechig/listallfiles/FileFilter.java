@@ -42,7 +42,7 @@ public class FileFilter implements Runnable {
 
         /* conditions in while:
         Keep filterThread running when searching; Continue filtering files if there are files found not filtered yet after searchThread finishes*/
-        while (!m_fileProvider.getIsProviderFinished() || m_fileProvider.take().size() > 0) {
+        while (!m_fileProvider.getIsProviderFinished() || m_fileProvider.takeFile().size() > 0) {
             filterSearchByInput();
 
             try {
@@ -100,8 +100,8 @@ public class FileFilter implements Runnable {
 
 
     private void filterSearchByInput() {//Filter files found by input fields
-        while (m_fileProvider.take().size() > 0) {
-            File scanningFile = m_fileProvider.take().get(0);
+        while (m_fileProvider.takeFile().size() > 0) {
+            File scanningFile = m_fileProvider.takeFile().get(0);
             Log.d("jia", "filtering file " + m_iFileFilteredCount + ": " + scanningFile);
             m_iFileFilteredCount++;
             File matchedFile = null;
@@ -111,7 +111,7 @@ public class FileFilter implements Runnable {
                     if (m_inputFields.get(i).isMatch(scanningFile, m_inputFields.get(i).getCode())) {
                         matchedFile = scanningFile;
                     } else {
-                        m_fileProvider.take().remove(scanningFile);
+                        m_fileProvider.takeFile().remove(scanningFile);
                         matchedFile = null;
                         break;
                     }
@@ -120,7 +120,7 @@ public class FileFilter implements Runnable {
             if (matchedFile != null) {
                 m_handler.obtainMessage(1, matchedFile).sendToTarget(); //Send matched file to UI
             }
-            m_fileProvider.take().remove(scanningFile);//remove file in original arraylist after authenticated
+            m_fileProvider.takeFile().remove(scanningFile);//remove file in original arraylist after authenticated
         }
     }
 }

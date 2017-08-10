@@ -11,14 +11,14 @@ import java.util.List;
 public class Controller {
 
     public void startSearching(Handler handler, List<String> strListInputText) {
-        CallBack fileForFilter = new SharedFiles();
+        CallBack forSearchAndFilter = new SharedFiles();
 
-        Runnable searchRunnable  = new FileSearcher(fileForFilter);
+        Runnable searchRunnable  = new FileSearcher(forSearchAndFilter);
         Thread searchThread = new Thread(searchRunnable);
         searchThread.start();
 
         if (strListInputText != null) { //has input
-            Runnable filterRunnable  = new FileFilter(fileForFilter, handler, strListInputText);
+            Runnable filterRunnable  = new FileFilter(forSearchAndFilter, handler, strListInputText);
             Thread filterThread = new Thread(filterRunnable);
             filterThread.start();
         }

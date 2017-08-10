@@ -58,8 +58,8 @@ public class FileSearcher implements Runnable {
                 if (listFile[i].isDirectory()) { //directory
                     callback.putDirectory(listFile[i]); //store directory path into list
                 } else { //file
-                    callback.put(listFile[i]);
                     Log.d("jia", "the " + m_iFileFoundCount + " th file found");
+                    callback.putFile(listFile[i]);
                     m_iFileFoundCount++;
                 }
             }

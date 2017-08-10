@@ -22,12 +22,12 @@ public class SharedFiles implements CallBack {
     }
 
     @Override
-    public synchronized void put(File fileToProvide) {
+    public synchronized void putFile(File fileToProvide) {
         m_arrltFileProvided.add(fileToProvide);
     }
 
     @Override
-    public synchronized ArrayList<File> take() {
+    public synchronized ArrayList<File> takeFile() {
         return m_arrltFileProvided;
     }
 
