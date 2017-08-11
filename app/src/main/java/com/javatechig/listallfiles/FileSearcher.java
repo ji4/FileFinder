@@ -1,11 +1,13 @@
 
 package com.javatechig.listallfiles;
 
+import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.Callable;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -15,11 +17,11 @@ import static java.lang.Thread.sleep;
  * Created by chiaying.wu on 2017/7/17.
  */
 
-public class FileSearcher implements Runnable {
+public class FileSearcher implements Callable<Boolean> {
     private CallBack callback;
     //getting SDcard root path
-//    private File m_root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-    private File m_root = new File("/storage/emulated/0/Download");
+    private File m_root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+//    private File m_root = new File("/storage/emulated/0/Download");
 
     private ArrayList<File> m_arrltDupFiles = new ArrayList<File>();
 
@@ -33,11 +35,19 @@ public class FileSearcher implements Runnable {
         this.m_root = dir;
     }
 
+//    @Override
+//    public void run() {
+//        Log.d("jia", "searchThread " + Thread.currentThread().getName() + " starts running");
+//        searchFiles();
+//        Log.d("jia", "searchThread " + Thread.currentThread().getName() + " finishes.");
+//    }
+
     @Override
-    public void run() {
+    public Boolean call() throws Exception {
         Log.d("jia", "searchThread " + Thread.currentThread().getName() + " starts running");
         searchFiles();
         Log.d("jia", "searchThread " + Thread.currentThread().getName() + " finishes.");
+        return true;
     }
 
     private Lock lock = new ReentrantLock();
@@ -46,9 +56,17 @@ public class FileSearcher implements Runnable {
         if (!callback.getHasPutRootPath()) {
             callback.putDirectory(m_root);
             callback.setHasPutRootPath(true);
+            Log.d("jia", "searchThread " + Thread.currentThread().getName() + " put the root path and sleeps for 0.02 sec.");
+            try {
+                sleep(20); //avoid taking the same root dir with other threads
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-        while (!callback.getIsProviderFinished()) { //Keep searchThread running
+        int iSleepCount = 0;
+        while (iSleepCount < 4) {
             while (callback.takeDirectories().size() > 0) { //Scan directory paths
+                iSleepCount = 0;
                 //remove directory that just taken
                 lock.lock();
                 File scannigDirectory = callback.takeDirectories().get(0);
@@ -63,8 +81,13 @@ public class FileSearcher implements Runnable {
                     e.printStackTrace();
                 }
             }
-
-//            callback.setIsFinishedPut(true);
+            try {
+                sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            iSleepCount++;
+            Log.d("jia", "searchThread " + Thread.currentThread().getName() + " waiting for directory. count: " + iSleepCount);
         }
     }
 
