@@ -46,10 +46,12 @@ public class MainActivity extends Activity {
     //----------End of file view variables-----------//
 
     //-------------UI Handler-------------//
+    int iUpdateCount = 0;
     Handler m_handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            Log.d("jia", "UI handler got informed to update, count: "+ iUpdateCount++);
             switch (msg.what){
                 case 1:
                     File receivedFile = (File) msg.obj;
