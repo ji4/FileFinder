@@ -38,7 +38,7 @@ public class FileFilter implements Runnable {
 
     @Override
     public void run() {
-        Log.d("jia", "filterThread starts running");
+        Log.d("jia", "filterThread starts to run");
 
         /* conditions in while:
         Keep filterThread running when searching; Continue filtering files if there are files found not filtered yet after searchThread finishes*/

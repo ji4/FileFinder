@@ -35,15 +35,15 @@ public class FileSearcher implements Runnable {
 
     @Override
     public void run() {
-        Log.d("jia", "searchThread " + Thread.currentThread().getName() + " starts running");
+        Log.d("jia", "searchThread starts to run");
         searchFiles();
-        Log.d("jia", "searchThread " + Thread.currentThread().getName() + " finishes.");
+        Log.d("jia", "searchThread finishes.");
     }
-
+    
     private Lock lock = new ReentrantLock();
 
     private void searchFiles() {
-        if (!callback.getHasPutRootPath()) {
+        if(!callback.getHasPutRootPath()) {
             callback.putDirectory(m_root);
             callback.setHasPutRootPath(true);
         }
@@ -59,12 +59,10 @@ public class FileSearcher implements Runnable {
 
                 try {
                     sleep(20);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                } catch (InterruptedException e) {e.printStackTrace();}
             }
 
-//            callback.setIsFinishedPut(true);
+            callback.setIsFinishedPut(true);
         }
     }
 
@@ -78,7 +76,7 @@ public class FileSearcher implements Runnable {
                     callback.putDirectory(listFile[i]); //store directory path into list
                 } else { //file
                     callback.putFile(listFile[i]);
-                    Log.d("jia", "searchThread" + Thread.currentThread().getName() + " found the " + m_iFileFoundCount + " th file: " + listFile[i]);
+                    Log.d("jia", "the " + m_iFileFoundCount + " th file found: "+listFile[i]);
                     m_iFileFoundCount++;
                 }
             }
