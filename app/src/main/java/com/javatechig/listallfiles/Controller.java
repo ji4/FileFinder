@@ -5,6 +5,7 @@ import android.os.Handler;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by chiaying.wu on 2017/8/9.
@@ -27,14 +28,14 @@ public class Controller {
             Thread filterThread = new Thread(filterRunnable);
             filterThread.start();
         }
-        while (!executor.isTerminated()) {
-        }
-//        try {
-////            executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-//            executor.awaitTermination(1, TimeUnit.SECONDS);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
+//        while (!executor.isTerminated()) {
 //        }
+        try {
+//            executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+            executor.awaitTermination(1, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         forSearchAndFilter.setIsFinishedPut(true);
     }
 }
