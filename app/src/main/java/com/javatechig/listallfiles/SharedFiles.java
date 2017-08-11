@@ -11,6 +11,17 @@ public class SharedFiles implements CallBack {
     private ArrayList<File> m_arrltDirectories = new ArrayList<File>();
     private ArrayList<File> m_arrltFileProvided = new ArrayList<File>();
     private Boolean isProviderFinished = false;
+    private Boolean hasPutRootPath = false;
+
+    @Override
+    public void setHasPutRootPath(Boolean hasPut) {
+        hasPutRootPath = hasPut;
+    }
+
+    @Override
+    public Boolean getHasPutRootPath() {
+        return hasPutRootPath;
+    }
 
     @Override
     public synchronized void putDirectory(File directory) {
@@ -27,7 +38,7 @@ public class SharedFiles implements CallBack {
     }
 
     @Override
-    public synchronized ArrayList<File> takeFile() {
+    public synchronized ArrayList<File> takeFiles() {
         return m_arrltFileProvided;
     }
 

@@ -8,8 +8,10 @@ import java.util.ArrayList;
  */
 
 public interface CallBack {
+    void setHasPutRootPath(Boolean hasPut);
+    Boolean getHasPutRootPath();
     void putFile(File fileProvided);
-    ArrayList<File> takeFile();
+    ArrayList<File> takeFiles();
     void putDirectory(File directory);
     ArrayList<File> takeDirectories();
     void setIsFinishedPut(Boolean isFininshed);

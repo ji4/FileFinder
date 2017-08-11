@@ -6,6 +6,10 @@ import android.util.Log;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import static java.lang.Thread.sleep;
 
 /**
  * Created by chiaying.wu on 2017/7/17.
@@ -35,16 +39,29 @@ public class FileSearcher implements Runnable {
         searchFiles();
         Log.d("jia", "searchThread finishes.");
     }
+    
+    private Lock lock = new ReentrantLock();
 
     private void searchFiles() {
-        callback.putDirectory(m_root);
-
-        int i = 0;
+        if(!callback.getHasPutRootPath()) {
+            callback.putDirectory(m_root);
+            callback.setHasPutRootPath(true);
+        }
         while (!callback.getIsProviderFinished()) { //Keep searchThread running
-            while (i < callback.takeDirectories().size()) {//Scan directory paths
-                getFile(callback.takeDirectories().get(i));
-                i++;
+            while (callback.takeDirectories().size() > 0) { //Scan directory paths
+                //remove directory that just taken
+                lock.lock();
+                File scannigDirectory = callback.takeDirectories().get(0);
+                callback.takeDirectories().remove(scannigDirectory);
+                lock.unlock();
+
+                getFile(scannigDirectory);
+
+                try {
+                    sleep(20);
+                } catch (InterruptedException e) {e.printStackTrace();}
             }
+
             callback.setIsFinishedPut(true);
         }
     }
@@ -58,8 +75,8 @@ public class FileSearcher implements Runnable {
                 if (listFile[i].isDirectory()) { //directory
                     callback.putDirectory(listFile[i]); //store directory path into list
                 } else { //file
-                    Log.d("jia", "the " + m_iFileFoundCount + " th file found");
                     callback.putFile(listFile[i]);
+                    Log.d("jia", "the " + m_iFileFoundCount + " th file found: "+listFile[i]);
                     m_iFileFoundCount++;
                 }
             }
