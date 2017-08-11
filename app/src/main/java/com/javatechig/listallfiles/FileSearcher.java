@@ -1,6 +1,7 @@
 
 package com.javatechig.listallfiles;
 
+import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
@@ -18,8 +19,8 @@ import static java.lang.Thread.sleep;
 public class FileSearcher implements Runnable {
     private CallBack callback;
     //getting SDcard root path
-//    private File m_root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-    private File m_root = new File("/storage/emulated/0/Download");
+    private File m_root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+//    private File m_root = new File("/storage/emulated/0/Download");
 
     private ArrayList<File> m_arrltDupFiles = new ArrayList<File>();
 
@@ -47,24 +48,20 @@ public class FileSearcher implements Runnable {
             callback.putDirectory(m_root);
             callback.setHasPutRootPath(true);
         }
-        while (!callback.getIsProviderFinished()) { //Keep searchThread running
-            while (callback.takeDirectories().size() > 0) { //Scan directory paths
-                //remove directory that just taken
-                lock.lock();
-                File scannigDirectory = callback.takeDirectories().get(0);
-                callback.takeDirectories().remove(scannigDirectory);
-                lock.unlock();
+        while (callback.takeDirectories().size() > 0) { //Scan directory paths
+            //remove directory that just taken
+            lock.lock();
+            File scannigDirectory = callback.takeDirectories().get(0);
+            callback.takeDirectories().remove(scannigDirectory);
+            lock.unlock();
 
-                getFile(scannigDirectory);
+            getFile(scannigDirectory);
 
-                try {
-                    sleep(20);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            try {
+                sleep(20);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-
-//            callback.setIsFinishedPut(true);
         }
     }
 
