@@ -1,6 +1,8 @@
 
 package com.javatechig.listallfiles;
 
+import android.os.Environment;
+import android.os.Handler;
 import android.util.Log;
 
 import java.io.File;
@@ -18,9 +20,13 @@ import static java.lang.Thread.sleep;
 public class FileSearcher implements Runnable {
     private CallBack callback;
     private CyclicBarrier m_barrier;
+    private Handler m_handler;
+
+    private Boolean boolSearchWithInput = false;
+
     //getting SDcard root path
-//    private File m_root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-    private File m_root = new File("/storage/emulated/0/Download");
+    private File m_root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+//    private File m_root = new File("/storage/emulated/0/Download");
 
     private ArrayList<File> m_arrltDupFiles = new ArrayList<File>();
 
@@ -29,6 +35,13 @@ public class FileSearcher implements Runnable {
     public FileSearcher(CallBack callback, CyclicBarrier barrier) {
         this.callback = callback;
         this.m_barrier = barrier;
+        boolSearchWithInput = true;
+    }
+
+    public FileSearcher(CallBack callback, Handler handler) {
+        this.callback = callback;
+        this.m_handler = handler;
+        boolSearchWithInput = false;
     }
 
     public void setDirectoryPath(File dir) {
@@ -42,24 +55,40 @@ public class FileSearcher implements Runnable {
         Log.d("jia", "searchThread finishes.");
     }
 
+
     private void searchFiles() {
-        if(!callback.getHasPutRootPath()) {
+        if (!callback.getHasPutRootPath()) {
             callback.putDirectory(m_root);
             callback.setHasPutRootPath(true);
         }
 
-        while (callback.takeDirectories().size() > 0) { //Scan directory paths
-            //remove directory that just taken
-            File scannigDirectory = callback.takeDirectories().get(0);
-            callback.takeDirectories().remove(scannigDirectory);
+        int iSleepCount = 0;
+        while (iSleepCount < 4) {
+            while (callback.takeDirectories().size() > 0) { //Scan directory paths
+                //remove directory that just taken
+                File scannigDirectory = callback.takeDirectories().get(0);
+                callback.takeDirectories().remove(scannigDirectory);
 
-            getFile(scannigDirectory);
+                getFile(scannigDirectory);
+
+                try {
+                    sleep(20);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
 
             try {
-                sleep(20);
-            } catch (InterruptedException e) {e.printStackTrace();}
+                sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            iSleepCount++;
+            Log.d("jia", "searchThread " + Thread.currentThread().getName() + " waiting for directory, count: " + iSleepCount);
         }
-        if(m_barrier!=null) {
+
+        if (m_barrier != null) {
             try {
                 m_barrier.await();
             } catch (InterruptedException e) {
@@ -79,8 +108,10 @@ public class FileSearcher implements Runnable {
                 if (listFile[i].isDirectory()) { //directory
                     callback.putDirectory(listFile[i]); //store directory path into list
                 } else { //file
-                    callback.putFile(listFile[i]);
-                    Log.d("jia", "the " + m_iFileFoundCount + " th file found: "+listFile[i]);
+                        callback.putFile(listFile[i]);
+                    if(!boolSearchWithInput)
+                        m_handler.obtainMessage(Code.MSG_UPDATE_VIEW, listFile[i]).sendToTarget(); //Send matched file to UI
+                    Log.d("jia", "searchThread" + Thread.currentThread().getName() + " found the " + m_iFileFoundCount + " th file: " + listFile[i]);
                     m_iFileFoundCount++;
                 }
             }
