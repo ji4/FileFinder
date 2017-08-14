@@ -1,7 +1,6 @@
 package com.javatechig.listallfiles;
 
 import android.os.Handler;
-import android.util.Log;
 
 import java.util.List;
 import java.util.concurrent.CyclicBarrier;
@@ -11,23 +10,26 @@ import java.util.concurrent.CyclicBarrier;
  */
 
 public class Controller {
-    String TAG = "jia";
 
     public void startSearching(Handler handler, List<String> strListInputText) {
+        final CallBack forSearchAndFilter = new SharedFiles();
+
         Runnable done = new Runnable() {
             @Override
             public void run() {
-                Log.d(TAG, "ALL THREADS FINISHED");
-                Log.d(TAG, "executed in: " + Thread.currentThread().getName());
+                forSearchAndFilter.setIsFinishedPut(true);
             }
         };
 
-        CallBack forSearchAndFilter = new SharedFiles();
-
         CyclicBarrier barrier = new CyclicBarrier(2, done);
+
         Runnable searchRunnable  = new FileSearcher(forSearchAndFilter, barrier);
         Thread searchThread = new Thread(searchRunnable);
         searchThread.start();
+
+        Runnable secSearchRunnable  = new FileSearcher(forSearchAndFilter, barrier);
+        Thread secSearchThread = new Thread(secSearchRunnable);
+        secSearchThread.start();
 
         if (strListInputText != null) { //has input
             Runnable filterRunnable  = new FileFilter(forSearchAndFilter, handler, strListInputText);

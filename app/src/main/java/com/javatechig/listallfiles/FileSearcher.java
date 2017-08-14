@@ -51,23 +51,21 @@ public class FileSearcher implements Runnable {
             callback.putDirectory(m_root);
             callback.setHasPutRootPath(true);
         }
-        while (!callback.getIsProviderFinished()) { //Keep searchThread running
-            while (callback.takeDirectories().size() > 0) { //Scan directory paths
-                //remove directory that just taken
-                lock.lock();
-                File scannigDirectory = callback.takeDirectories().get(0);
-                callback.takeDirectories().remove(scannigDirectory);
-                lock.unlock();
 
-                getFile(scannigDirectory);
+        while (callback.takeDirectories().size() > 0) { //Scan directory paths
+            //remove directory that just taken
+            lock.lock();
+            File scannigDirectory = callback.takeDirectories().get(0);
+            callback.takeDirectories().remove(scannigDirectory);
+            lock.unlock();
 
-                try {
-                    sleep(20);
-                } catch (InterruptedException e) {e.printStackTrace();}
-            }
+            getFile(scannigDirectory);
 
-            callback.setIsFinishedPut(true);
+            try {
+                sleep(20);
+            } catch (InterruptedException e) {e.printStackTrace();}
         }
+
         try {
             m_barrier.await();
         } catch (InterruptedException e) {
