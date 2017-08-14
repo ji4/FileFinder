@@ -1,10 +1,15 @@
 package com.javatechig.listallfiles;
 
 import android.os.Handler;
+import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import static java.lang.Thread.sleep;
 
 /**
  * Created by chiaying.wu on 2017/8/14.
@@ -19,10 +24,31 @@ public class FileDupChecker implements Runnable{
         this.m_handler = m_handler;
     }
     private ArrayList<File> m_arrltDupFiles = new ArrayList<File>();
+    private Lock lock = new ReentrantLock();
 
     @Override
     public void run() {
+        Log.d("jia", "DupChecker starts running.");
+        while (!m_callBackToTake.getProviderDone() || m_callBackToTake.takeFiles().size() > 0) {
+            while (m_callBackToTake.takeFiles().size() > 0) {
+                lock.lock();
+                ArrayList<File> scanningFiles = new ArrayList<>(m_callBackToTake.takeFiles());
+                m_callBackToTake.takeFiles().clear();
+                lock.unlock();
 
+                if(scanningFiles != null) {
+                    ArrayList<File> sameSizeFiles = findTheSameSizeFiles(scanningFiles);
+                    findTheSameMD5Files(sameSizeFiles);
+                }
+            }
+
+            try {
+                sleep(20);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        Log.d("jia", "DupChecker finishes.");
     }
 
     private ArrayList<File> findTheSameSizeFiles(ArrayList<File> filePaths) {
@@ -65,13 +91,15 @@ public class FileDupChecker implements Runnable{
                 // found a match between original and duplicate
                 File fileOri = new File(original);
                 m_arrltDupFiles.add(fileOri);
+                m_handler.obtainMessage(Code.MSG_UPDATE_VIEW, fileOri).sendToTarget(); //Send matched file to UI
 
                 File fileDup = new File(duplicate);
                 m_arrltDupFiles.add(fileDup);
+                m_handler.obtainMessage(Code.MSG_UPDATE_VIEW, fileDup).sendToTarget(); //Send matched file to UI
             } else {
                 md5hashmap.put(md5, strFilePath);
             }
         }
-
     }
+
 }

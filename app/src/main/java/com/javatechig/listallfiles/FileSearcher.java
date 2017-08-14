@@ -19,7 +19,7 @@ public class FileSearcher implements Runnable {
     private CyclicBarrier m_barrier;
     private Handler m_handler;
 
-    private Boolean boolSearchWithInput = false;
+    private Boolean isOnlySearch;
 
     //getting SDcard root path
 //    private File m_root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
@@ -30,14 +30,14 @@ public class FileSearcher implements Runnable {
     public FileSearcher(CallBack callback, CyclicBarrier barrier) {
         this.callback = callback;
         this.m_barrier = barrier;
-        boolSearchWithInput = true;
+        isOnlySearch = false;
     }
 
     public FileSearcher(CallBack callback, CyclicBarrier barrier, Handler handler) {
         this.callback = callback;
         this.m_barrier = barrier;
         this.m_handler = handler;
-        boolSearchWithInput = false;
+        isOnlySearch = true;
     }
 
     public void setDirectoryPath(File dir) {
@@ -95,7 +95,7 @@ public class FileSearcher implements Runnable {
                     callback.putDirectory(listFile[i]); //store directory path into list
                 } else { //file
                     callback.putFile(listFile[i]);
-                    if (!boolSearchWithInput)
+                    if (isOnlySearch)
                         m_handler.obtainMessage(Code.MSG_UPDATE_VIEW, listFile[i]).sendToTarget(); //Send matched file to UI
                     Log.d("jia", "searchThread" + Thread.currentThread().getName() + " found the " + m_iFileFoundCount + " th file: " + listFile[i]);
                     m_iFileFoundCount++;

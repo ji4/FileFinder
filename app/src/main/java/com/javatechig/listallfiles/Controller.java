@@ -12,8 +12,12 @@ import java.util.concurrent.CyclicBarrier;
 public class Controller {
     private Handler m_handler;
     private List<String> m_strListInputText;
-    private int m_iSearchThreadCount = 2;
+    private int m_iSearchThreadCount = 1;
     private CallBack m_fileSharer = new SharedFiles();
+    private static final int SEARCH_ONLY = 1;
+    private static final int SEARCH_FOR_AUTHENTICATE = 2;
+    private int searcherConstroctor;
+
 
     Runnable done = new Runnable() {
         @Override
@@ -34,20 +38,24 @@ public class Controller {
         enableFilterIfInputted();
     }
 
-    public void searchDupFiles(){
+    public void searchDupFiles() {
+        searcherConstroctor = SEARCH_FOR_AUTHENTICATE;
         enableSearcher();
         enableDupChecker();
     }
 
     private void enableSearcher() {
-        Runnable searchRunnable;
+        Runnable searchRunnable = null;
 
         for (int i = 0; i < m_iSearchThreadCount; i++) {
             if (m_strListInputText != null) { //has input
                 searchRunnable = new FileSearcher(m_fileSharer, barrier);
+            } else if (searcherConstroctor == SEARCH_FOR_AUTHENTICATE) {
+                searchRunnable = new FileSearcher(m_fileSharer, barrier);
             } else {
                 searchRunnable = new FileSearcher(m_fileSharer, barrier, m_handler);
             }
+
             Thread searchThread = new Thread(searchRunnable);
             searchThread.start();
         }
@@ -61,7 +69,7 @@ public class Controller {
         }
     }
 
-    private void enableDupChecker(){
+    private void enableDupChecker() {
         Runnable dupCheckRunnable = new FileDupChecker(m_fileSharer, m_handler);
         Thread dupCheckerThread = new Thread(dupCheckRunnable);
         dupCheckerThread.start();
