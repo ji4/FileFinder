@@ -22,11 +22,7 @@ public class FileFilter implements Runnable {
 
     private int m_iFileFilteredCount = 0;
 
-    private static final int FILE_NAME = 0;
-    private static final int START_DATE = 1;
-    private static final int END_DATE = 2;
-    private static final int MIN_SIZE = 3;
-    private static final int MAX_SIZE = 4;
+
     private ArrayList<InputField> m_inputFields;
 
     public FileFilter(CallBack callBackToTake, Handler handler, List<String> strListinputText) {
@@ -66,24 +62,24 @@ public class FileFilter implements Runnable {
             String strInputValue = strListinputText.get(iInputFieldCode); //get inputField's text
             if (strInputValue != null) { //has text value
                 switch (iInputFieldCode) {
-                    case FILE_NAME:
+                    case Code.FILE_NAME:
                         m_inputFields.set(iInputtedIndex, new InputField(strInputValue));
                         break;
-                    case START_DATE:
+                    case Code.START_DATE:
                         int iArrStartDate[] = DataConverter.parseDateText(strInputValue);
                         Date startDate = DataConverter.convertToDate(iArrStartDate[0], iArrStartDate[1], iArrStartDate[2], false); //param: year, month, day
                         m_inputFields.set(iInputtedIndex, new InputField(startDate));
                         break;
-                    case END_DATE:
+                    case Code.END_DATE:
                         int iArrEndDate[] = DataConverter.parseDateText(strInputValue);
                         Date endDate = DataConverter.convertToDate(iArrEndDate[0], iArrEndDate[1], iArrEndDate[2], true); //param: year, month, day
                         m_inputFields.set(iInputtedIndex, new InputField(endDate));
                         break;
-                    case MIN_SIZE:
+                    case Code.MIN_SIZE:
                         long min_size = Long.parseLong(strInputValue) * 1024 * 1024; //Convert megabytes to bytes
                         m_inputFields.set(iInputtedIndex, new InputField(min_size));
                         break;
-                    case MAX_SIZE:
+                    case Code.MAX_SIZE:
                         long max_size = Long.parseLong(strInputValue) * 1024 * 1024; //Convert megabytes to bytes
                         m_inputFields.set(iInputtedIndex, new InputField(max_size));
                         break;
@@ -118,7 +114,7 @@ public class FileFilter implements Runnable {
                 }
             }
             if (matchedFile != null) {
-                m_handler.obtainMessage(1, matchedFile).sendToTarget(); //Send matched file to UI
+                m_handler.obtainMessage(Code.MSG_UPDATE_VIEW, matchedFile).sendToTarget(); //Send matched file to UI
             }
             m_callBackToTake.takeFiles().remove(scanningFile);//remove file in original arraylist after authenticated
         }

@@ -41,7 +41,7 @@ public class FileSearcher implements Runnable {
         searchFiles();
         Log.d("jia", "searchThread finishes.");
     }
-    
+
     private void searchFiles() {
         if(!callback.getHasPutRootPath()) {
             callback.putDirectory(m_root);

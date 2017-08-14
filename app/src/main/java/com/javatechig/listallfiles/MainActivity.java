@@ -53,7 +53,7 @@ public class MainActivity extends Activity {
             super.handleMessage(msg);
             Log.d("jia", "UI handler got informed to update, count: "+ iUpdateCount++);
             switch (msg.what){
-                case 1:
+                case Code.MSG_UPDATE_VIEW:
                     File receivedFile = (File) msg.obj;
                     addFilesToAdapter(receivedFile);
             }
