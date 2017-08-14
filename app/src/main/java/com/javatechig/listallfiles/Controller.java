@@ -34,7 +34,7 @@ public class Controller {
             if (strListInputText != null) { //has input
                 searchRunnable = new FileSearcher(forSearchAndFilter, barrier);
             } else {
-                searchRunnable = new FileSearcher(forSearchAndFilter, handler);
+                searchRunnable = new FileSearcher(forSearchAndFilter, barrier, handler);
             }
             Thread searchThread = new Thread(searchRunnable);
             searchThread.start();

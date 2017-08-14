@@ -38,8 +38,9 @@ public class FileSearcher implements Runnable {
         boolSearchWithInput = true;
     }
 
-    public FileSearcher(CallBack callback, Handler handler) {
+    public FileSearcher(CallBack callback, CyclicBarrier barrier, Handler handler) {
         this.callback = callback;
+        this.m_barrier = barrier;
         this.m_handler = handler;
         boolSearchWithInput = false;
     }
@@ -55,7 +56,6 @@ public class FileSearcher implements Runnable {
         Log.d("jia", "searchThread finishes.");
     }
 
-
     private void searchFiles() {
         if (!callback.getHasPutRootPath()) {
             callback.putDirectory(m_root);
@@ -65,17 +65,20 @@ public class FileSearcher implements Runnable {
         int iSleepCount = 0;
         while (iSleepCount < 4) {
             while (callback.takeDirectories().size() > 0) { //Scan directory paths
+                iSleepCount = 0;
                 //remove directory that just taken
+
                 File scannigDirectory = callback.takeDirectories().get(0);
                 callback.takeDirectories().remove(scannigDirectory);
 
-                getFile(scannigDirectory);
+                if (scannigDirectory != null)
+                    getFile(scannigDirectory);
 
-                try {
-                    sleep(20);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    sleep(20);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
 
             }
 
@@ -88,14 +91,12 @@ public class FileSearcher implements Runnable {
             Log.d("jia", "searchThread " + Thread.currentThread().getName() + " waiting for directory, count: " + iSleepCount);
         }
 
-        if (m_barrier != null) {
-            try {
-                m_barrier.await();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (BrokenBarrierException e) {
-                e.printStackTrace();
-            }
+        try {
+            m_barrier.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (BrokenBarrierException e) {
+            e.printStackTrace();
         }
     }
 
@@ -108,8 +109,8 @@ public class FileSearcher implements Runnable {
                 if (listFile[i].isDirectory()) { //directory
                     callback.putDirectory(listFile[i]); //store directory path into list
                 } else { //file
-                        callback.putFile(listFile[i]);
-                    if(!boolSearchWithInput)
+                    callback.putFile(listFile[i]);
+                    if (!boolSearchWithInput)
                         m_handler.obtainMessage(Code.MSG_UPDATE_VIEW, listFile[i]).sendToTarget(); //Send matched file to UI
                     Log.d("jia", "searchThread" + Thread.currentThread().getName() + " found the " + m_iFileFoundCount + " th file: " + listFile[i]);
                     m_iFileFoundCount++;
