@@ -13,6 +13,15 @@ public class Controller {
     private Handler m_handler;
     private List<String> m_strListInputText;
     private int m_iSearchThreadCount = 2;
+    private CallBack m_fileSharer = new SharedFiles();
+
+    Runnable done = new Runnable() {
+        @Override
+        public void run() {
+            m_fileSharer.setPutFileDone(true);
+        }
+    };
+    CyclicBarrier barrier = new CyclicBarrier(m_iSearchThreadCount, done);
 
     public Controller(Handler handler) {
         this.m_handler = handler;
@@ -21,46 +30,40 @@ public class Controller {
     public void searchFilesByInput(List<String> strListInputText) {
         this.m_strListInputText = strListInputText;
 
-        final CallBack forSearchAndFilter = new SharedFiles();
-        Runnable done = new Runnable() {
-            @Override
-            public void run() {
-                forSearchAndFilter.setPutFileDone(true);
-            }
-        };
-        CyclicBarrier barrier = new CyclicBarrier(m_iSearchThreadCount, done);
-
-        enableSearcher(forSearchAndFilter, barrier);
-        enableFilterIfInputted(forSearchAndFilter);
+        enableSearcher();
+        enableFilterIfInputted();
     }
 
-    private void enableFilterIfInputted(CallBack forSearchAndFilter) {
-        if (m_strListInputText != null) { //has input
-            Runnable filterRunnable = new FileFilter(forSearchAndFilter, m_handler, m_strListInputText);
-            Thread filterThread = new Thread(filterRunnable);
-            filterThread.start();
-        }
+    public void searchDupFiles(){
+        enableSearcher();
+        enableDupChecker();
     }
 
-    private void enableSearcher(CallBack forSearchAndFilter, CyclicBarrier barrier) {
+    private void enableSearcher() {
         Runnable searchRunnable;
 
         for (int i = 0; i < m_iSearchThreadCount; i++) {
             if (m_strListInputText != null) { //has input
-                searchRunnable = new FileSearcher(forSearchAndFilter, barrier);
+                searchRunnable = new FileSearcher(m_fileSharer, barrier);
             } else {
-                searchRunnable = new FileSearcher(forSearchAndFilter, barrier, m_handler);
+                searchRunnable = new FileSearcher(m_fileSharer, barrier, m_handler);
             }
             Thread searchThread = new Thread(searchRunnable);
             searchThread.start();
         }
     }
 
-//    public void searchDupFiles(Handler handler){
-//        final CallBack forSearchAndDupChecker = new SharedFiles();
-//
-//        Runnable searchRunnable  = new FileSearcher(forSearchAndDupChecker);
-//        Thread searchThread = new Thread(searchRunnable);
-//        searchThread.start();
-//    }
+    private void enableFilterIfInputted() {
+        if (m_strListInputText != null) { //has input
+            Runnable filterRunnable = new FileFilter(m_fileSharer, m_handler, m_strListInputText);
+            Thread filterThread = new Thread(filterRunnable);
+            filterThread.start();
+        }
+    }
+
+    private void enableDupChecker(){
+        Runnable dupCheckRunnable = new FileDupChecker(m_fileSharer, m_handler);
+        Thread dupCheckerThread = new Thread(dupCheckRunnable);
+        dupCheckerThread.start();
+    }
 }

@@ -85,18 +85,13 @@ public class MainActivity extends Activity {
             }
         });
 
-//		m_btn_searchDupFile.setOnClickListener(new Button.OnClickListener() {
-//			@Override
-//			public void onClick(View view) {
-//                m_matchedFileList.clear(); //reset view
-////                m_controller.searchDupFiles(m_handler);
-//
-//				FileSearcher fileSearcher = new FileSearcher();
-//				m_matchedFileList = fileSearcher.searchDupFiles();
-//
-//				setAdapters();
-//			}
-//		});
+		m_btn_searchDupFile.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+                m_matchedFileList.clear(); //reset view
+                m_controller.searchDupFiles();
+			}
+		});
 
 
     }

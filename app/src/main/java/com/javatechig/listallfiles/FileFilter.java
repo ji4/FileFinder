@@ -22,7 +22,6 @@ public class FileFilter implements Runnable {
 
     private int m_iFileFilteredCount = 0;
 
-
     private ArrayList<InputField> m_inputFields;
 
     public FileFilter(CallBack callBackToTake, Handler handler, List<String> strListinputText) {
