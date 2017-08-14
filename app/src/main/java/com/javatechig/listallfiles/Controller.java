@@ -11,7 +11,7 @@ import java.util.concurrent.CyclicBarrier;
 
 public class Controller {
 
-    public void startSearching(Handler handler, List<String> strListInputText) {
+    public void SearchFilesByInput(Handler handler, List<String> strListInputText) {
         final CallBack forSearchAndFilter = new SharedFiles();
 
         Runnable done = new Runnable() {
@@ -37,4 +37,12 @@ public class Controller {
             filterThread.start();
         }
     }
+
+//    public void searchDupFiles(Handler handler){
+//        final CallBack forSearchAndDupChecker = new SharedFiles();
+//
+//        Runnable searchRunnable  = new FileSearcher(forSearchAndDupChecker);
+//        Thread searchThread = new Thread(searchRunnable);
+//        searchThread.start();
+//    }
 }

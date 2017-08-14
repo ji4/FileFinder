@@ -81,13 +81,16 @@ public class MainActivity extends Activity {
             public void onClick(View view) {
                 m_matchedFileList.clear(); //reset view
                 List<String> strListInputText = detectEditTextInputStatus();
-                m_controller.startSearching(m_handler, strListInputText);
+                m_controller.SearchFilesByInput(m_handler, strListInputText);
             }
         });
 
 //		m_btn_searchDupFile.setOnClickListener(new Button.OnClickListener() {
 //			@Override
 //			public void onClick(View view) {
+//                m_matchedFileList.clear(); //reset view
+////                m_controller.searchDupFiles(m_handler);
+//
 //				FileSearcher fileSearcher = new FileSearcher();
 //				m_matchedFileList = fileSearcher.searchDupFiles();
 //

@@ -59,13 +59,14 @@ public class FileSearcher implements Runnable {
                 sleep(20);
             } catch (InterruptedException e) {e.printStackTrace();}
         }
-
-        try {
-            m_barrier.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (BrokenBarrierException e) {
-            e.printStackTrace();
+        if(m_barrier!=null) {
+            try {
+                m_barrier.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (BrokenBarrierException e) {
+                e.printStackTrace();
+            }
         }
     }
 
