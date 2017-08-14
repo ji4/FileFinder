@@ -51,7 +51,7 @@ public class MainActivity extends Activity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            Log.d("jia", "UI handler got informed to update, count: "+ iUpdateCount++);
+//            Log.d("jia", "UI handler got informed to update, count: "+ iUpdateCount++);
             switch (msg.what){
                 case Code.MSG_UPDATE_VIEW:
                     File receivedFile = (File) msg.obj;

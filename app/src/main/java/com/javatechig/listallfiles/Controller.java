@@ -19,27 +19,26 @@ public class Controller {
                 forSearchAndFilter.setPutFileDone(true);
             }
         };
-        CyclicBarrier barrier = new CyclicBarrier(2, done);
-
-//        Runnable secSearchRunnable  = new FileSearcher(forSearchAndFilter, barrier);
-//        Thread secSearchThread = new Thread(secSearchRunnable);
-//        secSearchThread.start();
+        int iSearchThreadCount = 2;
+        CyclicBarrier barrier = new CyclicBarrier(iSearchThreadCount, done);
 
         Runnable searchRunnable;
 
         if (strListInputText != null) { //has input
-            barrier = null; //set null if there is only one search thread
-            searchRunnable = new FileSearcher(forSearchAndFilter, barrier);
-
             Runnable filterRunnable = new FileFilter(forSearchAndFilter, handler, strListInputText);
             Thread filterThread = new Thread(filterRunnable);
             filterThread.start();
-        } else {
-            searchRunnable = new FileSearcher(forSearchAndFilter, handler);
         }
 
-        Thread searchThread = new Thread(searchRunnable);
-        searchThread.start();
+        for (int i = 0; i < iSearchThreadCount; i++) {
+            if (strListInputText != null) { //has input
+                searchRunnable = new FileSearcher(forSearchAndFilter, barrier);
+            } else {
+                searchRunnable = new FileSearcher(forSearchAndFilter, handler);
+            }
+            Thread searchThread = new Thread(searchRunnable);
+            searchThread.start();
+        }
     }
 
 //    public void searchDupFiles(Handler handler){
