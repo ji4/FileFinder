@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import static java.lang.Thread.sleep;
 
@@ -44,8 +42,6 @@ public class FileSearcher implements Runnable {
         Log.d("jia", "searchThread finishes.");
     }
     
-    private Lock lock = new ReentrantLock();
-
     private void searchFiles() {
         if(!callback.getHasPutRootPath()) {
             callback.putDirectory(m_root);
@@ -54,10 +50,8 @@ public class FileSearcher implements Runnable {
 
         while (callback.takeDirectories().size() > 0) { //Scan directory paths
             //remove directory that just taken
-            lock.lock();
             File scannigDirectory = callback.takeDirectories().get(0);
             callback.takeDirectories().remove(scannigDirectory);
-            lock.unlock();
 
             getFile(scannigDirectory);
 
