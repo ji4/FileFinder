@@ -38,7 +38,7 @@ public class FileFilter implements Runnable {
 
         /* conditions in while:
         Keep filterThread running when searching; Continue filtering files if there are files found not filtered yet after searchThread finishes*/
-        while (!m_callBackToTake.getIsProviderFinished() || m_callBackToTake.takeFiles().size() > 0) {
+        while (!m_callBackToTake.getProviderDone() || m_callBackToTake.takeFiles().size() > 0) {
             filterSearchByInput();
 
             try {

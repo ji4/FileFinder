@@ -43,12 +43,12 @@ public class SharedFiles implements CallBack {
     }
 
     @Override
-    public void setIsFinishedPut(Boolean isFininshed) {
+    public void setPutFileDone(Boolean isFininshed) {
         this.isProviderFinished = isFininshed;
     }
 
     @Override
-    public Boolean getIsProviderFinished() {
+    public Boolean getProviderDone() {
         return isProviderFinished;
     }
 }

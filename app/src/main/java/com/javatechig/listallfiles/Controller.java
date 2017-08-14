@@ -17,7 +17,7 @@ public class Controller {
         Runnable done = new Runnable() {
             @Override
             public void run() {
-                forSearchAndFilter.setIsFinishedPut(true);
+                forSearchAndFilter.setPutFileDone(true);
             }
         };
 
