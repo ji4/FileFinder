@@ -6,6 +6,8 @@ import android.util.Log;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -17,6 +19,7 @@ import static java.lang.Thread.sleep;
 
 public class FileSearcher implements Runnable {
     private CallBack callback;
+    private CyclicBarrier m_barrier;
     //getting SDcard root path
 //    private File m_root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
     private File m_root = new File("/storage/emulated/0/Download");
@@ -25,8 +28,9 @@ public class FileSearcher implements Runnable {
 
     private int m_iFileFoundCount = 0;
 
-    public FileSearcher(CallBack callback) {
+    public FileSearcher(CallBack callback, CyclicBarrier barrier) {
         this.callback = callback;
+        this.m_barrier = barrier;
     }
 
     public void setDirectoryPath(File dir) {
@@ -63,6 +67,13 @@ public class FileSearcher implements Runnable {
             }
 
             callback.setIsFinishedPut(true);
+        }
+        try {
+            m_barrier.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (BrokenBarrierException e) {
+            e.printStackTrace();
         }
     }
 
