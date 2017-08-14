@@ -10,8 +10,17 @@ import java.util.concurrent.CyclicBarrier;
  */
 
 public class Controller {
+    private Handler m_handler;
+    private List<String> m_strListInputText;
+    private int m_iSearchThreadCount = 2;
 
-    public void SearchFilesByInput(Handler handler, List<String> strListInputText) {
+    public Controller(Handler handler) {
+        this.m_handler = handler;
+    }
+
+    public void searchFilesByInput(List<String> strListInputText) {
+        this.m_strListInputText = strListInputText;
+
         final CallBack forSearchAndFilter = new SharedFiles();
         Runnable done = new Runnable() {
             @Override
@@ -19,22 +28,28 @@ public class Controller {
                 forSearchAndFilter.setPutFileDone(true);
             }
         };
-        int iSearchThreadCount = 2;
-        CyclicBarrier barrier = new CyclicBarrier(iSearchThreadCount, done);
+        CyclicBarrier barrier = new CyclicBarrier(m_iSearchThreadCount, done);
 
-        Runnable searchRunnable;
+        enableSearcher(forSearchAndFilter, barrier);
+        enableFilterIfInputted(forSearchAndFilter);
+    }
 
-        if (strListInputText != null) { //has input
-            Runnable filterRunnable = new FileFilter(forSearchAndFilter, handler, strListInputText);
+    private void enableFilterIfInputted(CallBack forSearchAndFilter) {
+        if (m_strListInputText != null) { //has input
+            Runnable filterRunnable = new FileFilter(forSearchAndFilter, m_handler, m_strListInputText);
             Thread filterThread = new Thread(filterRunnable);
             filterThread.start();
         }
+    }
 
-        for (int i = 0; i < iSearchThreadCount; i++) {
-            if (strListInputText != null) { //has input
+    private void enableSearcher(CallBack forSearchAndFilter, CyclicBarrier barrier) {
+        Runnable searchRunnable;
+
+        for (int i = 0; i < m_iSearchThreadCount; i++) {
+            if (m_strListInputText != null) { //has input
                 searchRunnable = new FileSearcher(forSearchAndFilter, barrier);
             } else {
-                searchRunnable = new FileSearcher(forSearchAndFilter, barrier, handler);
+                searchRunnable = new FileSearcher(forSearchAndFilter, barrier, m_handler);
             }
             Thread searchThread = new Thread(searchRunnable);
             searchThread.start();

@@ -61,7 +61,7 @@ public class MainActivity extends Activity {
     };
     //---------End of UI Handler---------//
 
-    private Controller m_controller = new Controller();
+    private Controller m_controller = new Controller(m_handler);
 //    @Override
 //    protected void onDestroy() {
 //        if (m_handler != null) m_handler.removeCallbacks(m_runnable);
@@ -81,7 +81,7 @@ public class MainActivity extends Activity {
             public void onClick(View view) {
                 m_matchedFileList.clear(); //reset view
                 List<String> strListInputText = detectEditTextInputStatus();
-                m_controller.SearchFilesByInput(m_handler, strListInputText);
+                m_controller.searchFilesByInput(strListInputText);
             }
         });
 

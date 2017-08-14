@@ -1,7 +1,6 @@
 
 package com.javatechig.listallfiles;
 
-import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 
@@ -25,8 +24,8 @@ public class FileSearcher implements Runnable {
     private Boolean boolSearchWithInput = false;
 
     //getting SDcard root path
-    private File m_root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-//    private File m_root = new File("/storage/emulated/0/Download");
+//    private File m_root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+    private File m_root = new File("/storage/emulated/0/Download");
 
     private ArrayList<File> m_arrltDupFiles = new ArrayList<File>();
 
@@ -57,10 +56,7 @@ public class FileSearcher implements Runnable {
     }
 
     private void searchFiles() {
-        if (!callback.getHasPutRootPath()) {
-            callback.putDirectory(m_root);
-            callback.setHasPutRootPath(true);
-        }
+        putRootDiectory();
 
         int iSleepCount = 0;
         while (iSleepCount < 4) {
@@ -73,13 +69,6 @@ public class FileSearcher implements Runnable {
 
                 if (scannigDirectory != null)
                     getFile(scannigDirectory);
-
-//                try {
-//                    sleep(20);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-
             }
 
             try {
@@ -116,6 +105,13 @@ public class FileSearcher implements Runnable {
                     m_iFileFoundCount++;
                 }
             }
+        }
+    }
+
+    private void putRootDiectory(){
+        if (!callback.getHasPutRootPath()) {
+            callback.putDirectory(m_root);
+            callback.setHasPutRootPath(true);
         }
     }
 
