@@ -17,7 +17,7 @@ public class Controller {
     private static final int SEARCH_ONLY = 1;
     private static final int SEARCH_FOR_DUP = 2;
     private static final int SEARCH_FOR_FILTER = 3;
-    private int searcherConstroctor;
+    private int m_searcherConstroctor;
 
     public Controller(Handler handler) {
         this.m_handler = handler;
@@ -27,7 +27,7 @@ public class Controller {
         @Override
         public void run() {
             m_fileSharer.setPutFileDone(true);
-            if (searcherConstroctor == SEARCH_FOR_DUP)
+            if (m_searcherConstroctor == SEARCH_FOR_DUP)
                 enableDupChecker();
         }
     };
@@ -36,14 +36,12 @@ public class Controller {
 
     public void searchFilesByInput(List<String> strListInputText) {
         this.m_strListInputText = strListInputText;
-
-        reset();
-
         if (m_strListInputText != null) { //has input
-            searcherConstroctor = SEARCH_FOR_FILTER;
+            m_searcherConstroctor = SEARCH_FOR_FILTER;
         } else {
-            searcherConstroctor = SEARCH_ONLY;
+            m_searcherConstroctor = SEARCH_ONLY;
         }
+        reset();
 
         enableSearcher();
         enableFilterIfInputted();
@@ -51,7 +49,7 @@ public class Controller {
 
     public void searchDupFiles() {
         reset();
-        searcherConstroctor = SEARCH_FOR_DUP;
+        m_searcherConstroctor = SEARCH_FOR_DUP;
 
         enableSearcher();
     }
@@ -60,9 +58,9 @@ public class Controller {
         Runnable searchRunnable;
 
         for (int i = 0; i < m_iSearchThreadCount; i++) {
-            if (searcherConstroctor == SEARCH_FOR_FILTER) {
+            if (m_searcherConstroctor == SEARCH_FOR_FILTER) {
                 searchRunnable = new FileSearcher(m_fileSharer, barrier);
-            } else if (searcherConstroctor == SEARCH_FOR_DUP) {
+            } else if (m_searcherConstroctor == SEARCH_FOR_DUP) {
                 searchRunnable = new FileSearcher(m_fileSharer, barrier);
             } else { //SEARCH_ONLY
                 searchRunnable = new FileSearcher(m_fileSharer, barrier, m_handler);
