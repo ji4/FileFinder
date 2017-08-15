@@ -24,7 +24,7 @@ public class Controller {
         @Override
         public void run() {
             m_fileSharer.setPutFileDone(true);
-            if(searcherConstroctor == SEARCH_FOR_DUP)
+            if (searcherConstroctor == SEARCH_FOR_DUP)
                 enableDupChecker();
         }
     };
@@ -37,24 +37,34 @@ public class Controller {
     public void searchFilesByInput(List<String> strListInputText) {
         this.m_strListInputText = strListInputText;
 
+        reset();
+
+        if (m_strListInputText != null) { //has input
+            searcherConstroctor = SEARCH_FOR_FILTER;
+        } else {
+            searcherConstroctor = SEARCH_ONLY;
+        }
+
         enableSearcher();
         enableFilterIfInputted();
     }
 
     public void searchDupFiles() {
+        reset();
         searcherConstroctor = SEARCH_FOR_DUP;
+
         enableSearcher();
     }
 
     private void enableSearcher() {
-        Runnable searchRunnable = null;
+        Runnable searchRunnable;
 
         for (int i = 0; i < m_iSearchThreadCount; i++) {
-            if (m_strListInputText != null) { //has input
+            if (searcherConstroctor == SEARCH_FOR_FILTER) {
                 searchRunnable = new FileSearcher(m_fileSharer, barrier);
             } else if (searcherConstroctor == SEARCH_FOR_DUP) {
                 searchRunnable = new FileSearcher(m_fileSharer, barrier);
-            } else {
+            } else { //SEARCH_ONLY
                 searchRunnable = new FileSearcher(m_fileSharer, barrier, m_handler);
             }
 
@@ -75,5 +85,12 @@ public class Controller {
         Runnable dupCheckRunnable = new FileDupChecker(m_fileSharer, m_handler);
         Thread dupCheckerThread = new Thread(dupCheckRunnable);
         dupCheckerThread.start();
+    }
+
+    private void reset(){ //reset fileSharer
+        m_fileSharer.setHasPutRootPath(false);
+        m_fileSharer.setPutFileDone(false);
+        m_fileSharer.takeDirectories().clear();
+        m_fileSharer.takeFiles().clear();
     }
 }
