@@ -6,16 +6,12 @@ import android.util.Log;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-import static java.lang.Thread.sleep;
 
 /**
  * Created by chiaying.wu on 2017/8/14.
  */
 
-public class FileDupChecker implements Runnable{
+public class FileDupChecker implements Runnable {
     private CallBack m_callBackToTake;
     private Handler m_handler;
 
@@ -23,31 +19,14 @@ public class FileDupChecker implements Runnable{
         this.m_callBackToTake = m_callBackToTake;
         this.m_handler = m_handler;
     }
+
     private ArrayList<File> m_arrltDupFiles = new ArrayList<File>();
-    private Lock lock = new ReentrantLock();
 
     @Override
     public void run() {
         Log.d("jia", "DupChecker starts running.");
-        while (!m_callBackToTake.getProviderDone() || m_callBackToTake.takeFiles().size() > 0) {
-            while (m_callBackToTake.takeFiles().size() > 0) {
-                lock.lock();
-                ArrayList<File> scanningFiles = new ArrayList<>(m_callBackToTake.takeFiles());
-                m_callBackToTake.takeFiles().clear();
-                lock.unlock();
-
-                if(scanningFiles != null) {
-                    ArrayList<File> sameSizeFiles = findTheSameSizeFiles(scanningFiles);
-                    findTheSameMD5Files(sameSizeFiles);
-                }
-            }
-
-            try {
-                sleep(20);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+            ArrayList<File> sameSizeFiles = findTheSameSizeFiles(m_callBackToTake.takeFiles());
+            findTheSameMD5Files(sameSizeFiles);
         Log.d("jia", "DupChecker finishes.");
     }
 

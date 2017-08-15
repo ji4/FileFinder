@@ -15,7 +15,8 @@ public class Controller {
     private int m_iSearchThreadCount = 1;
     private CallBack m_fileSharer = new SharedFiles();
     private static final int SEARCH_ONLY = 1;
-    private static final int SEARCH_FOR_AUTHENTICATE = 2;
+    private static final int SEARCH_FOR_DUP = 2;
+    private static final int SEARCH_FOR_FILTER = 3;
     private int searcherConstroctor;
 
 
@@ -23,6 +24,8 @@ public class Controller {
         @Override
         public void run() {
             m_fileSharer.setPutFileDone(true);
+            if(searcherConstroctor == SEARCH_FOR_DUP)
+                enableDupChecker();
         }
     };
     CyclicBarrier barrier = new CyclicBarrier(m_iSearchThreadCount, done);
@@ -39,9 +42,8 @@ public class Controller {
     }
 
     public void searchDupFiles() {
-        searcherConstroctor = SEARCH_FOR_AUTHENTICATE;
+        searcherConstroctor = SEARCH_FOR_DUP;
         enableSearcher();
-        enableDupChecker();
     }
 
     private void enableSearcher() {
@@ -50,7 +52,7 @@ public class Controller {
         for (int i = 0; i < m_iSearchThreadCount; i++) {
             if (m_strListInputText != null) { //has input
                 searchRunnable = new FileSearcher(m_fileSharer, barrier);
-            } else if (searcherConstroctor == SEARCH_FOR_AUTHENTICATE) {
+            } else if (searcherConstroctor == SEARCH_FOR_DUP) {
                 searchRunnable = new FileSearcher(m_fileSharer, barrier);
             } else {
                 searchRunnable = new FileSearcher(m_fileSharer, barrier, m_handler);
