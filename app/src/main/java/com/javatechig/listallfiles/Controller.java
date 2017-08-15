@@ -19,8 +19,11 @@ public class Controller {
     private static final int SEARCH_FOR_FILTER = 3;
     private int searcherConstroctor;
 
+    public Controller(Handler handler) {
+        this.m_handler = handler;
+    }
 
-    Runnable done = new Runnable() {
+    private Runnable done = new Runnable() {
         @Override
         public void run() {
             m_fileSharer.setPutFileDone(true);
@@ -28,11 +31,8 @@ public class Controller {
                 enableDupChecker();
         }
     };
-    CyclicBarrier barrier = new CyclicBarrier(m_iSearchThreadCount, done);
+    private CyclicBarrier barrier = new CyclicBarrier(m_iSearchThreadCount, done);
 
-    public Controller(Handler handler) {
-        this.m_handler = handler;
-    }
 
     public void searchFilesByInput(List<String> strListInputText) {
         this.m_strListInputText = strListInputText;

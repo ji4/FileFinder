@@ -46,7 +46,7 @@ public class MainActivity extends Activity {
     //----------End of file view variables-----------//
 
     //-------------UI Handler-------------//
-    Handler m_handler = new Handler() {
+    private Handler m_handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -147,7 +147,7 @@ public class MainActivity extends Activity {
         m_listView = (ListView) findViewById(R.id.mylistview);
         m_gridView = (GridView) findViewById(R.id.mygridview);
 
-        m_controller.searchFilesByInput(null); //initialize file view
+        m_controller.searchFilesByInput(null); //filled with files
 
         //get list of files
         setAdapters();
