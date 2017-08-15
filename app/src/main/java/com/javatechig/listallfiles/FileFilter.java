@@ -97,7 +97,8 @@ public class FileFilter implements Runnable {
     private void filterSearchByInput() {//Filter files found by input fields
         while (m_callBackToTake.takeFiles().size() > 0) {
             File scanningFile = m_callBackToTake.takeFiles().get(0);
-            Log.d("jia", "filtering file " + m_iFileFilteredCount + ": " + scanningFile);
+            m_callBackToTake.takeFiles().remove(scanningFile);//remove file in original arraylist after taken
+            Log.d("jia", Thread.currentThread().getName() + "filtering file " + m_iFileFilteredCount + ": " + scanningFile);
             m_iFileFilteredCount++;
             File matchedFile = null;
             int iInputtedFieldsSize = m_inputFields.size();
@@ -115,7 +116,6 @@ public class FileFilter implements Runnable {
             if (matchedFile != null) {
                 m_handler.obtainMessage(Code.MSG_UPDATE_VIEW, matchedFile).sendToTarget(); //Send matched file to UI
             }
-            m_callBackToTake.takeFiles().remove(scanningFile);//remove file in original arraylist after authenticated
         }
     }
 }

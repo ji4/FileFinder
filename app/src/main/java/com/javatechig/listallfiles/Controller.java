@@ -12,7 +12,8 @@ import java.util.concurrent.CyclicBarrier;
 public class Controller {
     private Handler m_handler;
     private List<String> m_strListInputText;
-    private int m_iSearchThreadCount = 1;
+    private int m_iSearchThreadCount = 2;
+    private int m_iFilterThreadCount = 2;
     private CallBack m_fileSharer = new SharedFiles();
     private static final int SEARCH_ONLY = 1;
     private static final int SEARCH_FOR_DUP = 2;
@@ -73,9 +74,11 @@ public class Controller {
 
     private void enableFilterIfInputted() {
         if (m_strListInputText != null) { //has input
-            Runnable filterRunnable = new FileFilter(m_fileSharer, m_handler, m_strListInputText);
-            Thread filterThread = new Thread(filterRunnable);
-            filterThread.start();
+            for (int i = 0; i < m_iFilterThreadCount; i++) {
+                Runnable filterRunnable = new FileFilter(m_fileSharer, m_handler, m_strListInputText);
+                Thread filterThread = new Thread(filterRunnable);
+                filterThread.start();
+            }
         }
     }
 
@@ -85,7 +88,7 @@ public class Controller {
         dupCheckerThread.start();
     }
 
-    private void reset(){ //reset fileSharer
+    private void reset() { //reset fileSharer
         m_fileSharer.setHasPutRootPath(false);
         m_fileSharer.setPutFileDone(false);
         m_fileSharer.takeDirectories().clear();
