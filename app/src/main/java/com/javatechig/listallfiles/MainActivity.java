@@ -126,13 +126,6 @@ public class MainActivity extends Activity {
         return strListInputText;
     }
 
-
-//	public void searchAllFiles(){
-//		//search
-//		FileSearcher fileSearcher = new FileSearcher();
-//		m_matchedFileList = fileSearcher.searchFiles(null);
-//	}
-
     public void findViews() {
         m_btn_search = (Button) findViewById(R.id.activity_main_btn_search);
         m_btn_searchDupFile = (Button) findViewById(R.id.activity_main_btn_searchDupFile);
@@ -159,7 +152,7 @@ public class MainActivity extends Activity {
         m_listView = (ListView) findViewById(R.id.mylistview);
         m_gridView = (GridView) findViewById(R.id.mygridview);
 
-//		searchAllFiles();
+        m_controller.searchFilesByInput(null); //initialize file view
 
         //get list of files
         setAdapters();
