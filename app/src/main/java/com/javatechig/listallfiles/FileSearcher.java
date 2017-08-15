@@ -15,11 +15,11 @@ import static java.lang.Thread.sleep;
  */
 
 public class FileSearcher implements Runnable {
-    private CallBack callback;
+    private CallBack m_callback;
     private CyclicBarrier m_barrier;
     private Handler m_handler;
 
-    private Boolean isOnlySearch;
+    private Boolean m_isOnlySearch;
 
     //getting SDcard root path
 //    private File m_root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
@@ -28,16 +28,16 @@ public class FileSearcher implements Runnable {
     private int m_iFileFoundCount = 0;
 
     public FileSearcher(CallBack callback, CyclicBarrier barrier) {
-        this.callback = callback;
+        this.m_callback = callback;
         this.m_barrier = barrier;
-        isOnlySearch = false;
+        m_isOnlySearch = false;
     }
 
     public FileSearcher(CallBack callback, CyclicBarrier barrier, Handler handler) {
-        this.callback = callback;
+        this.m_callback = callback;
         this.m_barrier = barrier;
         this.m_handler = handler;
-        isOnlySearch = true;
+        m_isOnlySearch = true;
     }
 
     public void setDirectoryPath(File dir) {
@@ -56,12 +56,12 @@ public class FileSearcher implements Runnable {
 
         int iSleepCount = 0;
         while (iSleepCount < 4) {
-            while (callback.takeDirectories().size() > 0) { //Scan directory paths
+            while (m_callback.takeDirectories().size() > 0) { //Scan directory paths
                 iSleepCount = 0;
                 //remove directory that just taken
 
-                File scannigDirectory = callback.takeDirectories().get(0);
-                callback.takeDirectories().remove(scannigDirectory);
+                File scannigDirectory = m_callback.takeDirectories().get(0);
+                m_callback.takeDirectories().remove(scannigDirectory);
 
                 if (scannigDirectory != null)
                     getFile(scannigDirectory);
@@ -92,10 +92,10 @@ public class FileSearcher implements Runnable {
         if (listFile != null && iListFileLenth > 0) {
             for (int i = 0; i < iListFileLenth; i++) {
                 if (listFile[i].isDirectory()) { //directory
-                    callback.putDirectory(listFile[i]); //store directory path into list
+                    m_callback.putDirectory(listFile[i]); //store directory path into list
                 } else { //file
-                    callback.putFile(listFile[i]);
-                    if (isOnlySearch)
+                    m_callback.putFile(listFile[i]);
+                    if (m_isOnlySearch)
                         m_handler.obtainMessage(Code.MSG_UPDATE_VIEW, listFile[i]).sendToTarget(); //Send matched file to UI
                     Log.d("jia", "searchThread" + Thread.currentThread().getName() + " found the " + m_iFileFoundCount + " th file: " + listFile[i]);
                     m_iFileFoundCount++;
@@ -105,9 +105,9 @@ public class FileSearcher implements Runnable {
     }
 
     private void putRootDiectory(){
-        if (!callback.getHasPutRootPath()) {
-            callback.putDirectory(m_root);
-            callback.setHasPutRootPath(true);
+        if (!m_callback.getHasPutRootPath()) {
+            m_callback.putDirectory(m_root);
+            m_callback.setHasPutRootPath(true);
         }
     }
 }
