@@ -46,16 +46,19 @@ public class MainActivity extends Activity {
     //----------End of file view variables-----------//
 
     //-------------UI Handler-------------//
-    int iUpdateCount = 0;
     Handler m_handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-//            Log.d("jia", "UI handler got informed to update, count: "+ iUpdateCount++);
             switch (msg.what){
                 case Code.MSG_UPDATE_VIEW:
                     File receivedFile = (File) msg.obj;
                     addFilesToAdapter(receivedFile);
+                    break;
+                case Code.MSG_RESET_VIEW:
+                    m_matchedFileList.clear();
+                    notifyChangeToAdapter();
+                    break;
             }
         }
     };
@@ -79,7 +82,7 @@ public class MainActivity extends Activity {
         m_btn_search.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                m_matchedFileList.clear(); //reset view
+                m_handler.sendEmptyMessage(Code.MSG_RESET_VIEW);
                 List<String> strListInputText = detectEditTextInputStatus();
                 m_controller.searchFilesByInput(strListInputText);
             }
@@ -88,7 +91,7 @@ public class MainActivity extends Activity {
 		m_btn_searchDupFile.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-                m_matchedFileList.clear(); //reset view
+                m_handler.sendEmptyMessage(Code.MSG_RESET_VIEW);
                 m_controller.searchDupFiles();
 			}
 		});
@@ -189,7 +192,10 @@ public class MainActivity extends Activity {
 
     private void addFilesToAdapter(File receivedFile) {
         m_matchedFileList.add(receivedFile);
+        notifyChangeToAdapter();
+    }
 
+    private void notifyChangeToAdapter(){
         if (VIEW_MODE_LISTVIEW == m_currentViewMode) {
             m_listViewAdapter.notifyDataSetChanged();
         } else {

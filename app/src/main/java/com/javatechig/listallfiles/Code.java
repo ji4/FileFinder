@@ -7,6 +7,7 @@ package com.javatechig.listallfiles;
 public class Code {
     //MSG
     public static final int MSG_UPDATE_VIEW = 1;
+    public static final int MSG_RESET_VIEW = 2;
 
     //FILE
     public static final int FILE_NAME = 0;
