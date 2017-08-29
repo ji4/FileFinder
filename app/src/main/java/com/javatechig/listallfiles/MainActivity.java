@@ -134,6 +134,13 @@ public class MainActivity extends Activity {
     }
 
     //----------------Following are file view functions-------------------//
+    AdapterView.OnItemClickListener onItemClick = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            //Do any thing when user click to item
+            Toast.makeText(getApplicationContext(), m_matchedFileList.get(position).getName() + " - " + DataConverter.convertTime(m_matchedFileList.get(position).lastModified()), Toast.LENGTH_SHORT).show();
+        }
+    };
 
     public void initFileViews() {
         m_stubList = (ViewStub) findViewById(R.id.stub_list);
@@ -200,14 +207,6 @@ public class MainActivity extends Activity {
             m_gridView.setAdapter(m_gridViewAdapter);
         }
     }
-
-    AdapterView.OnItemClickListener onItemClick = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            //Do any thing when user click to item
-            Toast.makeText(getApplicationContext(), m_matchedFileList.get(position).getName() + " - " + DataConverter.convertTime(m_matchedFileList.get(position).lastModified()), Toast.LENGTH_SHORT).show();
-        }
-    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -12,9 +12,11 @@ import java.util.concurrent.CyclicBarrier;
 public class Controller {
     private Handler m_handler;
     private List<String> m_strListInputText;
+    private CallBack m_fileSharer = new SharedFiles();
+    //thrread count
     private int m_iSearchThreadCount = 2;
     private int m_iFilterThreadCount = 2;
-    private CallBack m_fileSharer = new SharedFiles();
+
     private static final int SEARCH_ONLY = 1;
     private static final int SEARCH_FOR_DUP = 2;
     private static final int SEARCH_FOR_FILTER = 3;
