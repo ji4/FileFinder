@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.listallfiles.test">
+    package="com.example.filefinder.test">
 
     <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="18" />
 
@@ -9,8 +9,8 @@
     </application>
 
     <instrumentation android:name="android.test.InstrumentationTestRunner"
-                     android:targetPackage="com.example.listallfiles"
+                     android:targetPackage="com.example.filefinder"
                      android:handleProfiling="false"
                      android:functionalTest="false"
-                     android:label="Tests for com.example.listallfiles"/>
+                     android:label="Tests for com.example.filefinder"/>
 </manifest>
