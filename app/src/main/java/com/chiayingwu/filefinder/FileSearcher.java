@@ -1,5 +1,5 @@
 
-package com.javatechig.listallfiles;
+package com.chiayingwu.filefinder;
 
 import android.os.Handler;
 import android.util.Log;

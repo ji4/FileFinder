@@ -1,4 +1,4 @@
-package com.javatechig.listallfiles;
+package com.chiayingwu.filefinder;
 
 import android.app.Activity;
 import android.content.SharedPreferences;

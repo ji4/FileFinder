@@ -1,4 +1,4 @@
-package com.javatechig.listallfiles;
+package com.chiayingwu.filefinder;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;

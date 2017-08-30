@@ -1,4 +1,4 @@
-package com.javatechig.listallfiles;
+package com.chiayingwu.filefinder;
 
 import java.io.File;
 import java.util.ArrayList;

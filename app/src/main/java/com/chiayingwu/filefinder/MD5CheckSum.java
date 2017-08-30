@@ -1,4 +1,4 @@
-package com.javatechig.listallfiles;
+package com.chiayingwu.filefinder;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
